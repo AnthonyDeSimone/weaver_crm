@@ -1,0 +1,20 @@
+<div class="devblock">
+	<h2>Load Order by ID</h2>
+	<span class="setWidth">Order ID:</span><input type="text" id="orderid" /><br />
+	<span class="setWidth"></span><button ng-click="form.loadOrderjq()">Load Order</button>
+</div>
+
+
+<div class="devblock" style="width: 90%">
+	<textarea style="width: 90%; height: 300px; display: block; margin: auto;" id="textjson" ng-model="form.savequery"></textarea>
+    <button ng-click="form.doSaveQueryThing()">Display Save JSON</button>
+    <button ng-click="form.loadJSON()">Load Displayed JSON</button>
+</div>
+<div class="devblock">
+    <span>Using: "<i>{{form.BASE_URL}}</i>"</span><br />
+    <button ng-click="form.BASE_URL = form.antony">Use IP</button>
+    <button ng-click="form.BASE_URL = form.hero">Use Heroku</button>
+</div>
+<script>
+
+</script>

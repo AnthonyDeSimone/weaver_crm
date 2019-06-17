@@ -1,0 +1,22 @@
+-content_for(:page_title) do
+  Service Tickets
+  
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Service Tickets
+      %br/
+      %p.hidden-phone
+        %a.btn.btn-info.btn-large.pull-right{:href => '/service_tickets/new'} Add new ticket &raquo; 
+
+.row-fluid
+  .span12
+    = breadcrumbs(['Service Tickets'])
+.row-fluid.hidden-tablet.hidden-phone
+  .span12
+    %h4.title{style: 'display: inline-block;'} Service Tickets
+    .squiggly-border
+      = smart_listing_controls_for(:service_tickets) do  
+        = select_tag :show_completed, options_for_select([['Open', 'false'], ['Closed', 'true']])
+    %br
+    =smart_listing_render(:service_tickets)

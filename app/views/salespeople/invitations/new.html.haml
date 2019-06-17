@@ -1,0 +1,31 @@
+%h2 Create Salesperson
+= simple_form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => {:method => :post} do |f|
+  = devise_error_messages!
+  - resource.class.invite_key_fields.each do |field|
+    = f.input field
+  = f.input :name, required: true, input_html: {autocomplete: 'off'}
+  = f.input :rep_name, input_html: {autocomplete: 'off'}
+  = f.input :password, required: true, input_html: { autocomplete: 'off'}
+  = f.input :password_confirmation, required: true, input_html: {autocomplete: 'off'}
+  = f.input :account_type, collection: resource.account_types, input_html: {id: 'account_type_select'}
+  = f.association :sales_team, label: 'Primary Sales Team', input_html: {id: 'sales_team_select'}, wrapper_html: {id: 'sales_team_div', style: 'display:none;'}
+  = f.association :sales_teams, label: 'Additional Sales Teams', input_html: {id: 'sales_teams_select'}, wrapper_html: {id: 'sales_teams_div', style: 'display:none;'}
+  = f.button :submit, "Add Salesperson", input_html: {class: 'btn btn-info'}
+
+:javascript
+  $(document).ready(function(){
+    $("#account_type_select").change(function(){
+      if($("#account_type_select").val() == 'Dealer Salesman' || $("#account_type_select").val() == 'Dealer Sales Manager')
+      {
+        $("#sales_team_div").show('show')    
+        $("#sales_teams_div").show('show')    
+      }
+      else
+      {
+        $("#sales_team_div").hide('slow')
+        $("#sales_teams_div").hide('slow')
+      }
+      
+    })
+  
+  })

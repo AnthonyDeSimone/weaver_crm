@@ -1,0 +1,23 @@
+- content_for(:page_title) do
+  Edit Sales Team 
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Edit Sales Team
+.row-fluid
+  .span12
+    = breadcrumbs(['Sales Teams', 'New Sales Team'])
+.row-fluid
+  .span12
+    %h4.title Edit Sales Team
+    .squiggly-border
+    = simple_form_for @sales_team do |f|
+      = f.input :name
+      = f.input :business_name
+      = f.input :address
+      = f.input :phone
+      = f.input :fax
+      = f.input :email
+      = f.input :show_company_on_invoice, as: :boolean, checked_value: true, unchecked_value: false
+      = f.submit class: 'btn btn-success'
+      

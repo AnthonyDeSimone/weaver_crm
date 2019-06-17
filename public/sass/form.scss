@@ -1,0 +1,560 @@
+@import 'globals';
+@import 'visual_editor';
+
+body {
+    margin: 0;
+    border: 0;
+    padding: 0;
+    font-family: $helvetica;
+}
+
+header {
+    background-color: $GREEN_ACCENT_BACKGROUND;
+    font-family: $lato;
+    color: #feb;
+    position: relative;
+    padding-right: $SIDEBAR_WIDTH;
+
+    h1 {
+        font-weight: 300;
+        margin-left: 1rem;
+    }
+
+    .actions {
+        position: absolute;
+        top: 0;
+        right: $SIDEBAR_WIDTH + 25px;
+
+        .button {
+            background-color: rgba(0,0,0, 0.4);
+            padding: 0.5em 1em;
+            font-size: 1em;
+            font-weight: 300;
+            box-sizing: border-box;
+            display: inline-block;
+            transition: background-color 0.25s;
+            color: inherit;
+            text-decoration: none;
+
+            &:hover {
+                background-color: rgba(0,0,0, 0.6);
+            }
+        }
+    }
+
+    nav {
+        background-color: rgba(0,0,0, 0.5);
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+
+            li {
+                display: inline-block;
+                padding: 1em 0 1em 1em;
+                cursor: pointer;
+                transition: color 0.25s;
+
+                &:hover {
+                    color: #fed;
+                }
+
+                &.active {
+                    color: white;
+                }
+            }
+        }
+    }
+}
+
+aside {
+    $horizontal_padding: 1rem;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    background-color: #eee;
+    color: #666;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    line-height: 1.2;
+    width: $SIDEBAR_WIDTH;
+    padding: 2em $horizontal_padding;
+    box-sizing: border-box;
+
+    h1 {
+        margin: 0;
+    }
+
+    h2 {
+        font-weight: 300;
+
+        &.customer {
+            font-size: 1.3em;
+            margin: 0;
+        }
+
+        &.barn-type {
+            font-size: 1.4em;
+            margin-bottom: 0;
+        }
+    }
+
+    h3 {
+        margin-top: 0;
+        font-weight: 300;
+        font-size: 1em;
+    }
+
+    h4 {
+        font-weight: 300;
+        margin: 0.5em 0 0.25em;
+    }
+
+    h5 {
+        font-weight: normal;
+        font-style: italic;
+        color: $GREEN_ACCENT_FOREGROUND;
+        margin: 0.75em 0 0 0;
+    }
+
+    button.visual-editor {
+        font-size: 1em;
+        margin: 0 auto;
+        display: block;
+        padding: 0.4em 0.8em;
+    }
+
+    #options {
+        overflow-y: auto;
+        height: calc(100% - 300px);
+    }
+
+    .option {
+        display: table;
+        table-layout: fixed;
+        margin-bottom: 0.25em;
+
+        & > span {
+            display: table-cell;
+        }
+
+        .quantity {
+            width: 35px;
+
+            &:after {
+                content: ' \2013 ';
+            }
+        }
+
+        .name {
+            width: 160px;
+
+            &:after {
+                border-bottom: 1px dotted black;
+                width: 100%;
+                position: absolute;
+            }
+        }
+    }
+
+    .totals {
+        $dark_stripe: rgba(0,0,0, 0.05);
+        position: absolute;
+        bottom: 0;
+        margin-bottom: 2em;
+        margin-left: -$horizontal_padding;
+        width: 100%;
+
+        h2 {
+            font-weight: normal;
+            font-size: 1.2em;
+            padding-left: $horizontal_padding;
+            background-color: $dark_stripe;
+            margin: 0;
+            padding: 0.3em $horizontal_padding 0.1em $horizontal_padding;
+            color: #444;
+        }
+
+        & > span {
+            display: block;
+            padding: 0.2em 0;
+            padding-left: $horizontal_padding;
+
+            &:nth-child(even) {
+                background-color: $dark_stripe;
+            }
+        }
+
+        .price {
+            padding-left: 0.25em;
+        }
+
+        .total {
+            background-color: #fc0 !important;
+        }
+    }
+}
+
+.radio-option, .checkbox-option {
+    label {
+        cursor: pointer;
+        position: relative;
+        padding: 0 10px 5px 25px;
+        display: inline-block;
+
+        &.price, &.quantity {
+            padding: 0;
+            margin: 0;
+
+            &:before {
+                width: 0;
+            }
+        }
+
+        &:before {
+            content: "";
+            display: inline-block;
+            width: 16px; height: 16px;
+            background-color: rgba($FORM_ACCENT, 0.3);
+            box-shadow: 0 2px 6px 1px rgba(0,0,0, 0.4) inset;
+            color: $FORM_SELECT;
+            position: absolute;
+            left: 5px;
+            top: 3px;
+        }
+
+        &:hover {
+            background-color: rgba($FORM_ACCENT, 0.1);
+        }
+    }
+}
+
+.radio-option label:before {
+    border-radius: 50%;
+}
+
+.checkbox-option label:before {
+    border-radius: 2px;
+}
+
+input[type=radio], input[type=checkbox] {
+    display: none;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    appearance:none;
+}
+
+input:checked + label {
+    background-color: rgba($FORM_ACCENT, 0.2);
+    box-shadow: rgba($FORM_ACCENT, 0.2) 0 0 0 1px inset;
+}
+
+input[type=radio]:checked + label:before {
+    content: "\2022";
+    text-align: center;
+    font-size: 32px;
+    line-height: 17px;
+}
+
+input[type=checkbox]:checked + label:before {
+    content: "\2713";
+    font-size: 20px;
+    text-align: center;
+    line-height: 20px;
+    font-weight: bold;
+}
+
+input[type=text], input[type=number] {
+    background-color: rgba($FORM_ACCENT, 0.2);
+    border: 1px solid rgba($FORM_ACCENT, 0.2);
+    box-shadow: 0 2px 6px 1px rgba(0,0,0, 0.4) inset;
+    padding: 0.25em 0.5em;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+input[type=number] {
+    width: 60px;
+    margin-bottom: 0.5em;
+}
+
+form#main {
+    padding: 0 1em;
+    box-sizing: border-box;
+    margin-right: $SIDEBAR_WIDTH;
+
+    .unit, label.price, label.quantity {
+        display: inline-block;
+        color: gray;
+        font-size: 0.9em;
+        margin-left: 0.4em;
+    }
+
+    h1 {
+        font-size: 2.75em;
+        float: left;
+    }
+
+    h2 {
+        font-weight: normal;
+        font-size: 2.25em;
+        color: #666;
+    }
+
+    h3 {
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-bottom: 0.5em;
+
+        .checkbox-option + & {
+            margin-top: 1em;
+        }
+    }
+
+    select {
+        margin-bottom: 1em;
+    }
+
+    section {
+        margin: 1em;
+        clear: both;
+        overflow: hidden;
+
+        &.center-floated-children {
+            text-align: center;
+
+            .col {
+                float: none;
+                display: inline-block;
+                text-align: left;
+            }
+        }
+
+        &#dimensions {
+            select {
+                font-size: 1.4em;
+            }
+
+            .options {
+                text-align: center;
+                margin-bottom: 2em;
+            }
+        }
+
+        .col {
+            float: left;
+            margin: 0 0.5em 1em;
+
+            &.wide {
+                margin: 0 2em 3em;
+            }
+        }
+    }
+
+    button.next {
+        border: 0;
+        color: white;
+        outline: none;
+        background-color: $BRIGHT_GREEN_COLOR;
+        font-size: 1.5em;
+        font-family: inherit;
+        cursor: pointer;
+        display: block;
+        clear: both;
+        margin: 0 auto;
+        padding: 0.25em 0.5em;
+        -webkit-transition: all 0.2s;
+        transition: all 0.2s;
+
+        &:after {
+            content: '';
+            margin: -0.25em 0.5em;
+            border-width: 20px;
+            border-style: solid;
+            border-color: transparent transparent transparent $BRIGHT_GREEN_COLOR;
+            position: absolute;
+            -webkit-transition: border-color 0.2s;
+            transition: border-color 0.2s;
+        }
+
+        &:hover {
+            background-color: $BRIGHT_GREEN_COLOR - #222;
+
+            &:after {
+                border-color: transparent transparent transparent $BRIGHT_GREEN_COLOR - #222;
+            }
+        }
+
+        &.disabled {
+            $background-color: rgba($FORM_ACCENT, 0.25) !important;
+            background-color: $background-color;
+            cursor: default;
+
+            &:after {
+                border-color: transparent transparent transparent $background-color;
+            }
+        }
+
+        .spinner {
+            vertical-align: text-bottom;
+            width: 0;
+            transition: all 0.2s;
+            -webkit-transition: all 0.2s;
+
+            &.active {
+                width: initial;
+            }
+        }
+    }
+
+    .horizontal-group {
+        margin: 1em 1em 0;
+        display: inline-block;
+
+        & > * {
+            float: left;
+        }
+    }
+
+    .text-option {
+        .button {
+            width: 24px; height: 24px;
+            cursor: pointer;
+
+            &.add {
+                display: block;
+            }
+
+            &.delete {
+                display: inline;
+                vertical-align: top;
+            }
+        }
+    }
+
+    .incrementor {
+        display: inline-block;
+        margin: 0.5em;
+        color: gray;
+
+        img {
+            width: 18px; height: 18px;
+            vertical-align: text-bottom;
+            cursor: pointer;
+        }
+
+        .value {
+            font-weight: bold;
+            color: gray;
+            font-size: 1.2em;
+            margin-right: 0.25em;
+            cursor: default;
+        }
+    }
+}
+
+table.celled {
+    border-collapse: collapse;
+
+    td {
+        border: 1px solid rgba($FORM_ACCENT, 0.2);
+        padding: 0.1em 0.5em;
+
+        &.accent-background {
+            background-color: rgba($FORM_ACCENT, 0.2);
+        }
+    }
+}
+
+.barn-diagrams {
+    float: left;
+
+    .barn-diagram {
+        position: relative;
+        -webkit-transition: width 0.2s, height 0.2s;
+        transition: width 0.2s, height 0.2s;
+        background-color: rgba($FORM_ACCENT, 0.2);
+        box-shadow: rgba($FORM_ACCENT, 0.2) 0 0 0 1px inset;
+
+        .dimension {
+            width: 80px;
+            height: 20px;
+            position: absolute;
+            left: 50%; top: 50%;
+            margin-left: -40px;
+            margin-top: -10px;
+            font-family: $helvetica;
+            font-size: 0.8em;
+            text-align: center;
+            font-weight: bold;
+        }
+    }
+
+    .top {
+        width: 80px; height: 80px;
+    }
+}
+
+.annotation {
+    display: block;
+    color: gray;
+    font-size: 0.7em;
+    text-transform: uppercase;
+    font-family: $helvetica;
+}
+
+
+
+#overlay .overlaps {
+    text-align: center;
+    background-color: #fa3e3e;
+    border-radius: 2px;
+    color: white;
+    padding: 1px 3px;
+    font-size: 10px;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    display: block;
+    z-index: 9999;
+}
+
+
+h2.weaver-accordion-handle {
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+
+h2.weaver-accordion-handle.weaver-selected {
+  margin-bottom: -20px;
+}
+
+
+.weaver-accordion-handle:before {
+  content: '+';
+  display: inline-block;
+  margin-right: 5px;
+  width: 30px;
+  text-align: center;
+}
+.weaver-accordion-handle.weaver-selected:before {
+  content: '-';
+  display: inline-block;
+  margin-right: 5px;
+  width: 30px;
+  text-align: center;
+}
+h3.weaver-accordion-handle {
+  width: 100%;
+  border-bottom: 1px dashed #ccc;
+  border-top: 1px dashed #ccc;
+  padding: 3px;
+}
+h2.weaver-selected {
+  border-color: #bdc;
+}
+h3.weaver-selected {
+  background-color: #e0efe0;
+}

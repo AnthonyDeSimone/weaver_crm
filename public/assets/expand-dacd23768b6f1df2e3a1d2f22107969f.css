@@ -1,0 +1,13 @@
+/* line 4, /home/novillus/Projects/rails-dev-box/weaver-crm/app/assets/stylesheets/expand.css.scss */
+css
+body.form-expanded #main {
+  margin-top: 200px;
+}
+/* line 7, /home/novillus/Projects/rails-dev-box/weaver-crm/app/assets/stylesheets/expand.css.scss */
+css
+body.form-expanded header {
+  position: fixed;
+  left: 0;
+  right: 315px;
+  z-index: 999999;
+}

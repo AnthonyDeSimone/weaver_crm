@@ -1,0 +1,110 @@
+<div class="form-element visual-section" ng-repeat="subsection in section.subsections" ng-if="editor.isVisualSubsection(subsection)">
+    <h3 id="{{form.idCase('section-' + section.name + '-subsection-' + subsection.name)}}">{{subsection.name}}</h3>
+
+
+    <div accordion-component="{{'#' + form.idCase('section-' + section.name + '-subsection-' + subsection.name)}}" data-parent="{{'#' + form.idCase('section-' + section.name)}}">
+        <div ng-repeat="component in subsection.components" ng-if="component.show">
+
+            <!-- checkbox -->
+            <div class="checkbox-option visual_box" ng-if="component.show &&
+                    (component.form_type === 'checkbox' ||
+                    component.form_type === 'check_price' ||
+                    component.form_type === 'check_length') && component.image_url">
+                <h5 class="visual-comp-title" new-draggable> <img data-id="{{component.id}}" ng-src="{{form.getDisplayImage(component)}}" title="{{component.name}}"/>
+                {{component.name}}
+            </h5>
+                <input id="{{component.name}}" name="{{subsection.name}}" ng-value="component.name" ng-model="component.value" type="checkbox" />
+                <label for="{{component.name}}">
+                {{component.name}}
+                <span class="unit">{{form.displayPrice(component)}}</span>
+            </label>
+                <label ng-if="component.form_type === 'check_price'" for="{{component.name}}-price" class="price">
+                Price: $
+            </label>
+                <input ng-if="component.form_type === 'check_price'" ng-model="component.user_price" id="{{component.name}}-price" type="number" min="0" />
+                <input ng-if="component.form_type === 'check_length'" ng-model="component.len" id="{{component.name}}-length" type="number" min="0" />
+                <label ng-if="component.form_type === 'check_length'" for="{{component.name}}-length" class="quantity">
+                ft.
+            </label>
+            </div>
+
+            <!-- radio button -->
+            <div class="visualRadioOption visual_box" ng-if="component.form_type == 'radio' && component.show">
+                <span class="radioDrag">
+                <h5 class="visual-comp-title"> <img ng-src="{{form.getDisplayImage(component)}}" title="{{component.name}}"  data-id="{{component.id}}" new-draggable />
+                    {{component.name}}
+                </h5>
+				<div class="radio-option" ng-repeat="option in component.options">
+                    <input id="{{component.name + option.name}}" name="{{component.name}}" ng-value="option.id" ng-model="component.value" type="radio"/>
+                    <label for="{{component.name + option.name}}">
+                        {{option.name}}
+                        <span class="unit">{{form.displayPrice(component, $index)}}</span>
+                </label>
+            </div>
+            </span>
+        </div>
+
+        <!-- number range -->
+        <div class="visualNumericOption visual_box" ng-if="component.form_type === 'numeric' && (form.getDisplayImage(component) != null)">
+            <h5 class="visual-comp-title"> <img ng-src="{{component.image_url}}" title="{{component.name}}"  data-id="{{component.id}}" new-draggable />
+                {{component.name}}
+            </h5>
+            <div class="incrementor">
+                <img ng-click="form.decrementRange(component, 'value')" src="/img/icon-subtract.svg" />
+                <span class="value">{{component.value}}</span>
+                <img ng-click="form.incrementRange(component, 'value')" src="/img/icon-add.svg" />
+            </div>
+            <label for="{{component.name}}">
+                <span class="unit">{{form.displayPrice(component)}}</span>
+            </label>
+        </div>
+
+        <!-- dropdown -->
+        <div class="visual_box" ng-if="component.show &&
+                    component.form_type === 'select' && (form.getDisplayImage(component) != null)">
+            <h5 class="visual-comp-title"> <img ng-src="{{component.image_url}}" title="{{component.name}}"  data-id="{{component.id}}" new-draggable />
+                {{component.name}}
+            </h5>
+            <select name="{{component.name}}" ng-options="option.id as option.name + ' ' + form.displayPrice(component, index) for (index, option) in component.options" ng-model="component.value"><!-- http://stackoverflow.com/a/22080183 -->
+                <option value="">-- none --</option>
+            </select>
+            <div class="incrementor" ng-if="component.requires_quantity && component.value">
+                Quantity:
+                <img ng-click="form.decrementRange(component, 'quantity')" src="/img/icon-subtract.svg" />
+                <span class="value">{{component.quantity || 0}}</span>
+                <img ng-click="form.incrementRange(component, 'quantity')" src="/img/icon-add.svg" />
+            </div>
+        </div>
+
+        <!-- text box -->
+        <div class="visual_box" ng-if="component.show &&
+                    component.form_type === 'text' && subsection.name != 'Custom' && (form.getDisplayImage(component) != null)">
+            <h5 class="visual-comp-title"> <img ng-src="{{component.image_url}}" title="{{component.name}}"   data-id="{{component.id}}" new-draggable />
+                {{component.name}}
+            </h5>
+            <input id="{{component.name}}" name="{{component.name}}" ng-model="component.value" type="text" placeholder="Description" />
+
+            <label for="{{component.name}}-price" class="price">
+                Price: $
+            </label>
+            <input id="{{component.name}}-price" type="number" min="0" class="custom-price" ng-model="component.price" />
+
+            <div class="incrementor" ng-if="component.requires_quantity">
+                Quantity:
+                <img ng-click="form.decrementRange(component, 'quantity')" src="/img/icon-subtract.svg" />
+                <span class="value">{{component.quantity || 0}}</span>
+                <img ng-click="form.incrementRange(component, 'quantity')" src="/img/icon-add.svg" />
+            </div>
+        </div>
+
+
+
+
+
+
+    </div>
+</div>
+<!-- end subsection.components ng-repeat -->
+
+</div>
+<!-- end subsection in subsection.subsections ng-repeat -->

@@ -1,0 +1,87 @@
+-content_for(:page_title) do
+  Sales Orders
+  
+-content_for(:meta_info) do
+  = #javascript_include_tag 'jquery.select2.js'  
+  = javascript_include_tag 'bootstrap-modal.min.js'    
+  = javascript_include_tag 'jquery.easyModal.js'    
+  = javascript_include_tag 'moment.min.js'   
+  = stylesheet_link_tag    'select2.min.css'  
+  = javascript_include_tag 'pikaday.js'    
+  = javascript_include_tag 'pikaday-jquery.js'    
+  = stylesheet_link_tag    'pikaday.css'  
+  
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 
+        - if(@search_results)
+          Search Results
+        - elsif(@issued)
+          Sales Orders
+        - else
+          Quotes
+      %br/
+      %p.hidden-phone
+        %a.btn.btn-info.btn-large.pull-right{:href => '/sales_orders/new'} Add new order &raquo; 
+       
+.row-fluid
+  .span12
+    = breadcrumbs(['Sales Orders'])
+    #orderNotes.panel{style: 'display: none;min-width: 300px; min-height: 150px;padding:10px;'}
+      .easy-modal-inner
+        %h4#orderClosedHeader{style: 'text-align:center;'} Order Notes
+        %hr
+        #orderClosedBody
+    #orderWarnings.panel{style: 'display: none;min-width: 300px; min-height: 150px;padding:10px;'}
+      .easy-modal-inner
+        %h4#orderWarningsHeader{style: 'text-align:center;'} Order Warnings
+        %hr
+        #orderWarningsBody          
+    #emailDropboxModal.panel{style: 'display: none;min-width: 400px; min-height: 150px;padding:10px;'}
+      .easy-modal-inner
+        %h4#emailFormModal{style: 'text-align:center;'} Email Dropbox
+        %hr
+        #emailFormModalBody{style: "margin: 0 auto; width: 90%;"}
+          %form#emailDropboxForm{action: "", method: 'post', 'data-remote' => true}
+            %label{for: 'dropbox_comments'}Optional Comments:
+            %br/
+            %textarea{name: 'comments', id: 'dropbox_comments', style: 'width: 100%;', rows: 7}
+            %hr/            
+            %input{type: 'checkbox', id: 'dropbox_include_secondary_email', name: 'dropbox_include_secondary_email'}
+            %label{for: 'dropbox_include_secondary_email'} Include Secondary Email
+            %hr/                 
+            %button.btn.btn-info{:type => "submit"} Send       
+            %button.btn.btn-default.closeModal{:type => "button"} Cancel           
+
+    #emailInvoiceModal.panel{style: 'display: none;min-width: 400px; min-height: 150px;padding:10px;'}
+      .easy-modal-inner
+        %h4#emailFormModal{style: 'text-align:center;'} Email Invoice
+        %hr
+        #emailFormModalBody{style: "margin: 0 auto; width: 90%;"}
+          %form#emailInvoiceForm{action: "", method: 'post'}
+            %label{for: 'invoice_comments'}Optional Comments:
+            %br/           
+            %textarea{name: 'comments', id: 'invoice_comments', style: 'width: 100%;', rows: 7}
+            %hr/   
+            %input{type: 'checkbox', id: 'invoice_include_secondary_email', name: 'invoice_include_secondary_email'}
+            %label{for: 'invoice_include_secondary_email'} Include Secondary Email
+            %hr/                          
+            %button.btn.btn-info{:type => "submit"} Send       
+            %button.btn.btn-default.closeModal{:type => "button"} Cancel
+
+  %h4.title 
+    =@title
+  .span12
+    = smart_listing_controls_for(:sales_orders) do
+      = text_field_tag 'filter', nil, placeholder: 'Customer Name or Order #'
+      - if(@title == 'Prebuilt Status' || @title == 'AOS Status')
+        =select_tag :build_status, options_for_select([['All Orders', :all], ['Open', :unavailable], ['Ready To Process', :ready_to_process], ['In Production', :in_production], ['Completed', :completed]], @build_status)
+      - elsif(@title == 'Open Orders')
+        =select_tag :status, options_for_select([['All Orders', :all], ['Live', :Live], ['Site Ready', :Site_Ready], ["Weaver's Site", :Working_On_Site], ['Scheduled', :Scheduled], ['Load Complete', :Load_Complete], ['Approved', :approved], ['Not Approved', :not_approved]], @status)
+      - elsif(@title == 'General Search')
+        =select_tag :status, options_for_select([['All Orders', :all], ['Quote', :quote], ['Live', :Live], ['Site Ready', :Site_Ready], ["Weaver's Site", :Working_On_Site], ['Scheduled', :Scheduled], ['Load Complete', :Load_Complete], ['Approved', :approved], ['Not Approved', :not_approved], ['Closed', :closed]], @status)
+      - elsif(@title == 'Orders by Dealer')
+        =select_tag :salesperson_id, options_for_select(Salesperson.active.order(:name).map {|s| [s.name, s.id]}.unshift(["All Salespeople", nil]))
+      .squiggly-border
+  = smart_listing_render(:sales_orders)

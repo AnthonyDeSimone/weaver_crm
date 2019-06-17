@@ -1,0 +1,12 @@
+%li.item-default{style: 'vertical-align:text-top;'}
+  %div{style: 'display: inline-block; width: 20%;'}   
+    %label.inline
+      %input{:type => 'hidden', :value => @comment.id}
+        &nbsp;
+        #{@comment.created_at.strftime("%m/%d/%Y")}: 
+  %div{style: 'display: inline-block; width: 70%;'}         
+    #{@comment.comment}              
+  %div.pull-right
+    = link_to('<button class="button btn btn-xs btn-danger">Delete <i class="radmin-trash"></i></button>'.html_safe, 
+                      "/customer_comment/#{@comment.id}/destroy", :class => 'note-delete') 
+

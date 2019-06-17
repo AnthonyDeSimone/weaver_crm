@@ -1,0 +1,18 @@
+-content_for(:page_title) do
+  Dashboard
+  
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Dashboard
+      %br/
+      %p.hidden-phone
+
+.row-fluid
+  .span12
+    = breadcrumbs(nil)
+    %h4.title Server Error
+    There was a server error:
+    = @exception.inspect
+    - @exception.backtrace.each do |line|
+      %p=line

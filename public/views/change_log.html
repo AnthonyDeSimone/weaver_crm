@@ -1,0 +1,9 @@
+<div class="change_log" id = "change_log" ng-attr-data-order_id="{{form.order_id}}">
+  Loading
+</div>
+
+<script>
+window.setTimeout(function(){
+  $("#change_log").load("/sales_orders/" + $("#change_log").data('orderid') + "/change_log"); 
+}, 10000);
+</script>

@@ -1,0 +1,92 @@
+-content_for(:page_title) do
+  Final Order Approval
+  
+-content_for(:meta_info) do
+  = javascript_include_tag 'jquery.select2.js'  
+  = stylesheet_link_tag    'select2.min.css'  
+
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Special Order Items
+      %br/
+      %p.hidden-phone
+ 
+.row-fluid
+  .span12
+    = breadcrumbs(['Sales Orders'])
+.row-fluid.hidden-tablet.hidden-phone
+  .span12
+    = form_tag "/sales_orders/#{@order.id}/submit_special_order", method: 'POST' do  
+      %h4
+        %b Order #{@order.id}
+      
+      %h5 
+        %b Option
+      %table.table.table-striped.table-bordered.table-radmin
+        %thead
+          %tr
+            %th Options
+            %th Requires Special Order
+        %tbody
+          - @line_items.each do |category|
+            - (category[:components]).each_with_index do |item, i|
+              - if(i == 0)
+                %tr
+                  %td
+                    %b #{category[:category]}
+                  %td
+              %tr
+                %td
+                  #{item[:name]}
+                %td
+                  %a.btn.btn-info.special_order_add{item_name: item[:name]} Requires Special Order
+                  
+      %h5 
+        %b Special Order List
+      %table.table.table-striped.table-bordered.table-radmin#special_order_list
+        %thead
+          %tr
+            %th Option
+            %th Ordered
+            %th PO Number
+            %th Note
+            %th 
+        %tbody    
+          - @special_order_items.andand.each_with_index do |item, index|
+            %tr
+              %td 
+                =item['name']
+                %input.required_item{type: 'hidden', name: "item_name[#{index}]", value: item['name']}
+              %td 
+                %input{type: 'checkbox', name: "item_ordered[#{index}]", checked: item['ordered']}   
+              %td
+                %input{type: 'text', name: "item_po[#{index}]", value: item['po_num']}         
+              %td
+                %input{type: 'text', name: "item_note[#{index}]", value: item['note']}                           
+              %td
+                %a.btn.btn-danger.btn-xs.item-remove Remove
+      = submit_tag "Finish", class: 'btn btn-info'
+      
+:javascript
+  $(document).ready(function(){
+    $(".special_order_add").click(function(){
+      row =   "<tr><td>" + $(this).attr('item_name')
+      row +=  "<input class='required_item' type='hidden' name='item_name["+ $(".required_item").length +"]' value='"+ $(this).attr('item_name')
+      row +=  "'></td><td><input type='checkbox' name='item_ordered["+ $(".required_item").length
+      row +=  "]'></td><td><input type='text' name='item_po["+ $(".required_item").length
+      row +=  "]'></td><td><input type='text' name='item_note["+ $(".required_item").length
+      row += "]'></td><td><a class='btn btn-danger btn-xs item-remove'>Remove</a></td></tr>"
+      
+      $("#special_order_list tbody").append(row);    
+
+      $(".item-remove").click(function(){
+        $(this).closest('tr').remove();
+      })  
+    })
+  
+    $(".item-remove").click(function(){
+      $(this).closest('tr').remove();
+    })  
+  
+  })

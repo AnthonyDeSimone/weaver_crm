@@ -1,0 +1,109 @@
+
+<h2>Special Order Information</h2>
+
+<div id="special_order">
+    <div class="special_order_row special_order_heading">
+        <a href="#" class="special_order_warning" ng-click="form.specialSortBy('error')" style="margin-right: 1.5em; cursor: pointer">
+            ! {{form.getSortSymbol("error")}}
+        </a>
+        <a href="#" class="special_order_title" ng-click="form.specialSortBy('name')"
+           ng-style="{width: form.getMaxWidth('name')}">
+            Item Name {{form.getSortSymbol("name")}}
+        </a>
+        <a href="#" class="special_order_v_group" ng-click="form.specialSortBy('require')"
+           ng-style="{width: form.getMaxWidth('require')}"
+            style="text-align: center;"
+            >
+            Required/Ordered {{form.getSortSymbol("require")}}
+        </a>
+        <a href="#" class="special_order_po" ng-click="form.specialSortBy('po')"
+           ng-style="{width: form.getMaxWidth('po')}"jh
+           style="text-align: center;">
+            Purchase Order # {{form.getSortSymbol("po")}}
+        </a>
+        <a href="#" class=""
+           style="text-align: center; width: 300px" ng-click="form.specialSortBy('text')">
+            Notes {{form.getSortSymbol("text")}}
+        </a>
+        <a href="#" class=""
+           style="text-align: center; width: 4em" ng-click="form.specialSortBy('type')">
+            Type {{form.getSortSymbol("type")}}
+        </a>
+    </div>
+    <div ng-repeat="item in form.getSpecialOrders() track by $index" class="special_order_row">
+        <span ng-if="item.required && !item.ordered && item.po_number != null" class="special_order_warning" title="Special order is requried, but part has not been ordered.">
+            !
+        </span>
+        <span ng-if="item.required && !item.ordered && item.po_number == null" class="special_order_warning" title="Special order required, but no part number is given.">
+            !
+        </span>
+        <span ng-if="!item.required" class="special_order_warning" style="color:green" title="Special order not required.">
+            ✓
+        </span>
+        <span ng-if="item.required && item.ordered" class="special_order_warning" style="color:green" title="Part has been ordered.">
+            ✓
+        </span>
+        <span
+            class="special_order_title"
+            ng-class="{special_order_custom : item.is_custom}"
+            title="{{item.is_custom ? 'Custom Item' : ''}}"
+            ng-style="{width: form.getMaxWidth('name')}"
+            ng-if="!item.is_user_custom"
+            >{{item.name}}</span>
+        <input
+            type="text"
+            class="special_order_title"
+            ng-class="{special_order_custom : item.is_custom}"
+            ng-value="item.name"
+            ng-model="item.name"
+            ng-style="{width: form.getMaxWidth('name'), 'text-align': 'left'}"
+            ng-if="item.is_user_custom"
+            />
+        <span class="special_order_v_group" ng-style="{width: form.getMaxWidth('require')}">
+            <input
+                id="{{item.id}}_req"
+                type="checkbox"
+                ng-model="item.required"
+                ng-value="item.required"
+                class="special_order_cb"
+                ng-change="form.recalculateSpecialCount()"
+            />
+            <label for="{{item.id}}_req">Special Order Required</label>
+            <br ng-if="item.required" />
+            <input
+                type="checkbox"
+                id="{{item.id}}_ordered"
+                ng-model="item.ordered"
+                ng-value="item.ordered"
+                class="special_order_cb"
+                ng-if="item.required"
+                ng-change="form.recalculateSpecialCount()"
+            />
+            <label for="{{item.id}}_ordered" ng-if="item.required">Has Been Ordered</label>
+        </span>
+        <input type="text" ng-model="item.po_number" ng-value="item.po_number" class="special_order_po" placeholder="Purchase Order #"
+               ng-style="{width: form.getMaxWidth('po')}" ng-if="item.required"/>
+
+        <input type="text" value="(no part required)" disabled="disabled" class="special_order_po" ng-style="{width: form.getMaxWidth('po')}" ng-if="!item.required"/>
+        <textarea ng-value="item.notes" ng-model="item.notes" class="special_order_ta" placeholder="Notes"
+            ></textarea>
+        <span style="display:inline-block;vertical-align:middle;text-align:center" ng-if="item.is_user_custom && !item.is_form_custom" >
+            <span class="special_order_type" title="User Added Custom Item" style="color:#007000;">
+                UC
+            </span> <br />
+            <a href="#" ng-click="form.removeSpecialCustom(item)" style="color: red" title="Remove Custom Item">X</a>
+        </span>
+        <span ng-if="item.is_form_custom && !item.is_user_custom" class="special_order_type" title="Form Custom Item" style="color:#000070">
+            FC
+        </span>
+        <span ng-if="!item.is_form_custom && !item.is_user_custom" class="special_order_type" title="Form Item" style="color:black;">
+            FI
+        </span>
+    </div>
+    <div class="special_order_row" style="padding-left: 10px">
+        <a href="#" ng-click="form.addUserCustomSpecialOrderItem()">
+            <img src="/img/icon-add.svg" style="width:1.5em;height:1.5em; vertical-align:bottom" />
+        </a>
+        Add Custom Item
+    </div>
+</div>

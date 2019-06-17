@@ -1,0 +1,16 @@
+-content_for(:page_title) do
+  Outstanding Special Order Items
+
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Outstanding Special Order Items
+.row-fluid
+  .span12
+    = breadcrumbs(['Special Order Items'])
+.row-fluid.hidden-tablet.hidden-phone
+  .span12
+    %h4.title 
+      =@title
+    .squiggly-border
+    = smart_listing_render(:outstanding_items)

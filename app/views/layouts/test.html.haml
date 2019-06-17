@@ -1,0 +1,280 @@
+!!!
+%html{:lang => "en"}
+  %head
+    %title HEY
+    %meta{:charset => "utf-8"}/
+  %body#body-sample-pages
+    #sticky-footer-wrap
+      .navbar.navbar-inverse.navbar-static-top
+        .navbar-inner.black-gradient
+          .container-fluid
+            %a.btn.btn-navbar{"data-target" => ".nav-collapse", "data-toggle" => "collapse"}
+              %span.icon-bar
+              %span.icon-bar
+              %span.icon-bar
+            %a.brand{:href => "index.html"}
+              %span.rad Weaver
+              Barns
+            .nav-collapse.collapse
+              %p.navbar-text.pull-right
+                %a#user-popover.navbar-link.user-info{:href => "#"}
+                  %i.radmin-icon.radmin-user
+                  Jack Frost
+                %a.btn.btn-mini.btn-inverse.navbar-link.logout{:href => "login.html"}
+                  %i.radmin-icon.radmin-redo
+                  Logout
+              %ul.stats-sparkline.pull-left.hidden-phone.hidden-tablet
+                %li
+                  %span.line-sparkline Loading…
+                  %span.sparkline-text Traffic
+                %li
+                  %span.bar2-sparkline Loading…
+                  %span.sparkline-text Tickets
+                %li
+                  %span.discrete-sparkline Loading…
+                  %span.sparkline-text Sales
+                %li
+                  %span.bar1-sparkline Loading…
+                  %span.sparkline-text Revenue
+              %form.navbar-search.pull-right
+                %input.span2.search-query{:placeholder => "Search", :type => "text"}/
+      .row-fluid
+        .span12 &nbsp;
+      .row-fluid.hidden-phone.hidden-tablet
+        .span12.top-stats
+          %ul.top-nav-boxes
+            %li#hide-top-stats.top-stats-arrow{:title => "Hide Top Stats"}
+              %img{:alt => "Hide Top Stats", :src => "assets/radmin/images/chevron-left.png"}/
+            %li.first
+              %a{:href => "#"}
+                %i.radmin-bookmark
+                %span Favourites
+            %li
+              %a{:href => "#"}
+                %i.radmin-pencil
+                %span New Post
+            %li
+              .notifications-wrapper
+                .notifications
+                  %strong 3
+              %a{:href => "#"}
+                %i.radmin-comments-2
+                %span Comments
+            %li
+              %a{:href => "http://www.google.com/analytics/", :target => "_blank"}
+                %i.radmin-dashboard
+                %span Analytics
+            %li
+              %a{:href => "#"}
+                %i.radmin-stats-up
+                %span Reporting
+            %li
+              .notifications-wrapper
+                .notifications
+                  %strong 12
+              %a{:href => "#"}
+                %i.radmin-bell
+                %span Alerts
+            %li
+              %a{:href => "#"}
+                %i.radmin-cabinet
+                %span Sales History
+          .notifications-wrapper
+            #color-switcher.color-switcher{:style => "display:none"}
+              %small Choose style
+              %br/
+              %span.default.color-switcher-color
+              %span.pink.color-switcher-color
+              %span.green.color-switcher-color
+      .container-fluid.main-container
+        .row-fluid
+          .span12
+            .sidebar-nav
+              %ul.nav.nav-stacked.left-menu
+                %li#navigation-index
+                  %a{:href => "index.html"}
+                    %span.box
+                      %i.radmin-icon.radmin-home
+                    %span.hidden-tablet.hidden-phone Dashboard
+                %li#navigation-calendar
+                  %a{:href => "calendar.html"}
+                    %span.box
+                      %i.radmin-icon.radmin-calendar
+                    %span.hidden-tablet.hidden-phone Calendar
+                %li#navigation-graphs
+                  %a{:href => "graphs.html"}
+                    %span.box
+                      %i.radmin-icon.radmin-bars
+                    %span.hidden-tablet.hidden-phone Graphs &amp; Charts
+                %li#navigation-sample-pages.accordion
+                  %a.accordion-toggle{"data-parent" => "#navigation-sample-pages", "data-toggle" => "collapse", :href => "#collapse1"}
+                    %span.box
+                      %i.radmin-icon.radmin-file
+                    %span.hidden-tablet.hidden-phone Sample Pages
+                    %span.label.pull-right.hidden-tablet.hidden-phone 3
+                  #collapse1.accordion-body.collapse
+                    %ul.nav.nav-stacked.submenu
+                      %li
+                        %a{:href => "users.html"}
+                          %span.box
+                            %i.radmin-icon.radmin-user
+                          %span.hidden-tablet.hidden-phone Users
+                      %li
+                        %a{:href => "invoices.html"}
+                          %span.box
+                            %i.radmin-icon.radmin-clipboard-2
+                          %span.hidden-tablet.hidden-phone Invoices
+                      %li.submenu-last
+                        %a{:href => "reports.html"}
+                          %span.box
+                            %i.radmin-icon.radmin-attachment
+                          %span.hidden-tablet.hidden-phone Reports
+                %li#navigation-components.accordion
+                  %a.accordion-toggle{"data-parent" => "navigation-components", "data-toggle" => "collapse", :href => "#collapse2"}
+                    %span.box
+                      %i.radmin-icon.radmin-tree-view
+                    %span.hidden-tablet.hidden-phone Components
+                    %span.label.pull-right.hidden-tablet.hidden-phone 3
+                  #collapse2.accordion-body.collapse
+                    %ul.nav.nav-stacked.submenu
+                      %li
+                        %a{:href => "grid.html"}
+                          %span.box
+                            %i.radmin-icon.radmin-grid-view
+                          %span.hidden-tablet.hidden-phone Grid layout
+                      %li
+                        %a{:href => "icons.html"}
+                          %span.box
+                            %i.radmin-icon.radmin-picture
+                          %span.hidden-tablet.hidden-phone Radmin Icons
+                      %li.submenu-last
+                        %a{:href => "elements.html"}
+                          %span.box
+                            %i.radmin-icon.radmin-star
+                          %span.hidden-tablet.hidden-phone Misc. Elements
+            .container-fluid.content-wrapper
+              =yield
+      #sticky-footer-push
+    / Footer
+    %footer.black-gradient
+      %a.brand.pull-right{:href => "index.html"}
+        %span.rad Rad
+        min
+      .square-turtle.pull-left
+        %p
+          2012 &copy; All rights reserved -
+          %a{:href => "http://www.squareturtle.com.au", :target => "_blank"} square turtle studios
+    / Javascript
+    / Sparklines
+    %script{:src => "scripts/sparkline.js", :type => "text/javascript"}
+    :javascript
+      switcher_div = $('#color-switcher');
+      		switcher_control = $('#color-switcher-control');
+      		switcher_is_transitioning = false;
+      		
+      		switcher_div_style = {
+      			'width': switcher_control.children('a:first').width(),
+      			'z-index': 2,
+      			'top': '+=78px',
+      			'left': '-=5px'
+      		};
+      		
+      		switcher_control_style = {
+      			'z-index': 3,
+      			'position': 'relative'
+      		};
+      
+      		
+      		
+      		function get_flot_colors() {
+      		    if(radmin_current_theme === 'pink') {
+      		        return ['#E63E5D', '#97AF22', '#9D3844', '#533436', '#082D35'];
+      		    } else if(radmin_current_theme === 'green') {
+      		        return ['#42826C', '#FFC861', '#A5C77F', '#6d9f00', '#002F32'];
+      		    } else {
+      		        return ['#49AFCD', '#FF6347', '#38849A', '#BF4A35', '#999', '#555'];
+      		    }
+      		
+      		    return ['#49AFCD', '#FF6347', '#38849A', '#BF4A35', '#999', '#555'];
+      		}
+      		
+      		function get_sparkline_colors(){
+      			if(radmin_current_theme === 'pink') {
+      		        return ['#E63E5D', '#97AF22'];
+      		    } else if(radmin_current_theme === 'green') {
+      		        return ['#42826C', '#FFC861'];
+      		    } else {
+      		        return ['#49AFCD', '#FF6347'];
+      		    }
+      		
+      		    return ['#49AFCD', '#FF6347'];
+      		}
+           
+      	    var sparkline_colors = get_sparkline_colors();
+      	    
+          	/**
+      		 *  Jquery Load Event
+      		 *
+      		 */
+      		jQuery(function($){
+      			// format date inputs
+      			$( "a[rel=popover]" ).popover();
+      			
+       	        $('.bar1-sparkline').sparkline([12, 8, 10, 13, 15, -6, -8, 10, 18, 10, -8, -7 ], {type: 'bar', barColor: sparkline_colors[0], negBarColor: sparkline_colors[1], barWidth: '5', height: '20'} );
+      	       
+      	        $('.bar2-sparkline').sparkline([ [5,6],[7,9],[9,5],[6,2],[10,4],[6,7],[5,4],[6,7] ], {type: 'bar',stackedBarColor: sparkline_colors, barWidth: '5', height: '20'} );
+      	       
+      	        $('.discrete-sparkline').sparkline([ 12,11,13,14,13,12,11,12,13,14,15,16,15,14,13,14,15,16,17,18,17,16,17 ], {type: 'discrete', lineColor: sparkline_colors[0], height: '20'} );
+      	       
+      	        $('.line-sparkline').sparkline([ 12,11,13,14,13,12,11,12,13,14,15,16,15,14,13,12,11,12,13,14,15,16,17,18 ], {type: 'line', lineColor: sparkline_colors[0], fillColor: sparkline_colors[0], height: '20'} );
+      	        
+      	        $('#user-popover').popover();
+      	        
+      	        /**
+      	         * Sets active and expands menu items based on id of body tag of current page
+      	         * e.g. <body id="body-index-page"> will result in the menu item with the id="navigation-index-page" having the 
+      	         * class 'active' added, subsequently it will look for a child div with a class of collapse and add the class 'in' 
+      	         * and set the height to auto
+      	         */
+      	        var body_id = $('body').attr('id');
+      			if(body_id != null){
+      				var nav_element = $('#navigation-' + body_id.replace('body-',''));
+      	        	nav_element.addClass('active');
+      	        	if(nav_element.has('div.collapse')){
+      	        		var child_nav = nav_element.find('div.collapse');
+      	        		child_nav.addClass('in');
+      	        		child_nav.css('height: auto;');
+      	        		
+      	        	}
+      	        	
+      	        }
+      	        
+      	        //hide the top-stats when the arrow is clicked
+      	        var item = $('.top-stats');
+      	        var target = $('#hide-top-stats');
+      	        if(item.length > 0 && target.length > 0){
+         		        target.on('click', function() {
+      					item.css('position', 'relative');
+      					item.animate({
+      					    left: '-=1200',
+      		  		  	}, 1000, function() {
+      					    // Animation complete.
+      					    item.hide('slow');
+      					});
+      				});
+      			}
+      			
+      			//display the color-switcher and change theme (plus anything with comments of //used in theming logic )
+      			position_color_switcher(true);
+      			switcher_div.show();
+      			
+      			switcher_control.on('click', toggle_color_switcher);
+      			
+      			$(window).resize(function() {
+      				switcher_div.hide();
+      			});
+      			
+      			$('.color-switcher-color').bind('click', set_theme_url);
+      			
+      			
+      		});

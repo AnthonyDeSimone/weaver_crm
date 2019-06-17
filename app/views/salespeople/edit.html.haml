@@ -1,0 +1,27 @@
+-content_for(:page_title) do
+  Edit User
+  
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Edit User
+      %br/
+      %p.hidden-phone
+
+.row-fluid
+  .span12
+.row-fluid
+  .span12
+    %h4.title Edit User
+    .squiggly-border
+    = simple_form_for @user do |f|
+      = f.input :name
+      = f.input :rep_name
+      = f.input :account_type, collection: @user.account_types
+      = f.association :sales_team, label: 'Primary Sales Team'
+      = f.association :sales_teams, label: 'Additional Sales Teams'
+      = f.input :email
+      - if(@user.sales_team.nil? ||  @user.sales_team.name == 'Internal')
+        = f.input :can_approve_orders
+        = f.input :can_download_production_copy
+      = f.submit 'Update User', :class => 'btn btn-info'

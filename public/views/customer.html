@@ -1,0 +1,252 @@
+<div class="extra">
+    <h2>Customer Information</h2>
+
+    <div ng-show="form.customerSaveErr && form.customer.name == ''" style="color:tomato">
+        Please either enter a name for a new customer, or select a customer that is already in the database.
+    </div>
+    <h3>Basic Information</h3>
+    <label for="customerSelect" class="setWidth">
+        Customer:
+    </label>
+    <select id="customerSelect" ng-model="form.customer.id"></select>
+    <br/>
+    <label for="customerName" class="setWidth">
+        Display Name (*):
+    </label>
+    <input type="text" name="customerName" id="customerName" ng-model="form.customer.name" type="text"
+           placeholder="Name" disabled="disabled"/>
+    <br/>
+    <label for="customerName" class="setWidth">
+        First Name:
+    </label>
+    <input type="text" name="customerName" id="customerName" ng-model="form.customer.first_name" ng-change="form.customer.name = form.getDisplayName()" type="text"
+           placeholder="Name"/>
+    <br/>
+    <label for="customerName" class="setWidth">
+        Last Name (*):
+    </label>
+    <input type="text" name="customerLastName" id="customerLastName" ng-model="form.customer.last_name" type="text"  ng-change="form.customer.name = form.getDisplayName()"
+           placeholder="Name"/>
+    <br/>
+    <label for="customerStatus" class="setWidth">
+        Status:
+    </label>
+    <select name="customerStatus" id="customerStatus" ng-model="form.customer.status" ng-value="form.customer.status">
+        <option value="0">Zero</option>
+        <option value="1" selected="selected">One</option>
+        <option value="2">Two</option>
+    </select>
+    <br/>
+    <label for="primaryPhone" class="setWidth">
+        Primary Phone:
+    </label>
+    <input type="text" name="primaryPhone" id="primaryPhone" ng-model="form.customer.primary_phone" type="text"
+           placeholder="Primary Phone"/>
+
+    <br/>
+    <label for="secondaryPhone" class="setWidth">
+        Secondary Phone:
+    </label>
+    <input type="text" name="secondaryPhone" id="secondaryPhone" ng-model="form.customer.secondary_phone" type="text"
+           placeholder="Seconday Phone"/>
+
+    <br/>
+    <label for="email" class="setWidth">
+        Email:
+    </label>
+    <input type="text" name="email" id="email" ng-model="form.customer.email" type="text" placeholder="Email"/>
+
+    <br/>
+    <label for="secondary_email" class="setWidth">
+        Secondary Email:
+    </label>
+    <input type="text" name="secondary_email" id="secondary_email" ng-model="form.customer.secondary_email" type="text" placeholder="(Optional) Secondary Email"/>
+
+    <br/>
+
+    <h3>Billing Address</h3>
+    <label for="address" class="setWidth">
+        Address:
+    </label>
+    <input type="text" name="address" id="address" ng-model="form.customer.address" type="text" placeholder="Address"/>
+
+    <br/>
+    <label for="city" class="setWidth">
+        City:
+    </label>
+    <input type="text" name="city" id="city" ng-model="form.customer.city" type="text" placeholder="City"/>
+
+    <br/>
+    <label for="state" class="setWidth">
+        State:
+    </label>
+    <select name="state" id="state" ng-model="form.customer.state" type="text"></select>
+
+    <br/>
+    <label for="zip" class="setWidth">
+        Zip:
+    </label>
+    <input type="text" name="zip" id="zip" ng-model="form.customer.zip" type="text" placeholder="Zip Code"/>
+
+    <br/>
+    <label for="county" class="setWidth">
+        County:
+    </label>
+    <input type="text" name="county" id="county" ng-model="form.customer.county" type="text" placeholder="County"/>
+
+    <br/>
+
+    <h3>Shipping Address</h3>
+
+    <div class="checkbox-option">
+		<span class="setWidth" style="position:relative; top:0px">
+			Shipping Address:
+		</span>
+        <input id="shippingcb" name="shipping" ng-value="form.customer.shipping_same"
+               ng-model="form.customer.shipping_same" type="checkbox"/>
+        <label for="shippingcb" style="position:relative;top:2px;"><i
+                style="margin-left: 20px;position:relative;top:-2px;">(Use Billing Address)</i></label>
+    </div>
+    <span ng-show="!form.customer.shipping_same">
+        <label for="s_address" class="setWidth">
+            Address:
+        </label>
+        <input type="text" name="s_address" id="s_address" ng-model="form.customer.shipping.address" type="text"
+               placeholder="Address"/>
+
+        <br/>
+        <label for="s_city" class="setWidth">
+            City:
+        </label>
+        <input type="text" name="s_city" id="s_city" ng-model="form.customer.shipping.city" type="text"
+               placeholder="City"/>
+
+        <br/>
+        <label for="s_state" class="setWidth">
+            State:
+        </label>
+        <select name="s_state" id="s_state" ng-model="form.customer.shipping.state" type="text"></select>
+
+        <br/>
+        <label for="s_zip" class="setWidth">
+            Zip:
+        </label>
+        <input type="text" name="s_zip" id="s_zip" ng-model="form.customer.shipping.zip" type="text"
+               placeholder="Zip Code"/>
+
+        <br/>
+        <label for="s_county" class="setWidth">
+            County:
+        </label>
+        <input type="text" name="s_county" id="s_county" ng-model="form.customer.shipping.county" type="text"
+               placeholder="County"/>
+    </span>
+
+    <h3>Other Information</h3>
+    <label for="sales_method" class="setWidth">
+        Sales Method:
+    </label>
+    <input type="text" name="sales_method" id="sales_method" ng-model="form.customer.sales_method" type="text"
+           placeholder="Sales Method"/>
+    <br/>
+    <label for="advertisement" class="setWidth">
+        Advertisement:
+    </label>
+    <input type="text" name="advertisement" id="advertisement" ng-model="form.customer.advertisement" type="text"
+           placeholder="Advertisement"/>
+
+
+</div>
+
+<br/>
+
+<button ng-click="form.nextSection()" class="next">Next Section</button>
+
+<script>
+
+    function getBaseURL() {
+        if (form && form.BASE_URL) return form.BASE_URL;
+        return "/";
+    }
+
+    $(document).ready(function () {
+
+        var w = ($("#county").width() + 15) + "px";
+
+        $("#state, #s_state").select2({data: states, width: w});
+        $("#state, #s_state").on("select2:select", function (e) {
+            var scope = angular.element($("#main")).scope();
+            if ($(this).attr("id") == "state") {
+                $("#select2-state-container").text(e.params.data.text);
+                scope.form.customer.state = e.params.data.id;
+            } else {
+                $("#select2-s_state-container").text(e.params.data.text);
+                scope.form.customer.shipping.state = e.params.data.id;
+            }
+        });
+
+        $("#state, #s_state").val("OH").trigger("change");
+
+        $("#customerSelect").select2({
+            ajax: {
+                url: getBaseURL() + "customers/search",
+                dataType: 'jsonp',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page
+                    };
+                },
+                width: w,
+                processResults: function (data, page) {
+                    // parse the results into the format expected by Select2.
+                    // since we are using custom formatting functions we do not need to
+                    // alter the remote JSON data
+                    if (!data) data = {};
+                    if (!data.items || !data.items.length) data.items = [];
+                    data.items.push({id: 0, text: "+Add New Customer"});
+                    return {
+                        results: data.items
+                    };
+                },
+                cache: true
+            },
+            minimumInputLength: 0
+        });
+
+        $("#select2-customerSelect-container").text("(New Customer)");
+
+        $("#customerSelect").on("select2:select", function (e) {
+            var data = e.params.data;
+            var scope = angular.element($("#contentWrap")).scope();
+            if (scope && scope.form) {
+                var cus = scope.form.customer;
+                if (data.id == 0) {
+                    scope.form.customer = scope.form.newCustomer();
+                    $("#select2-customerSelect-container").text("(New Customer)");
+                } else {
+                    scope.form.customer = scope.form.newCustomer(data);
+                    if (!scope.form.customer.name) {
+                        scope.form.customer.name = scope.form.getDisplayName();
+                    } else if (!scope.form.customer.first_name) {
+                        var p = scope.form.customer.name.lastIndexOf(" ");
+                        if (p == -1) {
+                            scope.form.customer.first_name = scope.form.customer.name;
+                            scope.form.customer.last_name = '';
+                        } else {
+                            scope.form.customer.first_name = scope.form.customer.name.substring(0, p);
+                            scope.form.customer.last_name = scope.form.customer.name.substring(p + 1);
+                        }
+                    }
+                    $("#select2-state-container").text(getStateById(data.state));
+                    scope.form.customer.name = scope.form.getDisplayName();
+                    $("#select2-customerSelect-container").text(scope.form.customer.name);
+                }
+            }
+            if (!scope.$$phase) scope.$apply();
+        });
+
+
+    });
+</script>

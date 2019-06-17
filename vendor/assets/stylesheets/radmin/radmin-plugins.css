@@ -1,0 +1,198 @@
+/*
+ * Radmin Plugin's Stylesheet
+ */
+
+
+
+/* FullCalendar
+------------------------------------------------------------------------*/
+
+.fc-event-skin {
+	background:  rgb(73,175,205); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(73,175,205,1) 0%, rgba(56,132,154,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(73,175,205,1)), color-stop(100%,rgba(56,132,154,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(73,175,205,1) 0%,rgba(56,132,154,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(73,175,205,1) 0%,rgba(56,132,154,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(73,175,205,1) 0%,rgba(56,132,154,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(73,175,205,1) 0%,rgba(56,132,154,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#49afcd', endColorstr='#38849a',GradientType=0 ); /* IE6-9 */
+	border-color: #2E6C7E;
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+	color: #fff;            /* default TEXT color */
+}
+	
+.fc-event-time, .fc-event-title {
+    padding: 0 3px;
+}
+
+.fc-header {
+	background: rgb(79,79,79); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(79,79,79,1) 0%, rgba(68,68,68,1) 50%, rgba(43,43,43,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(79,79,79,1)), color-stop(50%,rgba(68,68,68,1)), color-stop(100%,rgba(43,43,43,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(79,79,79,1) 0%,rgba(68,68,68,1) 50%,rgba(43,43,43,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(79,79,79,1) 0%,rgba(68,68,68,1) 50%,rgba(43,43,43,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(79,79,79,1) 0%,rgba(68,68,68,1) 50%,rgba(43,43,43,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(79,79,79,1) 0%,rgba(68,68,68,1) 50%,rgba(43,43,43,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4f4f4f', endColorstr='#2b2b2b',GradientType=0 ); /* IE6-9 */	
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+    border-top: 1px solid #000;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15) inset;
+}
+
+.fc-header-space {
+    display: none;
+}
+	
+.fc-button-inner, .fc-state-default .fc-button-inner, .fc-state-hover .fc-button-inner, .fc-state-down .fc-button-inner, .fc-state-active .fc-button-inner, .fc-state-disabled .fc-button-inner {
+    background: none repeat scroll 0 center transparent;
+    border-bottom: 0 none #666;
+    border-color: #666;
+    border-top: 0 none #666;
+    color: #FEFEFE;
+    text-transform: capitalize;
+}
+
+.fc-button-inner {
+	font-size: 12px;
+}
+
+.fc-header-left .fc-button-inner {
+    border-left: 0 none;
+    border-right: 1px solid #666 !important;
+}
+
+.fc-state-default .fc-button-effect {
+    display: none;
+}
+
+.fc-header-space {
+    display: none;
+}
+
+.fc-header .fc-button {
+    background: none repeat scroll 0 center transparent;
+    border: 0 none;
+    margin-bottom: 0;
+}
+
+.fc-state-disabled .fc-button-inner {
+    color: #BBBBBB;
+}
+
+.fc-header .fc-button .fc-button-content {
+    display: block;
+    height: auto;
+    line-height: 40px;
+    overflow: hidden;
+    padding: 0 10px;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.fc-button.fc-state-active {
+background: rgb(43,43,43); /* Old browsers */
+background: -moz-linear-gradient(top,  rgba(43,43,43,1) 0%, rgba(68,68,68,1) 18%, rgba(79,79,79,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(43,43,43,1)), color-stop(18%,rgba(68,68,68,1)), color-stop(100%,rgba(79,79,79,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  rgba(43,43,43,1) 0%,rgba(68,68,68,1) 18%,rgba(79,79,79,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  rgba(43,43,43,1) 0%,rgba(68,68,68,1) 18%,rgba(79,79,79,1) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  rgba(43,43,43,1) 0%,rgba(68,68,68,1) 18%,rgba(79,79,79,1) 100%); /* IE10+ */
+background: linear-gradient(to bottom,  rgba(43,43,43,1) 0%,rgba(68,68,68,1) 18%,rgba(79,79,79,1) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2b2b2b', endColorstr='#4f4f4f',GradientType=0 ); /* IE6-9 */
+
+}
+
+.fc-header-title h2 {
+    font-size: 18px;
+    margin: 0;
+    color: #FFF;
+}
+
+span.fc-corner-left.fc-button-next, span.fc-corner-left.fc-button-month, span.fc-corner-left.fc-button-agendaDay, span.fc-corner-left.fc-button-agendaWeek {
+	margin-right: 0;
+} 
+
+.fc-state-highlight {
+	background: none repeat scroll 0 0 #D7E6E8;
+}
+
+i.radmin-calendar-left {
+	background-image: url('../img/arrow-left-white.png');
+	background-repeat: no-repeat;
+	height: 10px;
+	width: 10px;
+	vertical-align: text-top;
+	line-height: 10px;
+	display: inline-block;
+	margin-top: 3px;
+}
+
+i.radmin-calendar-left.first {
+	margin-right: -3px;
+}
+
+i.radmin-calendar-right {
+	background-image: url('../img/arrow-right-white.png');
+	background-repeat: no-repeat;
+	height: 10px;
+	width: 10px;
+	vertical-align: text-top;
+	line-height: 10px;
+	display: inline-block;
+	margin-top: 3px;
+}
+
+i.radmin-calendar-right.first {
+	margin-right: -3px;
+}
+
+/* Sparklines 
+------------------------------------------------------------------------*/
+
+ul.stats-sparkline {
+	list-style: none;
+	text-align: center;
+	margin-top: 5px;
+}
+
+ul.stats-sparkline li {
+	display: inline-block;
+	background: none repeat scroll 0 0 #515151;
+	border: 1px solid #111;
+	padding: 5px;
+	margin: 0 10px;
+	min-width: 100px;
+	color: #CCC;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset, 0 1px 0 rgba(255, 255, 255, 0.15);
+	text-transform: uppercase;
+	font-size: 10px;
+}
+
+ul.stats-sparkline li span.sparkline-text {
+	display: inline-block;
+	padding-left: 3px;
+}
+
+/* FlotCharts 
+------------------------------------------------------------------------*/
+
+.graph, .pie, .chart {
+	height: 300px;
+	max-width: 100%;
+}
+
+/* DatePicker & ColorPicker 
+------------------------------------------------------------------------*/
+
+	/* IE 8 Specific Hackery */
+
+div.input-append.date input, div.input-append.color input {
+	min-height: 20px\9;
+}
+
+div.input-append span.add-on {
+	border-radius: 0 4px 4px 0\9;
+}
+	
+	

@@ -1,0 +1,93 @@
+-content_for(:page_title) do
+  Fishbowl Order Status
+
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Fishbowl Order Status
+      %br/
+      %p.hidden-phone
+        %a.btn.btn-info.btn-large.pull-right{:href => '/sales_orders/new'} Add new order &raquo; 
+.row-fluid
+  .span12
+    = breadcrumbs(['Sales Orders'])
+.row-fluid.hidden-tablet.hidden-phone
+  .span12
+    %h4.title 
+      =@title
+    .squiggly-border
+    = smart_listing_render(:sales_orders)
+          
+:javascript
+  $(document).ready(function() {  
+     $('.confirm').change(function(){
+      $(this).closest('form').submit()
+    })     
+  })
+
+:javascript
+  $(document).ready(function(){
+    
+    $("#sales_order_search").select2({
+      ajax: {
+        url: "/sales_orders/search",
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+          return {
+            q: params.term, // search term
+            page: params.page
+          };
+        },
+        processResults: function (data, page) {
+          // parse the results into the format expected by Select2.
+          // since we are using custom formatting functions we do not need to
+          // alter the remote JSON data
+          return {
+            results: data.items
+          };
+        },
+        cache: true
+      },
+      minimumInputLength: 1
+    }); 
+
+    $('.add-fishbowl').click(function() {        
+      confirmation = confirm("Are you sure you want to add this order to Fishbowl?")  
+     
+      if(confirmation)
+      {
+        $.ajax({url: this.href, type: 'POST'});
+          
+        alert('Order was queued for adding to Fishbowl.');
+      }
+        
+        return false;
+    })   
+
+    $('.sales_order_finalize').click(function() {        
+      confirmation = confirm("Are you sure you want to finalize this order?")
+      
+      if(confirmation)
+      {
+        $(this).closest('tr').remove()
+        $.ajax({url: '/sales_orders/'+ $(this).attr("sales_order_id") +'/fishbowl_finalize', type: 'POST'})
+      }
+
+    })   
+    
+    $('a.sales_order_delete').click(function() {  
+      confirmation = confirm("Are you sure you want to delete this order?")
+      
+      if(confirmation)
+      {
+        $(this).closest('tr').remove()
+        $.ajax({url: this.href, type: 'DELETE'})
+      }
+      return false
+    })   
+        
+    $('#sales_order_search').change(function() { 
+      window.location.replace("/sales_orders/" + $(sales_order_search).val())
+    });        
+  })

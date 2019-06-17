@@ -1,0 +1,24 @@
+-content_for(:page_title) do
+  Customers
+  
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Customers
+      %br/
+      %p.hidden-phone
+        %a.btn.btn-info.btn-large.pull-right{:href => '/customers/new'} Add new customer &raquo; 
+.row-fluid
+  .span12
+    %ul.breadcrumb
+      = breadcrumbs(['Customers', 'Leads'])
+
+.row-fluid.hidden-tablet.hidden-phone
+  .span12
+    %h4.title 
+      Customers
+    = smart_listing_controls_for(:customers) do
+      - if(@show_all_teams)
+        = select_tag :sales_team, options_for_select(SalesTeam.all.map {|t| [t.name, t.id]}.unshift(['All Sales Teams', nil]))
+      = text_field_tag 'customer_name', nil, placeholder: 'Customer Name'
+    = smart_listing_render(:customers)

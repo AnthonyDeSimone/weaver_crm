@@ -1,0 +1,21 @@
+<div class="warnings" ng-if="form.warnings != null">
+
+    <h2>Warning</h2>
+    <p>Before submitting this form, please review the following warnings:</p>
+
+    <h3 ng-repeat-start="(warning, arr) in form.warnings">{{warning}}</h3>
+    <ul ng-repeat-end>
+        <li ng-repeat="msg in arr">{{msg}}</li>
+    </ul>
+
+    <button ng-click="form.convertToSalesOrder(true)" class="next convert" ng-show="!form.extra.confirmed">Ignore Warnings, Convert To Sales Order</button><br />
+    <button ng-click="form.submitForm(true)" class="next">Ignore Warnings, Submit {{form.extra.confirmed ? "Sales Order" : "Quote"}}</button>
+
+</div>
+<div class="warnings" ng-if="form.warnings == null">
+    <h3>No Warnings</h3>
+    All of the necessary information appears to be present.
+    <br />
+    <button ng-click="form.convertToSalesOrder(true)" class="next convert" ng-show="!form.extra.confirmed">Convert To Sales Order</button><br />
+    <button ng-click="form.submitForm(true)" class="next convert">Submit {{form.extra.confirmed ? "Sales Order" : "Quote"}}</button>
+</div>

@@ -1,0 +1,11 @@
+@font-face {
+    font-family: 'Molle';
+    src: url('font/molle-regular-webfont.eot');
+    src: url('font/molle-regular-webfont-.eot#iefix') format('embedded-opentype'),
+         url('font/molle-regular-webfont.woff') format('woff'),
+         url('font/molle-regular-webfont.ttf') format('truetype'),
+         url('font/molle-regular-webfont.svg#molleregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}

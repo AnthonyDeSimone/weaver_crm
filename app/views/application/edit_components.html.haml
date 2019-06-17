@@ -1,0 +1,100 @@
+=javascript_include_tag "http://malsup.github.com/jquery.form.js"
+- content_for(:page_title) do
+  Components
+:css
+  input.price{
+    width: 75px;
+  }
+
+  .input-group-addon{display: none !important;}
+
+  .custom-file-input::-webkit-file-upload-button {
+    visibility: hidden;
+  }
+  .custom-file-input::before {
+    content: 'Select file';
+    display: inline-block;
+    background: -webkit-linear-gradient(top, #f9f9f9, #e3e3e3);
+    border: 1px solid #999;
+    border-radius: 3px;
+    padding: 5px 8px;
+    outline: none;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    cursor: pointer;
+    text-shadow: 1px 1px #fff;
+    font-weight: 700;
+    font-size: 10pt;
+  }
+  .custom-file-input:hover::before {
+    border-color: black;
+  }
+  .custom-file-input:active::before {
+    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+  }  
+  
+:javascript
+  $(document).ready(function() {
+    $('.uploadForm input').change(function(){
+      image = $(this).siblings('img').eq(0)
+      image.attr('src', "/img/spinner.gif");
+      
+     $(this).parent().ajaxSubmit({
+      beforeSubmit: function(a,f,o) {
+       o.dataType = 'json';
+      },
+      complete: function(XMLHttpRequest, textStatus) {
+        image.attr('src', XMLHttpRequest.responseText);
+       // XMLHttpRequest.responseText will contain the URL of the uploaded image.
+       // Put it in an image element you create, or do with it what you will.
+       // For example, if you have an image elemtn with id "my_image", then
+       //  $('#my_image').attr('src', XMLHttpRequest.responseText);
+       // Will set that image tag to display the uploaded image.
+      },
+     });
+    });
+  });
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Components
+      %br/
+      %p.hidden-phone
+
+.row-fluid
+  .span12
+    %ul.breadcrumb
+      = breadcrumbs(['Form Components'])
+.row-fluid
+  .span12
+    %h1.title Component Pricing
+    .squiggly-border
+    = form_tag(nil) do
+      - @categories.each do |category|
+        %h2=category.name
+        - category.component_subcategories.each do |subcategory|
+          - next if subcategory.name == "Custom"
+    
+          %div{style: 'border: 1px solid gray; width: 60% !important;'}
+            %h3=subcategory.name
+            - subcategory.components.each do |component|
+              - next if component.name =~ /Custom/
+              %div{style: 'border: 1px solid gray; width: 90% !important;'}
+                %p
+                  %h4 #{component.name} (#{component.pricing_type})
+                  = label_tag "component_price[#{component.id}][small]", 'Small Price'
+                  = text_field_tag "component_price[#{component.id}][large]", ("%.2f" % component.small_price rescue 0), class: 'price'
+                            
+                  = label_tag "component_price[#{component.id}][large]", 'Large Price'
+                  = text_field_tag "component_price[#{component.id}][large]", ("%.2f" % component.large_price rescue 0), class: 'price'
+                  - component.component_options.each do |option|
+                    %p{style:'margin-left: 20px;'}
+                      %h5=option.name
+                      = label_tag "option_price[#{option.id}][small]", 'Small Price'
+                      = text_field_tag "option_price[#{option.id}][large]", ("%.2f" % option.small_price rescue 0), class: 'price'  
+                                
+                      = label_tag "option_price[#{option.id}][large]", 'Large Price'
+                      = text_field_tag "option_price[#{option.id}][large]", ("%.2f" % option.large_price rescue 0), class: 'price'
+              %br/
+      %br/
+      = submit_tag "Update Prices", class: 'btn btn-info'

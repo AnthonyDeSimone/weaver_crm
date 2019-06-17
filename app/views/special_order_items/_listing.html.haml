@@ -1,0 +1,32 @@
+- unless smart_listing.empty?
+  %table.table.table-striped.table-bordered.table-radmin
+    %thead
+      %tr
+        %th 
+          = smart_listing.sortable "Order #", :order_id 
+        %th
+          = smart_listing.sortable "Delivery Date", :order_delivery_date         
+        %th         
+          = smart_listing.sortable "Item Name", :name     
+        %th
+          = smart_listing.sortable "PO #", :po_number          
+        %th Notes
+        %th
+    %tbody
+      - smart_listing.collection.each do |item|
+        %tr
+          %td
+            = item.sales_order_id
+          %td
+            = item.sales_order.delivery_date.andand.strftime("%m/%d/%Y")
+          %td
+            = item.name
+          %td
+            = item.po_number
+          %td
+            = item.notes
+          %td
+            %a.btn.btn-info.btn-large{:href => "/sales_orders/#{item.sales_order.id}/edit"}
+              %i.radmin-pencil
+              Edit                      
+  = smart_listing.paginate 

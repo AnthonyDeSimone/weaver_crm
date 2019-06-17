@@ -1,0 +1,21 @@
+
+<header>
+    <h1>{{ticket_controller.is_new_ticket ? 'New' : '#' + (ticket_controller.ticket.id) + ' - Edit' }} Service Ticket</h1>
+
+    <div class="actions">
+        <a class="button" href="/service_tickets/{{ticket_controller.ticket.id}}.pdf">PDF</a>
+        <a class="button" href="#" ng-click="ticket_controller.save()">
+            <span ng-show="!ticket_controller.is_saving">{{ticket_controller.is_new_ticket ? 'Save' : 'Update' }}</span>
+            <span ng-show="ticket_controller.is_saving">Saving... <img src="/img/saving.gif" /></span>
+        </a>
+        <a class="button" href="#" ng-click="ticket_controller.expand()">{{ticket_controller.is_expanded ? "Shrink" : "Expand"}}</a>
+    </div>
+
+    <!-- The empty nav bar is just so the dark green line shows up... Nothing is needed in it. -->
+    <nav><ul><li></li></ul></nav>
+</header>
+
+<span id="serviceWrap">
+    <section ng-include="'/views/service_ticket.html'"></section>
+</span>
+

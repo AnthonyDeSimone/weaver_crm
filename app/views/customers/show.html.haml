@@ -1,0 +1,132 @@
+- content_for(:page_title) do
+  Customer Notes
+-content_for(:meta_info) do  
+  = javascript_include_tag 'moment.min.js'   
+  = javascript_include_tag 'pikaday.js'    
+  = stylesheet_link_tag    'pikaday.css' 
+  
+:css
+  li{vertical-align:top;}
+  
+- content_for(:page_title) do
+  Customer Comments
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Customer Comments
+      %br/
+.row-fluid
+  .span12
+    %ul.breadcrumb
+      %li
+        %a{:href => "index"}
+          %i.radmin-icon.radmin-home
+          Dashboard
+        %span.divider /
+      %li
+        %a{:href => "/customers"}
+          %i.radmin-icon.radmin-user-2
+          Customers
+        %span.divider /
+      %li.active
+        %i.radmin-icon.radmin-comments
+        Comments
+.row-fluid
+  .span12
+    - if @customer.lead_status
+      %img{src: "/#{@customer.lead_status}_status.png"} 
+    %h4.title{style:'display:inline-block;'} Customer #{@customer.id} - #{@customer.name} 
+    = link_to edit_customer_path(@customer) do
+      %button.btn.btn-info.btn-xs
+        %i.radmin-pencil
+        Edit 
+    .squiggly-border
+    %table.table.table-striped.table-bordered.table-radmin{style: 'width:25%;'}
+      %tbody
+        %tr
+          %td Name
+          %td #{@customer.name}
+        %tr
+          %td Primary Phone
+          %td #{@customer.primary_phone}
+        %tr
+          %td Secondary Phone
+          %td #{@customer.secondary_phone}      
+        %tr
+          %td Email
+          %td #{@customer.email}
+        %tr
+          %td Address
+          %td #{@customer.address}
+        %tr
+          %td City
+          %td #{@customer.city}
+        %tr
+          %td State
+          %td #{@customer.state}
+        %tr
+          %td Zip
+          %td #{@customer.zip}   
+        %tr
+          %td County
+          %td #{@customer.county} 
+    = simple_form_for @customer do |f|
+      = f.input :callback_date, as: :string, :input_html => { :value => (f.object.callback_date.strftime("%m/%d/%Y") rescue nil), autocomplete: :off}     
+      = f.hidden_field :referer, value: 'notes'
+      = f.submit 'Update', class: 'btn btn-info'     
+                                                           
+.row
+  .col-sm-5
+    .widget-box.transparent
+      .widget-header.widget-header-flat
+        %h4.lighter
+          Notes
+        .widget-toolbar
+      .widget-body
+        .widget-main.padding-4
+          .tab-content.padding-8.overflow-visible
+            %ul#notes.item-list
+              - @customer.customer_comments.andand.each do |note|
+                %li.item-default{style: 'vertical-align:text-bottom;'}
+                  %div{style: 'display: inline-block; width: 20%;'}    
+                    %label.inline
+                      %input{:type => 'hidden', :value => note.id}
+                      &nbsp;
+                      #{note.created_at.strftime("%m/%d/%Y")}:
+                  %div{style: 'display: inline-block; width: 70%;'}    
+                    #{note.comment}               
+                  %div.pull-right
+                    = link_to('<button class="button btn btn-xs btn-danger">Delete <i class="radmin-trash"></i></button>'.html_safe, 
+                                      "/customer_comment/#{note.id}/destroy", :class => 'note-delete')                                            
+            %br            
+            = form_tag({:controller => :customer_comment, :action => :create}, {:remote => true, :id => 'new-note-form', :'data-type' => 'html'}) do
+              = hidden_field_tag :customer_id, @customer.id   
+              %span
+                = label :text, 'Note', :for => 'note_text'
+                %br
+                = text_area_tag :text, nil, :id => 'note_text', :cols => 55, :rows => 2 
+              %br
+              %br
+              = submit_tag 'Add', :class => 'button btn btn-xs btn-info'   
+      
+:javascript
+  $(document).ready(function() {
+    var picker = new Pikaday({ field: $('#customer_callback_date')[0], format: 'MM/DD/YYYY', firstDay: 0})
+  
+    $('#new-note-form').on("ajax:success", function(e, data, status, xhr) { 
+      $('#note_text').val('');
+      $('#notes').append(xhr.responseText)    
+      
+      $('a.note-delete').click(function() {    
+        $(this).closest('li').remove()
+        $.ajax({url: this.href, type: 'POST'})
+        return false      
+      })      
+    })
+  
+      $('a.note-delete').click(function() {    
+        $(this).closest('li').remove()
+        $.ajax({url: this.href, type: 'POST'})
+        return false      
+      })          
+  })

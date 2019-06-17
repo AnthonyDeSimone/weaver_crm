@@ -1,0 +1,17 @@
+- content_for(:page_title) do
+  New Sales Team 
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 New Sales Team
+.row-fluid
+  .span12
+    = breadcrumbs(['Sales Teams', 'New Sales Team'])
+.row-fluid
+  .span12
+    %h4.title New Sales team
+    .squiggly-border
+    = simple_form_for @sales_team do |f|
+      = f.input :name
+      = f.submit
+      

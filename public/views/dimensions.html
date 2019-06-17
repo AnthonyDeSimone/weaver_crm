@@ -1,0 +1,128 @@
+<h2>Dimensions &amp; Layout</h2>
+
+<div class="options">
+
+	<h3>Choose a style</h3>
+
+	<div class="barn-styles form-element">
+		<div ng-repeat="style in form.styles" class="radio-option">
+			<input ng-model="form.options.style"
+				   type="radio"
+				   name="barn_styles"
+				   id="{{style.name}}"
+				   value="{{style.name}}"
+           ng-style="style.name == 'Garage' ? {'display':'none'} : { 'display': 'inherit' }"/>
+			<label for="{{style.name}}">
+				<img ng-src="{{style.url}}"/>
+			</label>
+		</div>
+	</div>
+
+	<select name="size" ng-model="form.options.size" ng-options="form.displaySize(size) for size in form.getSizes() track by form.displaySize(size)">
+	    <option disabled value="">-- choose dimensions --</option>
+	</select>
+
+	<select name="feature" ng-model="form.options.feature" ng-options="value as feature for (value, feature) in form.features">
+	    <option disabled value="">-- choose a feature --</option>
+        <option value="custom" ng-if="form.show_custom">(Custom Feature)</option>
+	</select>
+
+	<select name="zone" ng-model="form.options.zone" ng-options="'Zone '+zone for zone in [1,2,3,4,5,6,7]">
+	    <option disabled value="">-- choose a zone --</option>
+	</select>
+
+    <span class="dimension_group" ng-if="form.hasOptions('structure')">
+
+        <h2>Structure Options</h2>
+
+        <div ng-show="form.prebuilt_available" class="horizontal-group form-element">
+            <div class="radio-option">
+                <input ng-model="form.options.build_type" type="radio" name="build_type" value="AOS" id="buildtype_aos">
+                <label for="buildtype_aos">Assemble on site</label>
+            </div>
+            <div class="radio-option">
+                <input ng-model="form.options.build_type" type="radio" name="build_type" value="prebuilt" id="buildtype_prebuilt">
+                <label for="buildtype_prebuilt">Prebuilt</label>
+            </div>
+        </div>
+
+        <br ng-if="form.options.style == 'Custom' " />
+        <label for="custom_base" ng-show="form.options.style == 'Custom'">Custom Structure Name: </label>
+        <input type="text"
+               id="custom_struct"
+               ng-show="form.options.style == 'Custom'"
+               ng-model="form.custom.structure_name"
+               ng-value="form.custom.structure_name" />
+        <br />
+
+    </span>
+
+
+    <span class="dimension_group" ng-if="form.hasOptions('feature')">
+
+        <h2>Feature Options</h2>
+
+        <label for="custom_feature" ng-show="form.options.feature == 'Custom'">Custom Feature Name: </label>
+        <input type="text"
+               id="custom_feature"
+               ng-show="form.options.feature == 'Custom'"
+               ng-model="form.custom.feature"
+               ng-value="form.custom.feature" />
+        <br />
+
+        <select name="orientation" ng-model="form.options.orientation" ng-options="o for o in ['horizontal', 'vertical']" ng-if="form.options.feature == 'Premier'">
+            <option disabled value="">-- choose orientation --</option>
+        </select>
+
+        <!-- <select name="side_out" ng-model="form.options.side_out" ng-options="o for o in ['wide', 'narrow']" ng-if="form.options.feature == 'Premier'">
+            <option disabled value="">-- choose side out --</option>
+        </select> -->
+
+    </span>
+
+
+    <span class="form-element dimensions dimension_group" ng-if="form.hasOptions('custom_size')">
+
+        <h2>Custom Size Options</h2>
+
+        <label for="custom_base" ng-show="form.options.size == 'Custom'">Custom Base Price: </label>
+        <input type="number"
+               min="0"
+               step="any"
+               id="custom_base"
+               ng-show="form.options.size == 'Custom'"
+               ng-model="form.custom.base_price"
+               ng-value="form.custom.base_price" />
+        <br />
+        <label for="custom_width" ng-show="form.options.size == 'Custom'">Custom Size (Width): </label>
+        <input type="number"
+               min="0"
+               step="any"
+               id="custom_width"
+               ng-show="form.options.size == 'Custom'"
+               ng-model="form.custom.size.width"
+               ng-value="form.custom.size.width" />
+        <br />
+        <label for="custom_len" ng-show="form.options.size == 'Custom'">Custom Size (Length): </label>
+        <input type="number"
+               min="0"
+               step="any"
+               id="custom_len"
+               ng-show="form.options.size == 'Custom'"
+               ng-model="form.custom.size.len"
+               ng-value="form.custom.size.len" />
+    </span>
+
+
+
+
+</div>
+
+<button
+        ng-class="{disabled: !form.next_section_available}" ng-click="form.nextSection()"
+        class="next"
+        type="button"
+>
+    Next Section
+    <img ng-class="{active: form.next_section_loading}" class="spinner" src="/img/spinner.gif"/>
+</button>

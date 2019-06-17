@@ -1,0 +1,598 @@
+var is_dev_mode = false;
+
+/**
+ * Checks if a variable is a function.
+ *
+ * (from http://stackoverflow.com/a/7356528)
+ * @param functionToCheck The function to check.
+ * @returns {boolean} True if found, false if not.
+ */
+function isFunction(functionToCheck) {
+    var getType = {};
+    return (functionToCheck && getType.toString.call(functionToCheck) === '[object Function]')
+        ? true
+        : false;
+}
+
+/**
+ * Checks if a variable is a string.
+ * @param str The string to check.
+ * @returns {boolean} Returns true if it is a string, and false if not.
+ */
+function isString(str) {
+    return (typeof str !== 'undefined') && (typeof str == 'string' || str instanceof String);
+}
+
+function isObject(obj) {
+    return (typeof obj !== 'undefined') && (typeof obj === 'object' || obj instanceof Object);
+}
+
+/**
+ * Checks if a variable is an array.
+ * @param arr The array to check.
+ * @returns {boolean} Returns true if it is an array, false if not.
+ */
+function isArray(arr) {
+    return (typeof arr !== 'undefined') && (arr.constructor === Array);
+}
+
+/**
+ * Checks if a variable is defined AND not null.
+ * @param obj The object to check.
+ * @returns {boolean} True if it is something, false if not.
+ */
+function isSomething(obj) {
+    if (typeof obj === 'undefined' || obj == null)
+        return false;
+    return true;
+}
+
+function isDefined(obj) {
+    return typeof obj !== 'undefined';
+};
+
+/**
+ * An easy way of getting the url parameters.
+ *
+ * (from http://stackoverflow.com/a/8649003/2990656)
+ * @returns {*} Returns an object where each key is a key from the parameters,
+ * and each value is its corresponding value.
+ */
+function getURLParameters() {
+    var search = location.search.substring(1);
+    return (search
+        ? JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g, '":"') + '"}', function(key, value) {
+            return key === ""
+                ? value
+                : decodeURIComponent(value)
+        })
+        : {})
+}
+
+/**
+ * Does the check for undefined and stuff.
+ * @param field The field to check.
+ * @param value The default value to give it if it isn't defined.
+ */
+function def(field, value) {
+    return (typeof field === 'undefined')
+        ? value
+        : field;
+}
+
+/**
+ * Checks if a field in an object in an array contains a value.
+ *
+ * Example, given an array (arr):
+ *      [ {first: 'a', second: 'b'}, {first: 'c', second: 'd'} ]
+ * Calling hasFieldVal(arr, 'first', 'a') will return true, and calling hasFieldVar(arr, 'first', 'b') will
+ * return false.
+ * @param arr The array to check.
+ * @param field The field in the object in the array.
+ * @param val The value of the field in the object in the array.
+ * @returns {boolean} True if found, false if not.
+ */
+var hasFieldVal = function(arr, field, val) {
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i][field] == val)
+            return true;
+        }
+    return false;
+};
+
+/**
+ * Gets an object from an array that has a field equal to a value, or null if not found.
+ *
+ * Example, given an array (arr):
+ *      [ {first: 'a', second: 'b'}, {first: 'c', second: 'd'} ]
+ * Calling getIn(arr, 'first', 'a') will return {first: 'a', second: 'b'},
+ * and calling getIn(arr, 'first', 'b') will return null.
+ * @param arr The array to look in.
+ * @param field The field to look for.
+ * @param val The value the field should be.
+ * @returns {*|null} Returns the object if found, or null if not.
+ */
+var getIn = function(arr, field, val) {
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i][field] == val)
+            return arr[i];
+        }
+    return false;
+};
+
+/**
+ * Removes an object from an array with a field equal to a value.
+ *
+ * Example, given an array (arr):
+ *      [ {first: 'a', second: 'b'}, {first: 'c', second: 'd'} ]
+ * Calling removeFrom(arr, 'first', 'a') will result in arr being [ {first: 'c', second: 'd'} ]
+ * and calling removeFrom(arr, 'first', 'b') will result in no change.
+ * @param arr The array to look through.
+ * @param field The field to check for.
+ * @param val The value to compare against.
+ */
+var removeFrom = function(arr, field, val) {
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i][field] == val) {
+            arr.splice(i, 1);
+        }
+    }
+};
+
+var states = [
+    {
+        text: "Select a State",
+        id: "0"
+    }, {
+        text: "Alabama",
+        id: "AL"
+    }, {
+        text: "Alaska",
+        id: "AK"
+    }, {
+        text: "Arizona",
+        id: "AZ"
+    }, {
+        text: "Arkansas",
+        id: "AR"
+    }, {
+        text: "California",
+        id: "CA"
+    }, {
+        text: "Colorado",
+        id: "CO"
+    }, {
+        text: "Connecticut",
+        id: "CT"
+    }, {
+        text: "Delaware",
+        id: "DE"
+    }, {
+        text: "Florida",
+        id: "FL"
+    }, {
+        text: "Georgia",
+        id: "GA"
+    }, {
+        text: "Hawaii",
+        id: "HI"
+    }, {
+        text: "Idaho",
+        id: "ID"
+    }, {
+        text: "Illinois",
+        id: "IL"
+    }, {
+        text: "Indiana",
+        id: "IN"
+    }, {
+        text: "Iowa",
+        id: "IA"
+    }, {
+        text: "Kansas",
+        id: "KS"
+    }, {
+        text: "Kentucky",
+        id: "KY"
+    }, {
+        text: "Louisiana",
+        id: "LA"
+    }, {
+        text: "Maine",
+        id: "ME"
+    }, {
+        text: "Maryland",
+        id: "MD"
+    }, {
+        text: "Massachusetts",
+        id: "MA"
+    }, {
+        text: "Michigan",
+        id: "MI"
+    }, {
+        text: "Minnesota",
+        id: "MN"
+    }, {
+        text: "Mississippi",
+        id: "MS"
+    }, {
+        text: "Missouri",
+        id: "MO"
+    }, {
+        text: "Montana",
+        id: "MT"
+    }, {
+        text: "Nebraska",
+        id: "NE"
+    }, {
+        text: "Nevada",
+        id: "NV"
+    }, {
+        text: "New Hampshire",
+        id: "NH"
+    }, {
+        text: "New Jersey",
+        id: "NJ"
+    }, {
+        text: "New Mexico",
+        id: "NM"
+    }, {
+        text: "New York",
+        id: "NY"
+    }, {
+        text: "North Carolina",
+        id: "NC"
+    }, {
+        text: "North Dakota",
+        id: "ND"
+    }, {
+        text: "Ohio",
+        id: "OH"
+    }, {
+        text: "Oklahoma",
+        id: "OK"
+    }, {
+        text: "Oregon",
+        id: "OR"
+    }, {
+        text: "Pennsylvania",
+        id: "PA"
+    }, {
+        text: "Rhode Island",
+        id: "RI"
+    }, {
+        text: "South Carolina",
+        id: "SC"
+    }, {
+        text: "South Dakota",
+        id: "SD"
+    }, {
+        text: "Tennessee",
+        id: "TN"
+    }, {
+        text: "Texas",
+        id: "TX"
+    }, {
+        text: "Utah",
+        id: "UT"
+    }, {
+        text: "Vermont",
+        id: "VT"
+    }, {
+        text: "Virginia",
+        id: "VA"
+    }, {
+        text: "Washington",
+        id: "WA"
+    }, {
+        text: "West Virginia",
+        id: "WV"
+    }, {
+        text: "Wisconsin",
+        id: "WI"
+    }, {
+        text: "Wyoming",
+        id: "WY"
+    }
+];
+
+function getStateById(id) {
+    for (var i = 0; i < states.length; i++) {
+        if (states[i].id == id)
+            return states[i].text;
+        }
+    return states[0].text;
+}
+
+function getStateObjectById(id) {
+    for (var i = 0; i < states.length; i++) {
+        if (states[i].id == id)
+            return states[i];
+        }
+    return states[0];
+}
+
+// http://tzi.fr/js/snippet/convert-em-in-px#Convert-em-in-pixels
+function getElementFontSize( context ) {
+    // Returns a number
+    return parseFloat(
+        // of the computed font-size, so in px
+        getComputedStyle(
+            // for the given context
+            context
+                // or the root <html> element
+            || document.documentElement
+        )
+            .fontSize
+    );
+}
+function convertRem(value) {
+    return convertEm(value);
+}
+function convertEm(value, context) {
+    return value * getElementFontSize(context);
+}
+
+function copyOf(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
+
+if (!String.prototype.startsWith) {
+    Object.defineProperty(String.prototype, 'startsWith', {
+        enumerable: false,
+        configurable: false,
+        writable: false,
+        value: function(searchString, position) {
+            position = position || 0;
+            return this.lastIndexOf(searchString, position) === position;
+        }
+    });
+}
+
+if (!('contains' in String.prototype)) {
+    String.prototype.contains = function(str, startIndex) {
+        return ''.indexOf.call(this, str, startIndex) !== -1;
+    };
+}
+
+is_dev_mode = true;
+
+var dev = {
+    log: function() {
+        if (is_dev_mode) {
+            // console.log.apply(this, arguments);
+        }
+    }
+};
+
+/**
+ * Creates a new point.
+ * @param {(Point|{x:number,y:number}|{left:number,top:number})} [x]
+ * @param [y]
+ * @constructor
+ */
+var Point = function(x, y) {
+    this.x = 0;
+    this.y = 0;
+    if ((typeof x === 'undefined') && (typeof y === 'undefined')) {
+        this.x = 0;
+        this.y = 0;
+    } else if (x.constructor === Point) {
+        this.x = x.x;
+        this.y = x.y;
+    } else if ((typeof x !== 'undefined') && (typeof y !== 'undefined')) {
+        this.x = x;
+        this.y = y;
+    } else if (x.hasOwnProperty("x") && x.hasOwnProperty("y")) {
+        this.x = x.x;
+        this.y = x.y;
+    } else if (x.hasOwnProperty("left") && x.hasOwnProperty("top")) {
+        this.x = x.left;
+        this.y = x.top;
+    } else {
+        console.log("Point data (x,y): ", x, y);
+        throw new Error("Unknown object type for point creation.");
+    }
+    if ((typeof this.x !== 'number') || (typeof this.y !== 'number')) {
+        throw new Error("Invalid object type for point creation.");
+    }
+};
+
+/**
+ * Creates a new size (dimension)
+ * @param {(Size|{width:number,height:number})} [width]
+ * @param [height]
+ * @constructor
+ */
+var Size = function(width, height) {
+    this.width = 0;
+    this.height = 0;
+    Object.defineProperty(this, 'area', {
+        get: function() {
+            return this.width * this.height;
+        }
+    });
+    if ((typeof width === 'undefined') && (typeof height === 'undefined')) {
+        this.width = 0;
+        this.height = 0;
+    } else if (width.constructor === Size) {
+        this.width = width.width;
+        this.height = width.height;
+    } else if ((typeof width !== 'undefined') && (typeof height !== 'undefined')) {
+        this.width = width;
+        this.height = height;
+    } else if (width.hasOwnProperty("width") && width.hasOwnProperty("height")) {
+        this.width = width.width;
+        this.height = width.height;
+    } else {
+        throw new Error("Unknown object type for size creation.");
+    }
+    if ((typeof this.width !== 'number') || (typeof this.height !== 'number')) {
+        throw new Error("Invalid object type for point creation.");
+    }
+};
+
+/**
+ * Creates a new Rectangle.
+ * @param {
+ *      ( Point |
+ *        Size |
+ *        {x:number,y:number} |
+ *        {left:number,top:number} |
+ *        {width:number,height:number} |
+ *        {x:number,y:number,width:number,height:number} |
+ *        {left:number,top:number,width:number,height:number} |
+ *        {position:{x:number,y:number},dimensions:{width:number,height:number}}
+ *      )
+ * } [x]
+ * @param {
+ *      ( Point |
+ *        Size |
+ *        {x:number,y:number} |
+ *        {left:number,top:number} |
+ *        {width:number,height:number}
+ *      )
+ * }[y]
+ * @param {number} [width]
+ * @param {number} [height]
+ * @constructor
+ */
+var Rectangle = function(x, y, width, height) {
+    var me = this;
+    /**
+     *
+     * @type {Point}
+     */
+    this.position = null;
+    /**
+     *
+     * @type {Size}
+     */
+    this.size = null;
+    if ((typeof x !== 'undefined') && (typeof y !== 'undefined') && (typeof width !== 'undefined') && (typeof height !== 'undefined')) {
+        this.position = new Point(x, y);
+        this.size = new Size(width, height);
+    } else if ((typeof x === 'undefined') && (typeof y === 'undefined') && (typeof width === 'undefined') && (typeof height === 'undefined')) {
+        this.position = new Point();
+        this.size = new Size();
+    } else if (isDefined(x.position) && isDefined(x.dimensions) && isDefined(x.position.x) && isDefined(x.position.y) && isDefined(x.dimensions.width) && isDefined(x.dimensions.height)) {
+        this.position = new Point(x.position);
+        this.size = new Size(x.dimensions);
+    } else if (isDefined(x.position) && isDefined(x.size) && isDefined(x.position.x) && isDefined(x.position.y) && isDefined(x.size.width) && isDefined(x.size.height)) {
+        this.position = new Point(x.position);
+        this.size = new Size(x.size);
+    } else if (isDefined(x.x) && isDefined(x.y) && isDefined(x.width) && isDefined(x.height)) {
+        this.position = new Point(x);
+        this.size = new Size(x);
+    } else {
+        try {
+            this.position = new Point(x);
+            this.size = new Size(y);
+        } catch (e) {
+            try {
+                this.position = new Point(y);
+                this.size = new Size(x);
+            } catch (ex) {
+                this.position = new Point(x);
+                this.size = new Size(x);
+            }
+        }
+    }
+    if ((typeof this.position === 'undefined') || (typeof this.size === 'undefined')) {
+        throw new Error("Not enough information given for a rectangle.");
+    }
+
+    Object.defineProperty(this, 'x', {
+        get: function() {
+            return me.position.x
+        },
+        set: function(value) {
+            me.position.x = value;
+        }
+    });
+    Object.defineProperty(this, 'y', {
+        get: function() {
+            return me.position.y
+        },
+        set: function(value) {
+            me.position.y = value;
+        }
+    });
+    Object.defineProperty(this, 'width', {
+        get: function() {
+            return me.size.width
+        },
+        set: function(value) {
+            me.size.width = value;
+        }
+    });
+    Object.defineProperty(this, 'height', {
+        get: function() {
+            return me.size.height
+        },
+        set: function(value) {
+            me.size.height = value;
+        }
+    });
+
+    this.intersection = function(other) {
+        var x11 = me.x,
+            y11 = me.y,
+            x12 = me.x + me.width,
+            y12 = me.y + me.height,
+            x21 = other.x,
+            y21 = other.y,
+            x22 = other.x + other.width,
+            y22 = other.y + other.height;
+
+        /*x_overlap = x12<x21 || x11>x22 ? 0 : Math.min(x12,x22) - Math.max(x11,x21),
+          y_overlap = y12<y21 || y11>y22 ? 0 : Math.min(y12,y22) - Math.max(y11,y21);*/
+
+        x_overlap = Math.max(0, Math.min(x12, x22) - Math.max(x11, x21))
+        y_overlap = Math.max(0, Math.min(y12, y22) - Math.max(y11, y21));
+
+        if (x_overlap && y_overlap) {
+            return new Rectangle({
+                x: Math.max(x12, x22),
+                y: Math.max(y12, y22),
+                width: x_overlap,
+                height: y_overlap
+            });
+        }
+        return false;
+    };
+
+    this.toJson = function() {
+        let obj = {
+            x: me.position.x,
+            y: me.position.y,
+            width: me.size.width,
+            height: me.size.height,
+            area: me.size.area
+        };
+    };
+    this.toJSON = this.toJson;
+};
+
+function jqRect(jqobj) {
+    return new Rectangle(jqobj.offset().left, jqobj.offset().top, jqobj.width(), jqobj.height());
+};
+
+/**
+ * Number.prototype.toMoneyString(s, c)
+ *
+ * @param mixed   s: sections delimiter
+ * @param mixed   c: decimal delimiter
+ */
+Number.prototype.toMoneyString = function(s, c) {
+    var n = 2;
+    var x = 3;
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0
+            ? '\\D'
+            : '$') + ')',
+        num = this.toFixed(Math.max(0, ~~ n));
+
+    return "$" + (c
+        ? num.replace('.', c)
+        : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+};

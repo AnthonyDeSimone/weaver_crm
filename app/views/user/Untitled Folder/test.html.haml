@@ -1,0 +1,754 @@
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Users
+      %p
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce euismod mattis consectetur.
+        Sed iaculis tincidunt egestas. Donec faucibus, justo quis dapibus tristique.
+      %br/
+      %p.hidden-phone
+        %a.btn.btn-info.btn-large.pull-right Add user &raquo;
+.row-fluid
+  .span12
+    %ul.breadcrumb
+      %li
+        %a{:href => "index.html"}
+          %i.radmin-icon.radmin-home
+          Dashboard
+        %span.divider /
+      %li
+        %a{:href => "#"}
+          %i.radmin-icon.radmin-file
+          Sample Pages
+        %span.divider /
+      %li.active
+        %i.radmin-icon.radmin-user
+        Users
+.row-fluid
+  .span12
+    .alert.alter-block
+      %button.close{"data-dismiss" => "alert", :type => "button"} &times;
+      %h4 Warning!
+      Please be aware that changes you make to users come into effect immediately! Lorem ipsum dolor
+      sit amet, consectetur adipiscing elit.
+.row-fluid.hidden-desktop.hidden-tablet
+  .span12
+    %h4.title All Users
+    .squiggly-border
+    %table.table.table-striped.table-bordered.table-radmin
+      %thead
+        %tr
+          %th User ID
+          %th First Name
+          %th Last Name
+          %th{:style => "text-align:center; width: 60px"} Edit
+      %tbody
+        %tr
+          %td 00001
+          %td Jack
+          %td Notforst
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i
+              Edit
+        %tr
+          %td 00002
+          %td Jane
+          %td Doe
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i
+              Edit
+        %tr
+          %td 00003
+          %td John
+          %td Smith
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+        %tr
+          %td 00004
+          %td Artful
+          %td Dodger
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+        %tr
+          %td 00005
+          %td Bayham
+          %td Badger
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+        %tr
+          %td 00006
+          %td Estella
+          %td Havisham
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+        %tr
+          %td 00007
+          %td Clara
+          %td Barley
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+        %tr
+          %td 00008
+          %td David
+          %td Copperfield
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+        %tr
+          %td 00009
+          %td Philip
+          %td Pirrip
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+        %tr
+          %td 00010
+          %td John
+          %td Wemmick
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+        %tr
+          %td 00011
+          %td Nicholas
+          %td Nickleby
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+        %tr
+          %td 00012
+          %td Madeline
+          %td Bray
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+        %tr
+          %td 00013
+          %td Charles
+          %td Bates
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+        %tr
+          %td 00014
+          %td Fagin
+          %td Gentleman
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+        %tr
+          %td 00015
+          %td Oliver
+          %td Twist
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+    .pagination.pagination-right
+      %ul
+        %li.disabled
+          %a{:href => "#"} Prev
+        %li.active
+          %a{:href => "#"} 1
+        %li
+          %a{:href => "#"} 2
+        %li
+          %a{:href => "#"} 3
+        %li
+          %a{:href => "#"} 4
+        %li
+          %a{:href => "#"} 5
+        %li
+          %a{:href => "#"} Next
+.row-fluid.hidden-desktop.hidden-phone
+  .span12
+    %h4.title All Users
+    .squiggly-border
+    %table.table.table-striped.table-bordered.table-radmin
+      %thead
+        %tr
+          %th User ID
+          %th First Name
+          %th Last Name
+          %th{:style => "text-align:center; width: 60px"} Edit
+          %th{:style => "text-align:center; width: 87px"} Review
+          %th{:style => "text-align:center; width: 75px"} Delete
+      %tbody
+        %tr
+          %td 00001
+          %td Jack
+          %td Frost
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.disabled.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.disabled.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00002
+          %td Jane
+          %td Doe
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00003
+          %td John
+          %td Smith
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00004
+          %td Artful
+          %td Dodger
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00005
+          %td Bayham
+          %td Badger
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00006
+          %td Estella
+          %td Havisham
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00007
+          %td Clara
+          %td Barley
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00008
+          %td David
+          %td Copperfield
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00009
+          %td Philip
+          %td Pirrip
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00010
+          %td John
+          %td Wemmick
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00011
+          %td Nicholas
+          %td Nickleby
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00012
+          %td Madeline
+          %td Bray
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00013
+          %td Charles
+          %td Bates
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00014
+          %td Fagin
+          %td Gentleman
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00015
+          %td Oliver
+          %td Twist
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+    .pagination.pagination-right
+      %ul
+        %li.disabled
+          %a{:href => "#"} Prev
+        %li.active
+          %a{:href => "#"} 1
+        %li
+          %a{:href => "#"} 2
+        %li
+          %a{:href => "#"} 3
+        %li
+          %a{:href => "#"} 4
+        %li
+          %a{:href => "#"} 5
+        %li
+          %a{:href => "#"} Next
+.row-fluid.hidden-tablet.hidden-phone
+  .span12
+    %h4.title All Users
+    .squiggly-border
+    %table.table.table-striped.table-bordered.table-radmin
+      %thead
+        %tr
+          %th User ID
+          %th First Name
+          %th Last Name
+          %th Email
+          %th Date Registered
+          %th{:style => "text-align:center; width: 60px"} Edit
+          %th{:style => "text-align:center; width: 87px"} Review
+          %th{:style => "text-align:center; width: 75px"} Delete
+      %tbody
+        %tr
+          %td 00001
+          %td Jack
+          %td Frost
+          %td 
+            %i.icon-trash
+          %td 17-04-2012
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i
+              Edit
+          %td
+            %a.disabled.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.disabled.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash
+              Delete
+        %tr
+          %td 00002
+          %td Jane
+          %td Doe
+          %td doeadeer@doreme.com
+          %td 22-06-2012
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00003
+          %td John
+          %td Smith
+          %td pocahontas@hotmail.com
+          %td 23-06-2012
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00004
+          %td Artful
+          %td Dodger
+          %td jack.dawkins@hotmail.com
+          %td 24-06-2012
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00005
+          %td Bayham
+          %td Badger
+          %td badger@dickens.com
+          %td 24-06-2012
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00006
+          %td Estella
+          %td Havisham
+          %td ehavisham@dickens.com
+          %td 28-06-2012
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00007
+          %td Clara
+          %td Barley
+          %td clara@dickens.com
+          %td 01-07-2012
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00008
+          %td David
+          %td Copperfield
+          %td coppetogold@dickens.com
+          %td 28-07-2012
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00009
+          %td Philip
+          %td Pirrip
+          %td pip@dickens.com
+          %td 16-08-2012
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00010
+          %td John
+          %td Wemmick
+          %td wemmy@dickens.com
+          %td 17-08-2012
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00011
+          %td Nicholas
+          %td Nickleby
+          %td nickynick@dickens.com
+          %td 22-08-2012
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00012
+          %td Madeline
+          %td Bray
+          %td maddybray@dickens.com
+          %td 23-08-2012
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00013
+          %td Charles
+          %td Bates
+          %td charlie@dickens.com
+          %td 26-08-2012
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00014
+          %td Fagin
+          %td Gentleman
+          %td faginsgang@dickens.com
+          %td 26-08-2012
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+        %tr
+          %td 00015
+          %td Oliver
+          %td Twist
+          %td oliver.twist@dickens.com
+          %td 30-08-2012
+          %td
+            %a.btn.btn-small{:href => "#"}
+              %i.icon-edit
+              Edit
+          %td
+            %a.btn.btn-small.btn-info{:href => "#"}
+              %i.icon-user.icon-white
+              Login As
+          %td
+            %a.btn.btn-small.btn-danger{:href => "#"}
+              %i.icon-trash.icon-white
+              Delete
+    .pagination.pagination-right
+      %ul
+        %li.disabled
+          %a{:href => "#"} Prev
+        %li.active
+          %a{:href => "#"} 1
+        %li
+          %a{:href => "#"} 2
+        %li
+          %a{:href => "#"} 3
+        %li
+          %a{:href => "#"} 4
+        %li
+          %a{:href => "#"} 5
+        %li
+          %a{:href => "#"} Next

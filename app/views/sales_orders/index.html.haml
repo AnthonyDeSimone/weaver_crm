@@ -1,0 +1,442 @@
+-content_for(:page_title) do
+  Sales Orders
+  
+-content_for(:meta_info) do
+  = javascript_include_tag 'jquery.select2.js'  
+  = javascript_include_tag 'bootstrap-modal.min.js'    
+  = javascript_include_tag 'jquery.easyModal.js'    
+  = stylesheet_link_tag    'select2.min.css'  
+  = javascript_include_tag 'moment.min.js'   
+  = javascript_include_tag 'pikaday.js'    
+  = javascript_include_tag 'pikaday-jquery.js'    
+  = stylesheet_link_tag    'pikaday.css'  
+  
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 
+        - if(@search_results)
+          Search Results
+        - elsif(@issued)
+          Sales Orders
+        - else
+          Quotes
+      %br/
+      %p.hidden-phone
+        %a.btn.btn-info.btn-large.pull-right{:href => '/sales_orders/new'} Add new order &raquo; 
+       
+.row-fluid
+  .span12
+    = breadcrumbs(['Sales Orders'])
+    #orderNotes.panel{style: 'display: none;min-width: 300px; min-height: 150px;padding:10px;'}
+      .easy-modal-inner
+        %h4#orderClosedHeader{style: 'text-align:center;'} Order Notes
+        %hr
+        #orderClosedBody
+    #orderWarnings.panel{style: 'display: none;min-width: 300px; min-height: 150px;padding:10px;'}
+      .easy-modal-inner
+        %h4#orderWarningsHeader{style: 'text-align:center;'} Order Warnings
+        %hr
+        #orderWarningsBody          
+    #emailDropboxModal.panel{style: 'display: none;min-width: 400px; min-height: 150px;padding:10px;'}
+      .easy-modal-inner
+        %h4#emailFormModal{style: 'text-align:center;'} Email Dropbox
+        %hr
+        #emailFormModalBody{style: "margin: 0 auto; width: 90%;"}
+          %form#emailDropboxForm{action: "", method: 'post', 'data-remote' => true}
+            %label{for: 'dropbox_comments'}Optional Comments:
+            %br/
+            %textarea{name: 'comments', id: 'dropbox_comments', style: 'width: 100%;', rows: 7}
+            %hr/            
+            %input{type: 'checkbox', id: 'dropbox_include_secondary_email', name: 'dropbox_include_secondary_email'}
+            %label{for: 'dropbox_include_secondary_email'} Include Secondary Email
+            %hr/                 
+            %button.btn.btn-info{:type => "submit"} Send       
+            %button.btn.btn-default.closeModal{:type => "button"} Cancel           
+
+    #emailInvoiceModal.panel{style: 'display: none;min-width: 400px; min-height: 150px;padding:10px;'}
+      .easy-modal-inner
+        %h4#emailFormModal{style: 'text-align:center;'} Email Invoice
+        %hr
+        #emailFormModalBody{style: "margin: 0 auto; width: 90%;"}
+          %form#emailInvoiceForm{action: "", method: 'post'}
+            %label{for: 'invoice_comments'}Optional Comments:
+            %br/           
+            %textarea{name: 'comments', id: 'invoice_comments', style: 'width: 100%;', rows: 7}
+            %hr/   
+            %input{type: 'checkbox', id: 'invoice_include_secondary_email', name: 'invoice_include_secondary_email'}
+            %label{for: 'invoice_include_secondary_email'} Include Secondary Email
+            %hr/                          
+            %button.btn.btn-info{:type => "submit"} Send       
+            %button.btn.btn-default.closeModal{:type => "button"} Cancel  
+            
+.row-fluid.hidden-tablet.hidden-phone
+  .span12
+    %h4.title 
+      =@title
+    %select{id: 'sales_order_search'}
+    .squiggly-border
+    %table.table.table-striped.table-bordered.table-radmin
+      %thead
+        %tr
+          %th Order #
+          %th 
+            %a{href: "/sales_orders/?order_by=status&direction=#{@new_direction}"} Status            
+          %th 
+            %a{href: "/sales_orders/?order_by=name&direction=#{@new_direction}"} Customer Name    
+          %th
+            %a{href: "/sales_orders/?order_by=lead_status&direction=#{@new_direction}"} Lead Status              
+          %th 
+            - if(!@issued)
+              %a{href: "/sales_orders/?order_by=date&direction=#{@new_direction}"} Quote Date             
+            - else
+              %a{href: "/sales_orders/?order_by=date&direction=#{@new_direction}"} Order Date            
+          %th 
+            %a{href: "/sales_orders/?order_by=delivery_date&direction=#{@new_direction}"} Delivery Date
+          %th 
+            Site Ready Clicked            
+          %th Salesman
+          %th
+            %a{href: "/sales_orders/?order_by=production_order_printed_at&direction=#{@new_direction}"} Production Printed
+          %th
+            %a{href: "/sales_orders/?order_by=outstanding_special_order&direction=#{@new_direction}"} Outstanding          
+          %th 
+            Last
+            %br
+            Modified
+          %th Total
+          %th 
+            %a{href: "/sales_orders/?order_by=last_contact_date&direction=#{@new_direction}"} Last Contact Date
+          %th 
+            %a{href: "/sales_orders/?order_by=callback_date&direction=#{@new_direction}"} Callback Date             
+          %th Actions
+          %th Downloads
+      %tbody
+        - @sales_orders.each do |order|
+          %tr        
+            %td 
+              =order.id
+            %td
+              =order.real_status.andand.gsub('_', ' ').gsub('Working On Site', "Weaver's Site")
+            %td
+              -if(order.customer)
+                =link_to(order.customer.andand.name, customer_path(order.customer))
+            %td 
+              - if order.customer.andand.lead_status
+                %img{src: "/#{order.customer.andand.lead_status}_status.png"}        
+            %td
+              - if(!@issued && order.optional_quote_date)
+                =order.optional_quote_date.andand.strftime("%m/%d/%Y")
+              - else            
+                =order.date.andand.strftime("%m/%d/%Y")
+            %td 
+              =order.delivery_date.andand.strftime("%m/%d/%Y")
+            %td
+              = JSON.load(order.json_info)['data']['extra']['site_ready_clicked']
+            %td
+              =order.salesperson.andand.name
+            %td
+              =order.production_order_printed_at.andand.strftime("%m/%d/%Y")
+            %td
+              =order.outstanding_special_order              
+            %td
+              =order.modified_by.andand.name                   
+            %td
+              =JSON.load(order.prices).andand['total']
+            %td
+              %input.form-control.last_contact_date.datepicker{type: 'text', style: 'width: 100px;', value: order.last_contact_date.andand.strftime("%m/%d/%Y"), sales_order_id: order.id}
+            %td
+              %input.form-control.callback_date.datepicker{type: 'text', style: 'width: 100px;', value: order.customer.andand.callback_date.andand.strftime("%m/%d/%Y"), sales_order_id: order.id}              
+            %td
+              .dropdown
+                %button#dropdownMenu1.btn.btn-info.dropdown-toggle{"aria-expanded" => "true", "data-toggle" => "dropdown", :type => "button"}
+                  Actions
+                  %span.caret
+                %ul.dropdown-menu{"aria-labelledby" => "dropdownMenu1", :role => "menu"}  
+                  %li                    
+                    = link_to order.dropbox_url, :target => "_blank" do
+                      %i.radmin-file
+                      Acccess Dropbox           
+                  - if(current_salesperson.account_type != 'Delivery' && !order.issued)  
+                    %li{:role => "presentation"}
+                      %a{:href => "/sales_orders/#{order.id}/copy"}
+                        %i.radmin-clipboard
+                        Copy 
+                  - if(['Admin', 'Delivery'].include?(current_salesperson.account_type) || !order.issued && order.open?)                      
+                    %li{:role => "presentation"}                        
+                      = link_to sales_order_path(order), :class => 'sales_order_delete', :method => :delete do             
+                        %i.radmin-cancel
+                        Delete 
+                  - if(['Admin', 'Delivery'].include?(current_salesperson.account_type))     
+                    - if(order.open?
+                      %li{:role => "presentation"}                        
+                        = link_to "/sales_orders/#{order.id}/close", :class => 'sales_order_close', :method => :post, :order_id => order.id do             
+                          %i.radmin-enter-2
+                          Close          
+                    - else
+                      %li{:role => "presentation"}                        
+                        = link_to "/sales_orders/#{order.id}/open", :class => 'sales_order_open', :method => :post do             
+                          %i.radmin-enter-2
+                          Reopen                          
+                    %li{:role => "presentation"}                        
+                      = link_to "/sales_orders/#{order.id}/special_order" do             
+                        %i.radmin-lightning
+                        Special Order Items    
+                    %li{:role => "presentation"}  
+                      - text = (order.production_order_created ? 'Unlock Order' : 'Lock Order')                     
+                      = link_to "/sales_orders/#{order.id}", :class => 'sales_order_finalize', :method => :post do
+                        - if(order.production_order_created)
+                          %i.radmin-checkbox-unchecked
+                          Unlock Order     
+                        - else
+                          %i.radmin-checkbox
+                          Lock Order     
+                  - if(order.open?)
+                    %li{:role => "presentation"} 
+                      %a{:href => "/sales_orders/#{order.id}/edit"}
+                        %i.radmin-pencil
+                        Edit 
+                  - if(order.open? && order.active?)
+                    %li{:role => "presentation"}                   
+                      %a{:href => "/sales_orders/#{order.id}/deactivate", :class => 'sales_order_deactivate'}
+                        %i.radmin-clipboard-2
+                        Deactivate                         
+                  - elsif(!order.active?) 
+                    %li{:role => "presentation"}                   
+                      %a{:href => "/sales_orders/#{order.id}/activate", :class => 'sales_order_activate'}
+                        %i.radmin-clipboard-2
+                        Reactivate                                       
+                  %li{:role => "presentation"} 
+                    %a{:href => "/sales_orders/#{order.id}/modify_prices"}
+                      %i.radmin-pencil
+                      Adjust Prices                       
+            %td
+              .dropdown
+                %button#dropdownMenu1.btn.btn-info.dropdown-toggle{"aria-expanded" => "true", "data-toggle" => "dropdown", :type => "button"}
+                  Downloads
+                  %span.caret
+                %ul.dropdown-menu{"aria-labelledby" => "dropdownMenu1", :role => "menu"}          
+                  %li{:role => "presentation"}                      
+                    = link_to sales_order_path(order.id, format: 'pdf', t: Time.now.to_f.to_i.to_s), target: '_blank' do
+                      %i.radmin-printer
+                      Download PDF
+                  %li{:role => "presentation"}                     
+                    = link_to '#', {class: 'email_invoice', order_id: order.id} do #"/sales_orders/#{order.id}/mail_invoice" do
+                      %i.radmin-mail-3
+                      = order.issued? ? 'Mail Invoice' : 'Mail Quote'            
+                  - if(has_production_access)
+                    %li
+                      = link_to("/sales_orders/#{order.id}/production_order.pdf", target: '_blank', format: 'pdf', class: 'view_production_order', order_id: order.id) do
+                        %i.radmin-printer
+                        Download Production
+                  %li
+                    = link_to '#', {class: 'email_dropbox', order_id: order.id} do #"/sales_orders/#{order.id}/mail_dropbox" do
+                      %i.radmin-mail-3
+                      Mail Dropbox                                                
+    .pagination.pagination-right
+      = will_paginate @sales_orders, renderer: RadminRenderer
+          
+:javascript
+  $(document).ready(function() {  
+     $('.confirm').change(function(){
+      $(this).closest('form').submit()
+    })     
+  })
+  
+:javascript
+  open_status   = "#{@open}"
+  issued_status = "#{@issued}"
+  active_status = "#{@active}"
+  
+  $(document).ready(function(){
+    $('#orderNotes').easyModal({
+      top: 200,
+      overlay: 0.2,
+      closeButtonClass: '.closeModal'
+    });
+
+    $('#orderWarnings').easyModal({
+      top: 200,
+      overlay: 0.2,
+      closeButtonClass: '.closeModal'
+    });
+
+    $('#emailDropboxModal').easyModal({
+      top: 200,
+      overlay: 0.2,
+      closeButtonClass: '.closeModal'      
+    });
+ 
+    $('.email_dropbox').click(function(){
+      $("#emailDropboxForm").attr('action', "/sales_orders/" + $(this).attr('order_id') + "/mail_dropbox");
+      $("#emailDropboxModal").trigger('openModal');
+    });
+    
+    
+
+    $('.email_invoice').click(function(){
+      $("#emailInvoiceForm").attr('action', '/sales_orders/' + $(this).attr('order_id') + '/mail_invoice')    
+      $("#emailInvoiceModal").trigger('openModal');
+    });
+        
+    $("#emailInvoiceForm").submit(function(){
+      $.post($(this).attr('action'), 
+            {comments: $("#invoice_comments").val(), 
+            include_secondary_email: $("#invoice_include_secondary_email").is(':checked')}
+            ).always( function(){alert('Email was queued for sending.');});
+              
+      $("#emailInvoiceModal").trigger('closeModal');
+      $("#emailInvoiceForm")[0].reset();
+      return false;
+    });
+
+    $("#emailDropboxForm").submit(function(){
+      $.post($(this).attr('action'), 
+            {comments: $("#dropbox_comments").val(), 
+            include_secondary_email: $("#dropbox_include_secondary_email").is(':checked')}
+            ).always( function(){alert('Email was queued for sending.');});
+
+      $("#emailDropboxModal").trigger('closeModal');
+      $("#emailDropboxForm")[0].reset();
+      return false;
+    });
+    
+    $('#emailInvoiceModal').easyModal({
+      top: 200,
+      overlay: 0.2,
+      closeButtonClass: '.closeModal'      
+    });
+    
+    $('a.view_production_order').click(function() {   
+        order_id = $(this).attr('order_id')
+          
+        $.ajax({
+          url: "/sales_orders/" + order_id + "/warnings"
+        }).done(function(html){
+          $("#orderWarningsBody").html(html)
+          $("#orderWarningsHeader").html("Order " + order_id + " Warnings")
+          $("#orderWarnings").trigger('openModal');
+        });
+      })
+            
+
+    $('.datepicker').pikaday({ format: 'MM/DD/YYYY', firstDay: 0});
+    
+    $("#sales_order_search").select2({
+      ajax: {
+        url: "/sales_orders/search?open=" + open_status + "&issued=" + issued_status + "&active=" + active_status,
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+          return {
+            q: params.term, // search term
+            page: params.page
+          };
+        },
+        processResults: function (data, page) {
+          // parse the results into the format expected by Select2.
+          // since we are using custom formatting functions we do not need to
+          // alter the remote JSON data
+          return {
+            results: data.items
+          };
+        },
+        cache: true
+      },
+      minimumInputLength: 1,
+    });
+
+    $('.last_contact_date').change(function() {  
+        $.ajax({url: '/sales_orders/'+ $(this).attr("sales_order_id") +'/contact_date?date=' + $(this).val(), type: 'POST'})      
+    });
+
+    $('.callback_date').change(function() {  
+        $.ajax({url: '/sales_orders/'+ $(this).attr("sales_order_id") +'/callback_date?date=' + $(this).val(), type: 'POST'})      
+    });
+        
+    $('a.sales_order_close').click(function() {   
+      confirmation = confirm("Are you sure you want to close this order?")
+      order_id = $(this).attr('order_id')
+      if(confirmation)      
+      {
+        $.ajax({
+          url: "/sales_orders/" + order_id + "/notes"
+        }).done(function(html){
+          $("#orderClosedBody").html(html)
+          $("#orderClosedHeader").html("Order " + order_id + " Notes")
+          $("#orderNotes").trigger('openModal');
+        });
+        
+        $.ajax({url: this.href, type: 'POST'});
+        $(this).closest('tr').remove();
+        
+      }
+      
+      return false;
+    })   
+
+    $('a.sales_order_open').click(function() {   
+      confirmation = confirm("Are you sure you want to reopen this order?")
+      
+      if(confirmation)      
+      {
+        $.ajax({url: this.href, type: 'POST'});
+        $(this).closest('tr').remove();
+      }
+      
+      return false;
+    })   
+
+
+     $('a.sales_order_deactivate').click(function() {    
+        $.ajax({url: this.href, type: 'POST'})
+      
+        $(this).closest('tr').remove()
+      
+      return false
+    })       
+    
+     $('a.sales_order_activate').click(function() {    
+        $.ajax({url: this.href, type: 'POST'})
+      
+        $(this).closest('tr').remove()
+      
+      return false
+    })   
+        
+    $('a.sales_order_finalize').click(function() {    
+        $.ajax({url: '/sales_orders/'+ $(this).attr("sales_order_id") +'/finalize', type: 'POST'})
+      
+        $.ajax({url: this.href, type: 'POST'})
+      
+      return false
+    })   
+
+    $('a.sales_order_finalize').click(function() {        
+      if($(this).text().indexOf('Lock Order') >= 0){
+        $.ajax({url: this.href + '/finalize', type: 'POST'})
+        $(this).html("<i class='radmin-checkbox-unchecked'></i>Unlock Order")
+      }
+      else{
+        $.ajax({url: this.href + '/unfinalize', type: 'POST'})
+        $(this).html("<i class='radmin-checkbox'></i>Lock Order")     
+      }
+            
+      return false
+    })   
+    
+    $('a.sales_order_delete').click(function() {  
+      confirmation = confirm("Are you sure you want to delete this order?")
+      
+      if(confirmation)
+      {
+        $(this).closest('tr').remove()
+        $.ajax({url: this.href, type: 'DELETE'})
+      }
+      return false
+    })   
+        
+    $('#sales_order_search').change(function() { 
+      window.location.replace("/sales_orders/" + $(sales_order_search).val())
+    });        
+  })

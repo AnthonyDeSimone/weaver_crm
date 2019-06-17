@@ -1,0 +1,10 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+  %body
+    %p
+      Visit dropbox to view files relating to your order: #{@url}
+    - if(@comments)
+      %p
+        = @comments.to_s.gsub("\n", "<br />").html_safe

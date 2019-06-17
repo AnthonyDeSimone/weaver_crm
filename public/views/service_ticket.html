@@ -1,0 +1,273 @@
+
+<!--suppress XmlInvalidId, HtmlUnknownAttribute HtmlUnknownTag -->
+<h2>{{ticket_controller.is_new_ticket ? "New" : "Edit"}} Service Ticket</h2>
+
+<div class="service_ticket_container">
+    <span class="st_float_block" id="st_misc_block">
+        <h4>Basic Information</h4>
+        <!--BEGIN Basic Information -->
+        <label for="customerSelect">Customer: </label>
+        <select id="customerSelect" class="st_customer_select" ng-model="ticket_controller.ticket.customer.id"></select>
+        <br />
+
+        <label for="st_customer_name">Display Name:</label>
+        <input type="text" ng-model="ticket_controller.ticket.customer.name" placeholder="Display Name" disabled="disabled" title="Customer Name" id="st_customer_name" />
+        <br />
+
+        <label for="st_customer_first_name">First Name:</label>
+        <input type="text" ng-model="ticket_controller.ticket.customer.first_name" ng-change="ticket_controller.ticket.customer.updateName()" ng-value="ticket_controller.ticket.customer.first_name" placeholder="First Name" title="Customer Name" id="st_customer_first_name" />
+        <br />
+
+        <label for="st_customer_last_name">Last Name:</label>
+        <input type="text" ng-model="ticket_controller.ticket.customer.last_name" ng-change="ticket_controller.ticket.customer.updateName()" ng-value="ticket_controller.ticket.customer.last_name" placeholder="Last Name" title="Customer's Last Name" id="st_customer_last_name" />
+        <br />
+
+        <label for="st_customer_primary_phone">Phone:</label>
+        <input type="text" ng-model="ticket_controller.ticket.customer.primary_phone" ng-value="ticket_controller.ticket.customer.primary_phone" placeholder="Primary Phone" title="Customer's Primary Phone Number" id="st_customer_primary_phone" />
+        <br />
+
+        <label for="st_customer_secondary_phone">Secondary Phone:</label>
+        <input type="text" ng-model="ticket_controller.ticket.customer.secondary_phone" ng-value="ticket_controller.ticket.customer.secondary_phone" placeholder="Secondary Phone" title="Customer's Secondary Phone Number" id="st_customer_secondary_phone" />
+        <br />
+
+        <label for="st_customer_primary_email">Email:</label>
+        <input type="text" ng-model="ticket_controller.ticket.customer.primary_email" ng-value="ticket_controller.ticket.customer.primary_email" placeholder="Primary Email" title="Customer's Primary Email" id="st_customer_primary_email" />
+        <br />
+
+        <label for="st_customer_secondary_email">Secondary Email:</label>
+        <input type="text" ng-model="ticket_controller.ticket.customer.secondary_email" ng-value="ticket_controller.ticket.customer.secondary_email" placeholder="Secondary Email" title="Customer's Secondary Email" id="st_customer_secondary_email" />
+        <!--END Basic Information -->
+
+        <!--BEGIN Misc Info -->
+        <h4>Misc. Information</h4>
+        <label for="st_date">Date: </label>
+        <input type="text" ng-model="ticket_controller.ticket.date" ng-value="ticket_controller.ticket.date" placeholder="Date" title="Date" id="st_date" date-picker/>
+        <br />
+
+        <label for="st_time_frame">Time Frame:</label>
+        <select id="st_time_frame" ng-disabled="ticket_controller.is_dealer" ng-value="ticket_controller.ticket.time_frame" ng-model="ticket_controller.ticket.time_frame">
+            <option selected="selected" value="">-- Select Time Frame --</option>
+            <option value="fd">Full Day</option>
+            <option value="hd">Half Day</option>
+            <option value="thl">Two Hours or Less</option>
+        </select>
+
+        <label for="st_site_visit" class="st_vc">Site Visit: </label>
+        <input type="checkbox" ng-disabled="ticket_controller.is_dealer" ng-model="ticket_controller.ticket.site_visit" ng-value="ticket_controller.ticket.site_visit" placeholder="Site Visit" title="Site Visit" id="st_site_visit"/>
+        <br />
+
+        <label for="st_customer_present" class="st_vc">Customer needs to be present: </label>
+        <input type="checkbox" ng-model="ticket_controller.ticket.customer_present_required" ng-value="ticket_controller.ticket.customer_present_required" title="Customer Must Be Present" id="st_customer_present"/>
+        <br />
+        <br />
+
+        <label for="st_notes">Notes: </label>
+        <textarea ng-model="ticket_controller.ticket.notes" ng-value="ticket_controller.ticket.notes" placeholder="Notes" title="Notes" id="st_notes"></textarea>
+        <br />
+
+        <!--END Misc Info -->
+    </span>
+
+    <span class="st_float_block" id="st_basic_block">
+        <!--BEGIN Billing Address -->
+        <h4>Billing Address</h4>
+        <label for="st_billing_address">Address: </label>
+        <input type="text" id="st_billing_address" ng-model="ticket_controller.ticket.customer.billing.address" ng-value="ticket_controller.ticket.customer.billing.address" placeholder="Address" title="Address" />
+        <br />
+
+        <label for="st_billing_city">City: </label>
+        <input type="text" id="st_billing_city" ng-model="ticket_controller.ticket.customer.billing.city" ng-value="ticket_controller.ticket.customer.billing.city" placeholder="City" title="City" />
+        <br />
+
+        <label for="st_billing_state">State: </label>
+        <input type="text" id="st_billing_state" ng-model="ticket_controller.ticket.customer.billing.state" ng-value="ticket_controller.ticket.customer.billing.state" placeholder="State" title="State" />
+        <br />
+
+        <label for="st_billing_zip">Zip: </label>
+        <input type="text" id="st_billing_zip" ng-model="ticket_controller.ticket.customer.billing.zip" ng-value="ticket_controller.ticket.customer.billing.zip" placeholder="Zip" title="Zip" />
+        <br />
+
+        <label for="st_billing_county">County: </label>
+        <input type="text" id="st_billing_county" ng-model="ticket_controller.ticket.customer.billing.county" ng-value="ticket_controller.ticket.customer.billing.county" placeholder="County" title="County" />
+        <!--END Billing Address -->
+
+        <!--BEGIN Shipping Address -->
+        <h4>Shipping Address</h4>
+
+        <label for="st_shipping_same" title="Shipping Same as Billing">Use Billing Address: </label>
+        <input type="checkbox" ng-value="ticket_controller.ticket.customer.shipping_same" ng-model="ticket_controller.ticket.customer.shipping_same" title="Shipping Same as Billing" />
+        <br />
+
+        <span ng-show="!ticket_controller.ticket.customer.shipping_same">
+            <label for="st_shipping_address">Address: </label>
+            <input type="text" id="st_shipping_address" ng-model="ticket_controller.ticket.customer.shipping.address" ng-value="ticket_controller.ticket.customer.shipping.address" placeholder="Address" title="Address" />
+            <br />
+
+            <label for="st_shipping_city">City: </label>
+            <input type="text" id="st_shipping_city" ng-model="ticket_controller.ticket.customer.shipping.city" ng-value="ticket_controller.ticket.customer.shipping.city" placeholder="City" title="City" />
+            <br />
+
+            <label for="st_shipping_state">State: </label>
+            <input type="text" id="st_shipping_state" ng-model="ticket_controller.ticket.customer.shipping.state" ng-value="ticket_controller.ticket.customer.shipping.state" placeholder="State" title="State" />
+            <br />
+
+            <label for="st_shipping_zip">Zip: </label>
+            <input type="text" id="st_shipping_zip" ng-model="ticket_controller.ticket.customer.shipping.zip" ng-value="ticket_controller.ticket.customer.shipping.zip" placeholder="Zip" title="Zip" />
+            <br />
+
+            <label for="st_shipping_county">County: </label>
+            <input type="text" id="st_shipping_county" ng-model="ticket_controller.ticket.customer.shipping.county" ng-value="ticket_controller.ticket.customer.shipping.county" placeholder="County" title="County" />
+            <br />
+        </span>
+        <!--END Shipping Address -->
+    </span>
+
+
+    <br clear="both" />
+
+    <span class="st_float_block" id="st_description">
+        <!-- BEGIN Descriptions -->
+        <h4>Work Items</h4>
+
+        <span class="st_desc_desc_title">Description</span>
+        <span class="st_desc_cost_title">Cost</span>
+        <br />
+        <span class="st_desc_item" ng-repeat="desc in ticket_controller.ticket.service_description">
+            <input class="st_desc_desc" type="text" ng-value="desc.description" ng-model="desc.description" placeholder="Description" title="Description" />
+            <input class="st_desc_cost" type="number" step="any" ng-value="desc.cost" ng-model="desc.cost" placeholder="Cost" title="Cost" />
+            <a href="#" ng-click="ticket_controller.ticket.removeDescription(desc)" class="st_remove_desc" title="Remove Item">X</a>
+            <br />
+        </span>
+        <a href="#" ng-click="ticket_controller.ticket.addDescription()"><img src="/img/icon-add.svg" style="width:1.5em;height:1.5em; vertical-align:bottom"/> Add Item</a>
+        <!--END Descriptions -->
+
+        <h4>Totals</h4>
+        <!--BEGIN Totals -->
+        <span class="st_total_lbl">Subtotal: </span>
+        <span class="st_total_price">{{ticket_controller.ticket.getSubtotal1() | currency}}</span>
+        <br />
+
+        <label for="st_delivery" class="st_total_lbl">Delivery: </label>
+        <span class="dolla">$</span><input id="st_delivery" class="st_total_price" type="number" step="any" ng-model="ticket_controller.ticket.delivery" ng-value="ticket_controller.ticket.delivery" />
+        <br />
+
+        <span class="st_total_lbl">Subtotal: </span>
+        <span class="st_total_price">{{ticket_controller.ticket.getSubtotal2() | currency}}</span>
+        <br />
+
+        <label for="st_tax" class="st_total_lbl">Tax: </label>
+        <span class="dolla">&nbsp;</span><input id="st_tax" class="st_total_price" type="number" step="any" ng-model="ticket_controller.ticket.tax" ng-value="ticket_controller.ticket.tax" />(%)
+        <br />
+
+        <span class="st_total_lbl">Tax Amount: </span>
+        <span class="st_total_price">{{ticket_controller.ticket.getTaxAmount() | currency}}</span>
+        <br />
+        <br />
+
+        <span class="st_total_lbl">Total: </span>
+        <span class="st_total_price">{{ticket_controller.ticket.getTotal() | currency}}</span>
+        <br />
+        <!--END Totals -->
+    </span>
+
+    <span class="st_float_block" id="st_materials">
+        <h4>Materials</h4>
+        <span class="st_mat_desc_title">Description</span>
+        <span class="st_mat_ordered_title">Ordered</span>
+        <span class="st_mat_ordered_title">Arrived</span>
+        <br />
+        <span class="st_mat_item" ng-repeat="mat in ticket_controller.ticket.service_material">
+            <input type="text" ng-disabled="ticket_controller.is_dealer"  class="st_mat_desc" ng-value="mat.description" ng-model="mat.description" />
+            <input type="checkbox" ng-disabled="ticket_controller.is_dealer"  ng-model="mat.ordered" ng-value="mat.ordered" class="st_ordered_cb" />
+            <input type="checkbox" ng-disabled="ticket_controller.is_dealer"  ng-model="mat.arrived" ng-value="mat.arrived" class="st_ordered_cb" id="st_arrived_cb" ng-show="mat.ordered"/>
+            <span style="width:4em;display:inline-block" ng-show="!mat.ordered">&nbsp; &nbsp;</span>
+            <a href="#"  ng-show="!ticket_controller.is_dealer" ng-click="ticket_controller.ticket.removeMaterial(mat)" class="st_remove_desc" title="Remove Item">X</a>
+            <br />
+        </span>
+        <a href="#" ng-show="!ticket_controller.is_dealer" ng-click="ticket_controller.ticket.addMaterial()" ng-show="!ticket_controller.is_dealer"><img src="/img/icon-add.svg" style="width:1.5em;height:1.5em; vertical-align:bottom"/> Add Item</a>
+    </span>
+
+</div>
+
+
+<button ng-click="ticket_controller.save()" class="next convert" ng-disabled="ticket_controller.is_saving">{{ticket_controller.is_saving ? "Saving Changes..." : "Save Changes"}}</button>
+
+
+
+<script>
+
+    function getBaseURL() {
+        if (ticket_controller && ticket_controller.BASE_URL) return ticket_controller.BASE_URL;
+        return "/";
+    }
+
+    $(document).ready(function () {
+
+        var w = ($("#county").width() + 15) + "px";
+
+        $("#st_billing_state").select2({data: states, width: w});
+        $("#st_shipping_state").select2({data: states, width: w});
+        $("#st_billing_state, #st_shipping_state").on("select2:select", function (e) {
+            if ($(this).attr("id") == "st_billing_state") {
+                $("#select2-st_billing_state-container").text(e.params.data.text);
+                ticket_controller.ticket.customer.billing.state = e.params.data.id;
+            } else {
+                $("#select2-st_shipping_state-container").text(e.params.data.text);
+                ticket_controller.ticket.customer.shipping.state = e.params.data.id;
+            }
+        });
+
+
+        $("#st_billing_state, #st_shipping_state").trigger("change");
+
+        $("#customerSelect").select2({
+            ajax: {
+                url: getBaseURL() + "customers/search",
+                dataType: 'jsonp',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page
+                    };
+                },
+                width: w,
+                processResults: function (data, page) {
+                    // parse the results into the format expected by Select2.
+                    // since we are using custom formatting functions we do not need to
+                    // alter the remote JSON data
+                    if (!data) data = {};
+                    if (!data.items || !data.items.length) data.items = [];
+                    data.items.push({id: 0, text: "+Add New Customer"});
+                    return {
+                        results: data.items
+                    };
+                },
+                cache: true
+            },
+            minimumInputLength: 0
+        });
+
+        $("#select2-customerSelect-container").text("(New Customer)");
+
+        $("#customerSelect").on("select2:select", function (e) {
+            var data = e.params.data;
+            if (ticket_controller) {
+                var cus = ticket_controller.ticket.customer;
+                if (data.id == 0) {
+                    ticket_controller.ticket.customer = new Customer();
+                    $("#select2-customerSelect-container").text("(New Customer)");
+                } else {
+                    ticket_controller.ticket.customer = new Customer(data);
+                    $("#select2-st_shipping_state-container").text(getStateById(ticket_controller.ticket.customer.shipping.state));
+                    $("#select2-st_billing_state-container").text(getStateById(ticket_controller.ticket.customer.billing.state));
+                    $("#select2-customerSelect-container").text(ticket_controller.ticket.customer.name);
+                }
+            }
+            var scope = angular.element($("#contentWrap")).scope();
+            if (!scope.$$phase) scope.$apply();
+        });
+
+
+    });
+</script>

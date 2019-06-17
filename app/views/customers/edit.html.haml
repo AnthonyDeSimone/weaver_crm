@@ -1,0 +1,49 @@
+- content_for(:page_title) do
+  Customer Edit
+-content_for(:meta_info) do  
+  = javascript_include_tag 'moment.min.js'   
+  = javascript_include_tag 'pikaday.js'    
+  = stylesheet_link_tag    'pikaday.css'  
+:css
+  .input-group-addon{display: none !important;}
+
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Customer Edit
+      %br/
+      %p.hidden-phone
+        %a.btn.btn-info.btn-large.pull-right{:href => '/customers/new'} Add customer &raquo;
+.row-fluid
+  .span12
+    %ul.breadcrumb
+      = breadcrumbs(['Customers', 'Edit Customer'])
+.row-fluid
+  .span12
+    %h4.title{style:'display:inline-block;'} Customer #{@customer.id} - #{@customer.name} 
+    = link_to customer_path(@customer) do
+      %button.btn.btn-info.btn-xs
+        %i.radmin-pencil
+        Notes 
+    .squiggly-border
+    = simple_form_for @customer do |f|
+      = f.input :name
+      -# f.input :internal_id
+      = f.input :primary_phone
+      = f.input :secondary_phone
+      = f.input :email
+      = f.input :address
+      = f.input :city
+      = f.input :state, collection: state_hash      
+      = f.input :zip      
+      = f.input :county
+      = f.input :lead_status, collection: @customer.lead_statuses
+      = f.input :quote_date, as: :string, :input_html => { :value => (f.object.quote_date.strftime("%m/%d/%Y") rescue nil), autocomplete: :off} 
+      = f.input :callback_date, as: :string, :input_html => { :value => (f.object.callback_date.strftime("%m/%d/%Y") rescue nil), autocomplete: :off}     
+      = f.submit 'Save', class: 'btn btn-info'
+      
+:javascript
+  $(document).ready(function(){
+    var picker = new Pikaday({ field: $('#customer_quote_date')[0], format: 'MM/DD/YYYY', firstDay: 0})
+    var picker = new Pikaday({ field: $('#customer_callback_date')[0], format: 'MM/DD/YYYY', firstDay: 0})
+  })

@@ -1,0 +1,45 @@
+-content_for(:page_title) do
+  Sales Teams
+  
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Sales Teams
+      %br/
+      %p.hidden-phone
+        %a.btn.btn-info.btn-large.pull-right{:href => '/sales_teams/new'} Add new team &raquo; 
+.row-fluid
+  .span12
+    = breadcrumbs(['Sales Teams'])
+.row-fluid.hidden-tablet.hidden-phone
+  .span12
+    %h4.title Sales Teams
+    .squiggly-border
+    %table.table.table-striped.table-bordered.table-radmin
+      %thead
+        %tr
+          %th Sales Team
+          %th Number of Sales Reps
+          %th{:style => "text-align:center; width: 10%"} Edit
+          %th{:style => "text-align:center; width: 10%"} Deactivate
+      %tbody
+        - @sales_teams.each do |team|
+          %tr
+            %td #{team.name} 
+            %td #{team.salespeople.size}
+            %td
+              %a.btn.btn-info.btn-small{:href => "/sales_teams/#{team.id}/edit"}
+                %i.radmin-pencil
+                Edit
+            %td
+              %a.btn.btn-small.btn-danger.team-deactivate{:href => "/sales_teams/#{team.id}/deactivate"}
+                %i.radmin-cancel
+                Deactivate                
+:javascript
+  $(document).ready(function() {  
+    $('a.team-deactivate').click(function() {    
+      $(this).closest('tr').remove()
+      $.ajax({url: this.href, type: 'POST'})
+      return false      
+    })      
+  })

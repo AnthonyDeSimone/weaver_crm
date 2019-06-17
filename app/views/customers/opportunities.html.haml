@@ -1,0 +1,57 @@
+-content_for(:page_title) do
+  Opportunities
+
+-content_for(:meta_info) do
+  = javascript_include_tag 'jquery.easyModal.js'    
+      
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Opportunities
+      %br/
+      %p.hidden-phone
+
+.row-fluid
+  .span12
+    %ul.breadcrumb
+      = breadcrumbs(['Customers', 'Opportunities'])
+
+.row-fluid
+  .span12
+    %h4.title Outstanding Opportunities
+    .squiggly-border 
+  .span12
+    = smart_listing_controls_for(:customers) do
+      = text_field_tag 'customer_name', nil, placeholder: 'Customer Name'
+  = smart_listing_render(:customers)
+  #emailDropboxModal.panel{style: 'display: none;min-width: 400px; min-height: 150px;padding:10px;'}
+    .easy-modal-inner
+      %h4#emailFormModal{style: 'text-align:center;'} Email Dropbox
+      %hr
+      #emailFormModalBody{style: "margin: 0 auto; width: 90%;"}
+        %form#emailDropboxForm{action: "", method: 'post', 'data-remote' => true}
+          %label{for: 'dropbox_comments'}Optional Comments:
+          %br/
+          %textarea{name: 'comments', id: 'dropbox_comments', style: 'width: 100%;', rows: 7}
+          %hr/            
+          %input{type: 'checkbox', id: 'dropbox_include_secondary_email', name: 'dropbox_include_secondary_email'}
+          %label{for: 'dropbox_include_secondary_email'} Include Secondary Email
+          %hr/                 
+          %button.btn.btn-info{:type => "submit"} Send       
+          %button.btn.btn-default.closeModal{:type => "button"} Cancel           
+
+  #emailInvoiceModal.panel{style: 'display: none;min-width: 400px; min-height: 150px;padding:10px;'}
+    .easy-modal-inner
+      %h4#emailFormModal{style: 'text-align:center;'} Email Invoice
+      %hr
+      #emailFormModalBody{style: "margin: 0 auto; width: 90%;"}
+        %form#emailInvoiceForm{action: "", method: 'post'}
+          %label{for: 'invoice_comments'}Optional Comments:
+          %br/           
+          %textarea{name: 'comments', id: 'invoice_comments', style: 'width: 100%;', rows: 7}
+          %hr/   
+          %input{type: 'checkbox', id: 'invoice_include_secondary_email', name: 'invoice_include_secondary_email'}
+          %label{for: 'invoice_include_secondary_email'} Include Secondary Email
+          %hr/                          
+          %button.btn.btn-info{:type => "submit"} Send       
+          %button.btn.btn-default.closeModal{:type => "button"} Cancel                  

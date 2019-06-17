@@ -1,0 +1,15 @@
+<h2>Sales Order Status</h2>
+<br />
+<span  ng-if="form.salesOrderStatus.reason.length > 0">
+    <h3>The quote cannot be converted into a sales order for the following reasons:</h3>
+    <ul><li ng-repeat="err in form.salesOrderStatus.reason">{{err}}</li></ul>
+</span>
+<span ng-if="form.salesOrderStatus.colors">
+    <h3>{{
+            (form.salesOrderStatus.reason.length > 0) ?
+            "Additionally, " :
+            "The quote cannot be converted into a sales order because"
+        }} the following colors have not been selected yet:</h3>
+    <b ng-repeat-start="(sub, arr) in form.salesOrderStatus.colors" ng-if="sub != 'Stain' || !form.salesOrderStatus.colors.Paint">{{sub}}</b><br />
+    <ul ng-repeat-end><li ng-repeat="color in arr">{{color}}</li></ul>
+</span>

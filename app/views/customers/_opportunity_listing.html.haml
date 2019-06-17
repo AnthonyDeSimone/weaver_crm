@@ -1,0 +1,286 @@
+%table.table.table-striped.table-bordered.table-radmin
+  %thead
+    %tr
+      %th Quote #
+      %th 
+        =smart_listing.sortable "Lead Status", :lead_status
+      %th 
+        =smart_listing.sortable "Name", :name
+      %th Phone Number
+      %th 
+        =smart_listing.sortable "Quote Date", :created_at
+      %th 
+        Callback Date
+      %th 
+        =smart_listing.sortable "Salesperson", 'salespeople.name'
+      %th Actions
+      %th Downloads
+      %th Notes
+      %th{style: 'width: 50px;'} 
+        =smart_listing.sortable "Followed Up", :follow_ups
+  %tbody
+    - smart_listing.collection.each do |order|
+      %tr
+        %td
+          = order.id       
+          %td 
+            - if order.customer.andand.lead_status
+              %img{src: "/#{order.customer.andand.lead_status}_status.png"} 
+          %td 
+            %a{href: "/customers/#{order.customer.id}"}
+              #{order.customer.name} 
+          %td
+            #{order.customer.primary_phone}
+          %td
+            #{order.customer.created_at.andand.strftime("%m/%d/%Y")}
+          %td
+            #{order.customer.callback_date.andand.strftime("%m/%d/%Y")}
+          %td
+            #{order.salesperson.andand.name}
+          %td
+            .dropdown
+              %button#dropdownMenu1.btn.btn-info.dropdown-toggle{"aria-expanded" => "true", "data-toggle" => "dropdown", :type => "button"}
+                Actions
+                %span.caret
+              %ul.dropdown-menu{"aria-labelledby" => "dropdownMenu1", :role => "menu"}  
+                %li                    
+                  = link_to order.dropbox_url, :target => "_blank" do
+                    %i.radmin-file
+                    Acccess Dropbox           
+                - if(current_salesperson.account_type != 'Delivery' && !order.issued)  
+                  %li{:role => "presentation"}
+                    %a{:href => "/sales_orders/#{order.id}/copy"}
+                      %i.radmin-clipboard
+                      Copy                     
+                %li{:role => "presentation"}                        
+                  = link_to sales_order_path(order), :class => 'sales_order_delete', :method => :delete do             
+                    %i.radmin-cancel
+                    Delete 
+                - if(['Admin', 'Delivery'].include?(current_salesperson.account_type))     
+                  - if(@order_type == :open) 
+                    %li{:role => "presentation"}                        
+                      = link_to "/sales_orders/#{order.id}/close", :class => 'sales_order_close', :method => :post do             
+                        %i.radmin-enter-2
+                        Close          
+                  - else
+                    %li{:role => "presentation"}                        
+                      = link_to "/sales_orders/#{order.id}/open", :class => 'sales_order_open', :method => :post do             
+                        %i.radmin-enter-2
+                        Reopen                          
+                  %li{:role => "presentation"}                        
+                    = link_to "/sales_orders/#{order.id}/special_order" do             
+                      %i.radmin-lightning
+                      Special Order Items    
+                  %li{:role => "presentation"}  
+                    - text = (order.production_order_created ? 'Unlock Order' : 'Lock Order')                     
+                    = link_to "/sales_orders/#{order.id}", :class => 'sales_order_finalize', :method => :post do
+                      - if(order.production_order_created)
+                        %i.radmin-checkbox-unchecked
+                        Unlock Order     
+                      - else
+                        %i.radmin-checkbox
+                        Lock Order     
+                %li{:role => "presentation"} 
+                  %a{:href => "/sales_orders/#{order.id}/edit"}
+                    %i.radmin-pencil
+                    Edit 
+                %li{:role => "presentation"}                   
+                  %a{:href => "/sales_orders/#{order.id}/deactivate", :class => 'sales_order_deactivate'}
+                    %i.radmin-clipboard-2
+                    Deactivate                                                     
+                %li{:role => "presentation"} 
+                  %a{:href => "/sales_orders/#{order.id}/modify_prices"}
+                    %i.radmin-pencil
+                    Adjust Prices                       
+          %td
+            .dropdown
+              %button#dropdownMenu1.btn.btn-info.dropdown-toggle{"aria-expanded" => "true", "data-toggle" => "dropdown", :type => "button"}
+                Downloads
+                %span.caret
+              %ul.dropdown-menu{"aria-labelledby" => "dropdownMenu1", :role => "menu"}          
+                %li{:role => "presentation"}                      
+                  = link_to sales_order_path(order.id, format: 'pdf'), target: '_blank' do
+                    %i.radmin-printer
+                    Download Invoice
+                %li{:role => "presentation"}                     
+                  = link_to '#', {class: 'email_invoice', order_id: order.id} do #"/sales_orders/#{order.id}/mail_invoice" do
+                    %i.radmin-mail-3
+                    = order.issued? ? 'Mail Invoice' : 'Mail Quote'         
+                - if(has_production_access)
+                  %li
+                    = link_to("/sales_orders/#{order.id}/production_order.pdf", target: '_blank', format: 'pdf', class: 'view_production_order', order_id: order.id) do
+                      %i.radmin-printer
+                      Download Production
+                %li
+                  = link_to '#', {class: 'email_dropbox', order_id: order.id} do #"/sales_orders/#{order.id}/mail_dropbox" do
+                    %i.radmin-mail-3
+                    Mail Dropbox                 
+          %td
+            %a.btn.btn-info.btn-small{:href => "/customers/#{order.customer.id}"}
+              %i.radmin-comments
+              Notes         
+          %td
+            =form_tag("/sales_orders/#{order.id}/follow_ups", method: 'post', remote: true) do
+              =select_tag 'follow_ups', options_for_select([0,1,2,3,4,5,6], order.follow_ups), {class: 'follow_up', style: 'width: 50px;'}
+= smart_listing.paginate      
+:javascript
+$(document).ready(function() {
+  $('.follow_up').change(function(){
+    $(this).closest('form').submit()
+  })
+})
+$(document).ready(function(){
+
+  $("#sales_order_search").select2({
+    ajax: {
+      url: "/sales_orders/search?issued=false&active=true",
+      dataType: 'json',
+      delay: 250,
+      data: function (params) {
+        return {
+          q: params.term, // search term
+          page: params.page
+        };
+      },
+      processResults: function (data, page) {
+        // parse the results into the format expected by Select2.
+        // since we are using custom formatting functions we do not need to
+        // alter the remote JSON data
+        return {
+          results: data.items
+        };
+      },
+      cache: true
+    },
+    minimumInputLength: 1,
+  });
+
+  $('#emailDropboxModal').easyModal({
+    top: 200,
+    overlay: 0.2,
+    closeButtonClass: '.closeModal'      
+  });
+
+  $('.email_dropbox').click(function(){
+    $("#emailDropboxForm").attr('action', "/sales_orders/" + $(this).attr('order_id') + "/mail_dropbox");
+    $("#emailDropboxModal").trigger('openModal');
+  });
+
+  $('.email_invoice').click(function(){
+    $("#emailInvoiceForm").attr('action', '/sales_orders/' + $(this).attr('order_id') + '/mail_invoice')    
+    $("#emailInvoiceModal").trigger('openModal');
+  });
+      
+  $("#emailInvoiceForm").submit(function(){
+    $.post($(this).attr('action'), 
+          {comments: $("#invoice_comments").val(), 
+          include_secondary_email: $("#invoice_include_secondary_email").is(':checked')}
+          ).always( function(){alert('Email was queued for sending.');});
+            
+    $("#emailInvoiceModal").trigger('closeModal');
+    $("#emailInvoiceForm")[0].reset();
+    return false;
+  });
+
+  $("#emailDropboxForm").submit(function(){
+    $.post($(this).attr('action'), 
+          {comments: $("#dropbox_comments").val(), 
+          include_secondary_email: $("#dropbox_include_secondary_email").is(':checked')}
+          ).always( function(){alert('Email was queued for sending.');});
+
+    $("#emailDropboxModal").trigger('closeModal');
+    $("#emailDropboxForm")[0].reset();
+    return false;
+  });
+  
+  $('#emailInvoiceModal').easyModal({
+    top: 200,
+    overlay: 0.2,
+    closeButtonClass: '.closeModal'      
+  });
+
+  $('.last_contact_date').change(function() {  
+      $.ajax({url: '/sales_orders/'+ $(this).attr("sales_order_id") +'/contact_date?date=' + $(this).val(), type: 'POST'})      
+  });
+
+  $('.callback_date').change(function() {  
+      $.ajax({url: '/sales_orders/'+ $(this).attr("sales_order_id") +'/callback_date?date=' + $(this).val(), type: 'POST'})      
+  });
+      
+  $('a.sales_order_close').click(function() {   
+    confirmation = confirm("Are you sure you want to close this order?")
+    
+    if(confirmation)      
+    {
+      $.ajax({url: this.href, type: 'POST'});
+      $(this).closest('tr').remove();
+    }
+    
+    return false;
+  })   
+
+  $('a.sales_order_open').click(function() {   
+    confirmation = confirm("Are you sure you want to reopen this order?")
+    
+    if(confirmation)      
+    {
+      $.ajax({url: this.href, type: 'POST'});
+      $(this).closest('tr').remove();
+    }
+    
+    return false;
+  })   
+
+
+    $('a.sales_order_deactivate').click(function() {    
+      $.ajax({url: this.href, type: 'POST'})
+    
+      $(this).closest('tr').remove()
+    
+    return false
+  })       
+  
+    $('a.sales_order_activate').click(function() {    
+      $.ajax({url: this.href, type: 'POST'})
+    
+      $(this).closest('tr').remove()
+    
+    return false
+  })   
+      
+  $('a.sales_order_finalize').click(function() {    
+      $.ajax({url: '/sales_orders/'+ $(this).attr("sales_order_id") +'/finalize', type: 'POST'})
+    
+      $.ajax({url: this.href, type: 'POST'})
+    
+    return false
+  })   
+
+  $('a.sales_order_finalize').click(function() {        
+    if($(this).text().indexOf('Lock Order') >= 0){
+      $.ajax({url: this.href + '/finalize', type: 'POST'})
+      $(this).html("<i class='radmin-checkbox-unchecked'></i>Unlock Order")
+    }
+    else{
+      $.ajax({url: this.href + '/unfinalize', type: 'POST'})
+      $(this).html("<i class='radmin-checkbox'></i>Lock Order")     
+    }
+          
+    return false
+  })   
+  
+  $('a.sales_order_delete').click(function() {  
+    confirmation = confirm("Are you sure you want to delete this order?")
+    
+    if(confirmation)
+    {
+      $(this).closest('tr').remove()
+      $.ajax({url: this.href, type: 'DELETE'})
+    }
+    return false
+  })   
+      
+  $('#sales_order_search').change(function() { 
+    window.location.replace("/sales_orders/" + $(sales_order_search).val())
+  });        
+})

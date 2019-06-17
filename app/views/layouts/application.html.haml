@@ -1,0 +1,318 @@
+!!!
+%html{:lang => "en"}
+  %head
+    %title Weaver Barn | #{yield(:page_title)}
+    %meta{:charset => "utf-8"}/
+    = stylesheet_link_tag    "application"
+    -# = javascript_include_tag :defaults
+    = javascript_include_tag "application", "data-turbolinks-track" => true
+    = stylesheet_link_tag "radmin-green.css"
+    = favicon_link_tag
+    = yield(:meta_info)
+    
+    :css
+      .jqstooltip {
+        width: auto !important;
+        height: auto !important;
+      }
+
+  %body#body-sample-pages{:'data-no-turbolink' => true}
+    #sticky-footer-wrap
+      .navbar.navbar-inverse.navbar-static-top{style: 'background-color: white;border: none;' }
+        %div{style: 'background-color: white;border: none'}
+          .container-fluid{style: 'background-color: white;'}
+            %a.brand{style: 'padding: 5px;'}
+              %img{src: '/img/weaver-logo.png', alt: 'Weaver Barns', style: 'height: 60px;'}
+            %a.btn.btn-navbar{"data-target" => ".nav-collapse", "data-toggle" => "collapse"}
+              %span.icon-bar
+              %span.icon-bar
+              %span.icon-bar
+              %p.navbar-text.pull-right
+                - if salesperson_signed_in?
+                  %a#user-popover.navbar-link.user-info{:href => "#", style: 'color: #F2B718;text-shadow: none;font-size: 14px;'}
+                    %i.radmin-icon.radmin-user
+                    = current_salesperson.name 
+                    = link_to destroy_salesperson_session_path, :method => :delete do
+                      %button.btn.btn-mini.btn-inverse.navbar-link.logout{style:'    top: -4px;color: #F2B718; position: relative;background-color: white;'}
+                        %i.radmin-icon.radmin-redo
+                        Logout             
+      .row-fluid
+        .span12 &nbsp;
+      .row-fluid.hidden-phone.hidden-tablet
+        .span12.top-stats
+          - if salesperson_signed_in?
+            %ul.top-nav-boxes
+              %li#hide-top-stats.top-stats-arrow{:title => "Hide Top Stats"}
+                %img{:alt => "Hide Top Stats", :src => "/assets/radmin/images/chevron-left.png"}/
+              %li
+                %a{:href => "/sales_orders/new"}
+                  %i.radmin-pencil
+                  %span New Order
+              %li
+                %a{:href => "/opportunities"}
+                  %i.radmin-fire
+                  %span Opportunities   
+              - if(['Admin', 'Shipping'].include?(current_salesperson.account_type))
+                %li
+                  %a{:href => "/reports"}
+                    %i.radmin-stats-up
+                    %span Reporting
+              - if(['Admin', 'Shipping', 'Internal Sales Manager', 'Internal Salesman'].include?(current_salesperson.account_type))
+                %li
+                  %a{:href => "/sales_orders/general_search"}
+                    %i.radmin-search
+                    %span Search                                   
+              - if(true) #(['Admin', 'Shipping', 'Internal Sales Manager', 'Internal Salesman', 'Dealer Sales Manager'].include?(current_salesperson.account_type))
+                %li
+                  %a{:href => "/sales_orders/map"}
+                    %i.radmin-grid-view
+                    %span Order Map             
+              - if(['melissa@weaverbarns.com', 'mmiller@weaverbarns.com', 'anthony@mydesignforest.com'].include?(current_salesperson.email))
+                %li
+                  %a#csv-push{:href => "/sales_orders/push_to_dropbox"}
+                    %i.radmin-file-xml
+                    %span Dropbox CSV                       
+          .notifications-wrapper
+            #color-switcher.color-switcher{:style => "display:none"}
+              %small Choose style
+              %br/
+              %span.default.color-switcher-color
+              %span.pink.color-switcher-color
+              %span.green.color-switcher-color
+      .container-fluid.main-container
+        .row-fluid
+          .span12
+            .sidebar-nav
+              %ul.nav.nav-stacked.left-menu
+                - if !salesperson_signed_in?
+                  %li
+                    %span.box
+                      %i.radmin-icon.radmin-user
+                    %span.hidden-tablet.hidden-phone Please Sign In
+                - else
+                  %li
+                    %a{:href => "/index"}
+                      %span.box
+                        %i.radmin-icon.radmin-home
+                      %span.hidden-tablet.hidden-phone Dashboard
+                  %li.accordion
+                    %a.accordion-toggle{"data-toggle" => "collapse", :href => "#collapse1"}
+                      %span.box
+                        %i.radmin-icon.radmin-drawer-2
+                      %span.hidden-tablet.hidden-phone Sales Orders 
+                      %span.label.pull-right.hidden-tablet.hidden-phone
+                        #{['Admin', 'Shipping'].include?(current_salesperson.account_type) ? "9" : "5"}
+                    #collapse1.accordion-body.collapse
+                      %ul.nav.nav-stacked.submenu
+                        %li
+                          %a{:href => "/sales_orders"}
+                            %span.box
+                              %i.radmin-icon.radmin-drawer-2
+                            %span.hidden-tablet.hidden-phone General Orders  
+                        %li
+                          %a{:href => "/sales_orders/quotes"}
+                            %span.box
+                              %i.radmin-icon.radmin-drawer-2
+                            %span.hidden-tablet.hidden-phone Quotes  
+                        %li
+                          %a{:href => "/sales_orders/closed"}
+                            %span.box
+                              %i.radmin-icon.radmin-drawer-2
+                            %span.hidden-tablet.hidden-phone Closed Orders  
+                        %li
+                          %a{:href => "/sales_orders/inactive"}
+                            %span.box
+                              %i.radmin-icon.radmin-drawer-2
+                            %span.hidden-tablet.hidden-phone Inactive Orders                                                          
+                        - if(SalesTeam.find_by_name("Internal").salespeople.include?(current_salesperson))                           
+                          %li
+                            %a{:href => "/sales_orders_by_dealer"}
+                              %span.box
+                                %i.radmin-icon.radmin-drawer-2
+                              %span.hidden-tablet.hidden-phone Orders by Dealer     
+                        - if(['Admin', 'Shipping'].include?(current_salesperson.account_type))                                                         
+                          %li
+                            %a{:href => "/sales_orders/fishbowl"}
+                              %span.box
+                                %i.radmin-icon.radmin-drawer-2
+                              %span.hidden-tablet.hidden-phone Fishbowl Status
+                        - if(current_salesperson.can_approve_orders?)                                                                                   
+                          %li.submenu-last
+                            %a{:href => "/sales_orders/final_approval"}
+                              %span.box
+                                %i.radmin-icon.radmin-drawer-2
+                              %span.hidden-tablet.hidden-phone Final Approval                                 
+                  - if(['Admin', 'Shipping'].include?(current_salesperson.account_type))     
+                    %li.accordion
+                      %a.accordion-toggle{"data-toggle" => "collapse", :href => "#collapse4"}
+                        %span.box
+                          %i.radmin-icon.radmin-home
+                        %span.hidden-tablet.hidden-phone Production Status 
+                        %span.label.pull-right.hidden-tablet.hidden-phone 2
+                      #collapse4.accordion-body.collapse
+                        %ul.nav.nav-stacked.submenu                                                      
+                          %li
+                            %a{:href => "/sales_orders/prebuilt_status"}
+                              %span.box
+                                %i.radmin-icon.radmin-home
+                              %span.hidden-tablet.hidden-phone Prebuilt Status    
+                          %li
+                            %a{:href => "/sales_orders/aos_status"}
+                              %span.box
+                                %i.radmin-icon.radmin-home
+                              %span.hidden-tablet.hidden-phone AOS Status                            
+                  - if(['Admin', 'Shipping'].include?(current_salesperson.account_type))                                         
+                    %li
+                      %a{:href => "/reports"}
+                        %span.box
+                          %i.radmin-icon.radmin-bars
+                        %span.hidden-tablet.hidden-phone Reports    
+                  - if(current_salesperson.sales_team.name == 'Internal')                                         
+                    %li
+                      %a{:href => "/special_order_items"}
+                        %span.box
+                          %i.radmin-icon.radmin-drawer-2
+                        %span.hidden-tablet.hidden-phone Outstanding Special Order Items                                                        
+                  - if(['Admin', 'Shipping'].include?(current_salesperson.account_type))
+                    %li.accordion
+                      %a.accordion-toggle{"data-toggle" => "collapse", :href => "#collapse2"}
+                        %span.box
+                          %i.radmin-icon.radmin-user-3
+                        %span.hidden-tablet.hidden-phone Management
+                        %span.label.pull-right.hidden-tablet.hidden-phone 5
+                      #collapse2.accordion-body.collapse
+                        %ul.nav.nav-stacked.submenu
+                          %li
+                            %a{:href => "/sales_teams"}
+                              %span.box
+                                %i.radmin-icon.radmin-support
+                              %span.hidden-tablet.hidden-phone Sales Teams                          
+                          %li
+                            %a{:href => "/salespeople"}
+                              %span.box
+                                %i.radmin-icon.radmin-user
+                              %span.hidden-tablet.hidden-phone Users
+                          %li
+                            %a{:href => "/customers"}
+                              %span.box
+                                %i.radmin-icon.radmin-user-2
+                              %span.hidden-tablet.hidden-phone Customers
+                          %li
+                            %a{:href => "/reports"}
+                              %span.box
+                                %i.radmin-icon.radmin-attachment
+                              %span.hidden-tablet.hidden-phone Reports
+                          - if(['Admin'].include?(current_salesperson.account_type))                                         
+                            %li
+                              %a{:href => "/infusionsoft_settings"}
+                                %span.box
+                                  %i.radmin-icon.radmin-cog
+                                %span.hidden-tablet.hidden-phone Infusionsoft Settings                               
+                  - elsif(current_salesperson.account_type == 'Dealer Sales Manager')
+                    %li
+                      %a{:href => "/salespeople"}
+                        %span.box
+                          %i.radmin-icon.radmin-user
+                        %span.hidden-tablet.hidden-phone Users
+                    %li
+                      %a{:href => "/customers"}
+                        %span.box
+                          %i.radmin-icon.radmin-user-2 
+                        %span.hidden-tablet.hidden-phone Customers
+                  - else
+                    %li
+                      %a{:href => "/customers"}
+                        %span.box
+                          %i.radmin-icon.radmin-user-2
+                        %span.hidden-tablet.hidden-phone Customers          
+                  - if(['Admin', 'Shipping'].include?(current_salesperson.account_type))
+                    %li
+                      %a{:href => "/fishbowl_settings"}
+                        %span.box
+                          %i.radmin-icon.radmin-cog
+                        %span.hidden-tablet.hidden-phone Settings       
+                  - if(['Admin', 'Shipping'].include?(current_salesperson.account_type))
+                    %li.accordion
+                      %a.accordion-toggle{"data-toggle" => "collapse", :href => "#collapse3"}
+                        %span.box
+                          %i.radmin-icon.radmin-arrow-up
+                        %span.hidden-tablet.hidden-phone Backend Settings
+                        %span.label.pull-right.hidden-tablet.hidden-phone 3
+                      #collapse3.accordion-body.collapse
+                        %ul.nav.nav-stacked.submenu                      
+                          %li
+                            %a{:href => "/edit_components"}
+                              %span.box
+                                %i.radmin-icon.radmin-paragraph-left
+                              %span.hidden-tablet.hidden-phone Edit Component Prices
+                          %li
+                            %a{:href => "/edit_component_images"}
+                              %span.box
+                                %i.radmin-icon.radmin-pictures
+                              %span.hidden-tablet.hidden-phone Edit Component Images
+                          %li.submenu-last
+                            %a{:href => "/upload_barn_csv"}
+                              %span.box
+                                %i.radmin-icon.radmin-attachment
+                              %span.hidden-tablet.hidden-phone Update Barn Prices                          
+                  %li
+                    %a{:href => "/service_tickets"}
+                      %span.box
+                        %i.radmin-icon.radmin-flag-2
+                      %span.hidden-tablet.hidden-phone Service Tickets   
+                  %li
+                    %a{:href => edit_salesperson_registration_path}
+                      %span.box
+                        %i.radmin-icon.radmin-accessibility
+                      %span.hidden-tablet.hidden-phone User Settings                                                                 
+            .container-fluid.content-wrapper
+              - flash.each do |key, value|
+                %div.alter-block{class: flash_class(key), style:'padding-right:30px;height: 150px;'}
+                  %button.close{:type =>  "button", :'data-dismiss' => "alert"}
+                    &times;
+                  =value
+              =yield
+      #sticky-footer-push
+    / Javascript
+
+    :javascript
+      $(document).ready(function(){          
+        $('a#csv-push').click(function() {            
+            $.ajax({url: this.href, type: 'POST'})
+            alert('Creating new Dropbox CSV...')
+          return false
+          }) 
+        })
+
+      		jQuery(function($){
+      	        var body_id = $('body').attr('id');
+      			if(body_id != null){
+      				var nav_element = $('#navigation-' + body_id.replace('body-',''));
+      	        	nav_element.addClass('active');
+      	        	if(nav_element.has('div.collapse')){
+      	        		var child_nav = nav_element.find('div.collapse');
+      	        		child_nav.addClass('in');
+      	        		child_nav.css('height: auto;');
+      	        		
+      	        	}
+      	        	
+      	        }
+      	        
+      	        //hide the top-stats when the arrow is clicked
+      	        var item = $('.top-stats');
+      	        var target = $('#hide-top-stats');
+      	        if(item.length > 0 && target.length > 0){
+         		        target.on('click', function() {
+      					item.css('position', 'relative');
+      					item.animate({
+      					    left: '-=1200',
+      		  		  	}, 1000, function() {
+      					    // Animation complete.
+      					    item.hide('slow');
+      					});
+      				});
+      			}
+      			
+      			
+      		});
+           

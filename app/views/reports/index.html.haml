@@ -1,0 +1,95 @@
+-content_for(:page_title) do
+  Reports
+-content_for(:meta_info) do 
+  = javascript_include_tag "Chart.min.js"
+  
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Reports
+      %br/
+      %p.hidden-phone
+
+.row-fluid
+  .span12
+    = breadcrumbs(['Reports'])
+  .span4
+    %h2 Monthly Sales Totals
+    %canvas#sales_by_month{:height => "400", :width => "800"}
+.row-fluid    
+  .span4
+    %h2 Monthly Outstanding
+    %canvas#outstanding_by_month{:height => "400", :width => "800"}    
+.row-fluid        
+  .span4
+    %h2
+      #{@current_month}
+      %br
+      %span{style: 'color: rgba(220,220,220,0.8)'} AOS 
+      vs. 
+      %span{style: 'color: rgba(151,187,205,0.8)'} Prebuilt
+    %canvas#myChart{:height => "400", :width => "400"}
+    
+:javascript
+  $(document).ready(function(){    
+      var data = {
+          labels: ['#{@current_month}'],
+          datasets: [
+              {
+                  label: "AOS",
+                  fillColor: "rgba(220,220,220,0.5)",
+                  strokeColor: "rgba(220,220,220,0.8)",
+                  highlightFill: "rgba(220,220,220,0.75)",
+                  highlightStroke: "rgba(220,220,220,1)",
+                  data: [#{@aos_sales_order_total}]
+              },
+              {
+                  label: "Prebuilt",
+                  fillColor: "rgba(151,187,205,0.5)",
+                  strokeColor: "rgba(151,187,205,0.8)",
+                  highlightFill: "rgba(151,187,205,0.75)",
+                  highlightStroke: "rgba(151,187,205,1)",
+                  data: [#{@pb_sales_order_total}]
+              }
+          ]
+      }; 
+      var ctx = document.getElementById("myChart").getContext("2d");    
+     var myBarChart = new Chart(ctx).Bar(data);
+     
+    var data = {
+      labels: #{@sales_by_month.map{|e| e[:month]}},
+      datasets: [
+          {
+              label: "My Second dataset",
+              fillColor: "rgba(151,187,205,0.2)",
+              strokeColor: "rgba(151,187,205,1)",
+              pointColor: "rgba(151,187,205,1)",
+              pointStrokeColor: "#fff",
+              pointHighlightFill: "#fff",
+              pointHighlightStroke: "rgba(151,187,205,1)",
+              data: #{@sales_by_month.map{|e| e[:total]}}
+          }
+      ]
+    }
+    var ctx = document.getElementById("sales_by_month").getContext("2d");     
+    var myLineChart = new Chart(ctx).Line(data); 
+
+    var data = {
+      labels: #{@outstanding_by_month.map{|e| e[:month]}},
+      datasets: [
+          {
+              label: "My Second dataset",
+              fillColor: "rgba(151,187,205,0.2)",
+              strokeColor: "rgba(151,187,205,1)",
+              pointColor: "rgba(151,187,205,1)",
+              pointStrokeColor: "#fff",
+              pointHighlightFill: "#fff",
+              pointHighlightStroke: "rgba(151,187,205,1)",
+              data: #{@outstanding_by_month.map{|e| e[:total]}}
+          }
+      ]
+    }
+    var ctx = document.getElementById("outstanding_by_month").getContext("2d");     
+    var myLineChart = new Chart(ctx).Line(data);     
+  })
+

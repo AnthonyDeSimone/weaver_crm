@@ -1,0 +1,78 @@
+%table.table.table-striped.table-bordered.table-radmin
+  %thead
+    %tr
+      %th
+        =smart_listing.sortable "Number", :id
+      %th
+        =smart_listing.sortable "Customer", :customer_name
+      %th
+        =smart_listing.sortable "Date", :date      
+      %th
+        Timeframe
+      %th 
+        =smart_listing.sortable "Outstanding Materials", :materials_not_in_hand
+      %th
+        =smart_listing.sortable "Confirmed", :confirmed          
+      %th Edit
+      %th Complete
+      %th Delete
+  %tbody
+    - smart_listing.collection.each do |ticket|
+      %tr
+        %td=ticket.id
+        %td=ticket.customer.andand.name
+        %td=ticket.date.strftime("%m/%d/%Y") rescue nil
+        %td=ticket.time_frame_name
+        %td=ticket.materials_not_in_hand
+        %td
+          - allow_confirmation = (current_salesperson.account_type == 'Shipping' || current_salesperson.account_type == 'Admin' || ['matt@weaverbarns.com', 'dave@weaverbarns.com', 'dustin@weaverbarns.com'].include?(current_salesperson.email))
+          =form_tag("/service_tickets/#{ticket.id}/confirm", method: 'post', remote: true, id: 'confirm-form') do
+            =check_box_tag 'confirm', 'confirmed', ticket.confirmed, class: 'confirm', disabled: !allow_confirmation
+        %td
+          %a.btn.btn-info.btn-small{:href => "/service_tickets/#{ticket.id}/edit"}
+            %i.radmin-pencil
+            Edit      
+        %td
+          -if(!ticket.completed)
+            %a.btn.btn-small.btn-danger.ticket-mark_complete{:href => "/service_tickets/#{ticket.id}/mark_complete"}
+              %i.radmin-checkmark
+              Mark Complete      
+        %td
+          -if(current_salesperson.account_type == 'Admin')
+            = link_to service_ticket_path(ticket), :class => 'service_ticket_delete btn btn-small btn-danger', :method => :delete do             
+              %i.radmin-cancel
+              Delete  
+= smart_listing.paginate
+
+:javascript
+  $(document).ready(function() {  
+     $('.confirm').click(function(){
+      if(confirm('Are you sure you want to confirm this ticket?'))
+        $(this).closest('form').submit()
+      else
+        return false;
+        
+    }) 
+  
+    $('a.service_ticket_delete').click(function() {  
+      confirmation = confirm("Are you sure you want to delete this service ticket?")
+      
+      if(confirmation)
+      {
+        $(this).closest('tr').remove()
+        $.ajax({url: this.href, type: 'DELETE'})
+      }
+      return false
+    })  
+      
+    $('a.ticket-mark_complete').click(function() { 
+      if(confirm("Are you sure you want to mark this as complete?"))
+      {
+        $(this).closest('tr').remove()
+        $.ajax({url: this.href, type: 'POST'})
+      }
+      
+      return false      
+    })      
+  })
+            

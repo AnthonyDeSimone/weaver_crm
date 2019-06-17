@@ -1,0 +1,22 @@
+-content_for(:page_title) do
+  Sales Order Confirmation
+  
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Sales Order Confirmation
+      %br/
+      %p.hidden-phone
+
+.row-fluid
+  .span12
+    = breadcrumbs(['Sales Orders'])
+.row-fluid.hidden-tablet.hidden-phone
+  .span12
+    %h4.title 
+      = @order.issued ? "Order " : "Quote " 
+      #{@order.id}
+    Click 
+    = link_to sales_order_path(@order.id, format: 'pdf') do
+      here
+    for the invoice.

@@ -1,0 +1,59 @@
+%table.table.table-striped.table-bordered.table-radmin
+  %thead
+    %tr
+      %th Order #
+      %th 
+        %a{href: "/sales_orders/?order_by=name&direction=#{@new_direction}"} Customer Name
+      %th Dealer
+      %th Serial #
+      %th 
+        %a{href: "/sales_orders/?order_by=delivery_date&direction=#{@new_direction}"} Delivery Date
+      %th Salesman
+      %th 
+        Last
+        %br
+        Modified            
+      %th Total
+      %th Type      
+      %th Edit
+      %th Downloads                         
+  %tbody
+    - smart_listing.collection.each do |order|
+      %tr        
+        %td 
+          =order.id
+        %td
+          - if(order.customer)
+            =link_to(order.customer.andand.name, customer_path(order.customer))
+        %td
+          = order.salesperson.andand.sales_team.andand.name
+        %td
+          =order.serial_number
+        %td 
+          =order.delivery_date.andand.strftime("%m/%d/%Y")
+        %td
+          =order.salesperson.andand.name
+        %td
+          =order.modified_by.andand.name              
+        %td
+          =JSON.load(order.prices).andand['total']
+        %td
+          = order.issued ? 'Sold' : 'Quote'
+        %td
+          %a.btn.btn-info.btn-small{:href => "/sales_orders/#{order.id}/edit"}
+            %i.radmin-pencil
+              Edit  
+        %td
+          .dropdown
+            %button#dropdownMenu1.btn.btn-info.dropdown-toggle{"aria-expanded" => "true", "data-toggle" => "dropdown", :type => "button"}
+              Downloads
+              %span.caret
+            %ul.dropdown-menu{"aria-labelledby" => "dropdownMenu1", :role => "menu"}          
+              %li{:role => "presentation"}                      
+                = link_to sales_order_path(order.id, format: 'pdf', t: Time.now.to_f.to_i.to_s), target: '_blank' do
+                  %i.radmin-printer
+                  Download PDF
+              %li{:role => "presentation"}                     
+                = link_to "/sales_orders/#{order.id}/mail_invoice" do
+                  %i.radmin-mail-3
+                  = order.issued? ? 'Mail Invoice' : 'Mail Quote'                                                      

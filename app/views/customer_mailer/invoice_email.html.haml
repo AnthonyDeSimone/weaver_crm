@@ -1,0 +1,13 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+  %body
+    - if(@comments)
+      %p
+        = @comments.to_s.gsub("\n", "<br />").html_safe
+    - else
+      %p
+        Thank you for your #{@order.issued? ? 'order' : 'time'}, #{@order.customer.name}
+      %p
+        Attached is the #{@order.issued? ? 'invoice' : 'quote'}.

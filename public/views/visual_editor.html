@@ -1,0 +1,416 @@
+<div id="visual-editor-header">
+    <h1 style="padding-left: 30px">Visual Editor</h1>
+
+    <div id="visual-editor-buttons">
+        <a href="#" ng-click="editor.close()">{{editor.is_closing ? "Updating Changes..." : "Close"}}</a>
+    </div>
+</div>
+
+<!--
+    All of the tabs at the top right of the editor.
+-->
+<div id="visual-editor-tabs">
+    <span ng-if="!editor.visuals.selected">
+        <a href="#" ng-class="{'t_selected': editor.selected_tab == 0}" ng-click=editor.selectTab(0)>Queue</a>
+        <a href="#" ng-class="{'t_selected': editor.selected_tab == 1}" ng-click=editor.selectTab(1)>Form</a>
+        <a href="#" ng-class="{'t_selected': editor.selected_tab == 2}" ng-click=editor.selectTab(2)>Custom</a>
+        <a href="#" ng-class="{'t_selected': editor.selected_tab == 3}" ng-click=editor.selectTab(3)>Options</a>
+    </span>
+    <span ng-if="editor.visuals.selected">
+        <a href="#" class="t_selected">Edit Selected</a>
+        <a href="#" ng-click="editor.visuals.selectVisual(null)">(Other Options)</a>
+    </span>
+</div>
+
+
+<!--
+
+    Tab container.
+
+    This is where the bodies all of the tab options at the right of the editor are being held.
+
+-->
+<div id="tab-container">
+
+
+    <!-- Always display icons (if more than 1 item) -->
+    <span ng-if="editor.visuals.size() > 1">
+        <br />
+        <span class="across note">
+            Items currently on editor.
+        </span>
+        <br />
+        <!--suppress HtmlUnknownAttribute -->
+        <img
+            ng-repeat="vis in editor.visuals.getVisualsByZ() track by $index"
+            ng-src="{{vis.custom.is_custom ? '/images/custom.png' : vis.image_url}}"
+            ng-attr-title="{{vis.custom.is_custom ? vis.custom.text : (vis.getComponent() ? vis.getComponent().name : vis.id)}}"
+            ng-mouseenter="vis.is_hovering = true"
+            ng-mouseleave="vis.is_hovering = false"
+            ng-click="editor.visuals.selectVisual(vis)"
+            ng-class="{'on-editor-icon':true, selected: editor.visuals.isSelected(vis)}"
+            />
+    </span>
+
+    <!--
+        Although it started as "sandbox", it would probably be more accurate to label it as "components".
+
+        This holds all of the queued components, and the components currently on the editor.
+    -->
+    <div id="sandbox" ng-show="editor.selected_tab == 0">
+
+        <!--
+            QUEUED
+
+            The queued components.
+        -->
+        <h3 style="text-align: center; border-bottom: 2px solid #ccc; margin: auto">Queued</h3>
+        <br/>
+        <span class="note across">
+            This is the list of components that have already been selected on the form and still need to be placed
+            on the editor (may be empty).
+        </span>
+        <img
+            ng-repeat="qd in editor.visuals.getQueuedVisuals() track by $index"
+            data-id="{{qd.id}}"
+            ng-src="{{form.getDisplayImage(qd)}}"
+            ng-attr-title="{{qd.name}}"
+            waiting
+            />
+    </div>
+
+    <!--
+        VISUAL FORM
+    -->
+    <div id="components" ng-show="editor.selected_tab == 1">
+        <h2
+          ng-repeat-start="section in form.additions"
+          ng-if="editor.isVisualSection(section)"
+          class="components-title"
+          id="{{form.idCase('section-' + section.name)}}"
+          >{{section.name}}</h2>
+        <div ng-include="'/views/visual_section.html'"
+             style="width:300px;max-width: 300px; min-width:300px"
+             class="components-section"
+             ng-if="editor.isVisualSection(section)"
+             accordion-component="{{'#' + form.idCase('section-' + section.name)}}"
+             data-parent="#components"
+             ng-repeat-end
+            >
+        </div>
+    </div>
+
+
+    <!--
+        CUSTOM
+    -->
+    <div id="ve_extra" ng-show="editor.selected_tab == 2">
+
+
+        <h3 style="text-align: center; border-bottom: 2px solid #ccc; margin: auto">Custom Visual</h3>
+
+        <br />
+        <span class="across">
+            <h4>Options</h4>
+        </span>
+        <br />
+        <span class="across note">
+            <input type="checkbox" ng-model="editor.custom_visual.has_text" ng-value="editor.custom_visual.has_text"/>
+             {{editor.custom_visual.has_text ? "Custom Component Text" : "Include Text"}}
+        </span>
+        <input
+            type="text"
+            ng-model="editor.custom_visual.text"
+            ng-value="editor.custom_visual.text"
+            ng-if="editor.custom_visual.has_text"
+            class="across"
+            />
+        <br />
+        <span class="across note">
+            <input type="checkbox" ng-model="editor.custom_visual.filled" ng-value="editor.custom_visual.filled"/>
+            Solid Background
+        </span>
+        <br />
+        <span class="across note">
+            <input type="checkbox" ng-model="editor.custom_visual.border" ng-value="editor.custom_visual.border"/>
+            Has Border
+        </span>
+
+        <br />
+        <span class="across">
+            <h4>Size</h4>
+        </span>
+        <span class="across note">
+            Size dimensions are measured in feet.
+        </span>
+        <br />
+        <span class="across note">
+            Size (Width, Height)
+        </span>
+        <span class="across">
+            <input type="number" step="any" ng-model="editor.custom_visual.width"
+                   ng-value="editor.custom_visual.width" class="sec" />
+            <input type="number" step="any" ng-model="editor.custom_visual.height"
+                   ng-value="editor.custom_visual.height" class="sec" />
+        </span>
+        <br clear="both"/><br/>
+            <span class="across">
+                <h4>Preview</h4>
+            </span>
+            <span class="across"><br/>
+                <span id="custom_visual" ng-style="editor.getCustomVisualStyle()" custom>
+                <span ng-style="editor.getCustomSpanStyle()" style="font-size:1.5em">{{editor.custom_visual.has_text ? editor.custom_visual.text : ""}}</span>
+            </span>
+            </span>
+        </span>
+    </div>
+
+    <!-- Drawing -->
+    <div id="ve_options" ng-show="editor.selected_tab == 3">
+        <span class="across">
+            <h4>Drawing</h4>
+        </span>
+        <br />
+        <span class="across note">
+            <input type="checkbox" ng-model="editor.options.horizontal_line.draw" ng-value="editor.options.horizontal_line.draw" />
+            Draw Ridge Line
+        </span>
+        <br />
+        <span class="across note">
+            <input type="checkbox" ng-model="editor.options.grid.draw" ng-value="editor.options.grid.draw"/>
+            {{
+            !editor.options.grid.draw ?
+            "Draw Grid Lines" :
+            "Grid - Spacing (Feet)"
+            }}
+            <input type="number" step="any" ng-model="editor.options.grid.size" ng-value="editor.options.grid.size" ng-if="editor.options.grid.draw"/>
+        </span>
+        <span class="across">
+        </span>
+
+        <br/>
+        <span class="across">
+            <h4>Barn Padding</h4>
+        </span>
+        <span class="across">
+            <span class="note">
+                The minimum area, in feet, that pad the outside of the barn.
+            </span>
+        </span>
+        <br />
+        <span class="across note">
+            Minimum padding (horizontal, vertical)
+        </span>
+        <span class="across">
+            <input type="number" step="any" ng-model="editor.visuals.barn.dimensions.padding.x"
+                   ng-value="editor.visuals.barn.dimensions.padding.x" class="sec" />
+            <input type="number" step="any" ng-model="editor.visuals.barn.dimensions.padding.y"
+                   ng-value="editor.visuals.barn.dimensions.padding.y" class="sec" />
+        </span>
+    </div>
+
+
+    <!--
+        EDIT SELECTED
+    -->
+    <div ng-if="editor.selected_tab == 5" id="edit-selected">
+
+        <h3 style="text-align: center; border-bottom: 2px solid #ccc; margin: auto">Selected Component</h3>
+        <br/>
+
+        <!--
+            An overview of all of the components currently on the editor.
+        -->
+        <span ng-if="editor.visuals.size() > 1">
+            <span class="across">
+                <h4>Stacking Order</h4>
+            </span>
+            <div style="margin:auto;text-align:center">
+                <img
+                    src="/images/first.png"
+                    title="Send to Front"
+                    class="z-img"
+                    ng-click="editor.visuals.setZTop(editor.visuals.selected)"
+                    />
+                <img
+                    src="/images/previous.png"
+                    title="Send Up One"
+                    class="z-img"
+                    ng-click="editor.visuals.setZUp(editor.visuals.selected)"
+                    />
+                <img
+                    src="/images/next.png"
+                    title="Send Down One"
+                    class="z-img"
+                    ng-click="editor.visuals.setZDown(editor.visuals.selected)"
+                    />
+                <img
+                    src="/images/last.png"
+                    title="Sent to Bottom"
+                    class="z-img"
+                    ng-click="editor.visuals.setZBottom(editor.visuals.selected)"
+                    />
+            </div>
+            <br/>
+        </span>
+
+        <span class="across">
+            <h4>Remove</h4>
+        </span>
+        <br />
+        <span class="across note" ng-if="!editor.visuals.selected.custom.is_custom">
+            <img
+                src="/img/return.png"
+                style="cursor:pointer"
+                ng-click="editor.visuals.unplaceVisual(editor.visuals.selected)"
+                title="Remove from Editor"
+                />
+            Remove the component from the editor, but do not change the amount on the form.
+            <br />
+        </span>
+        <span class="across note" ng-if="!editor.visuals.selected.custom.is_custom">
+            <br />
+            <img
+                src="/img/delete.png"
+                style="cursor:pointer"
+                ng-click="editor.visuals.removeVisual(editor.visuals.selected)"
+                title="Delete from Form"
+                />
+            Removes this component altogether, and updates the form accordingly.
+        </span>
+        <span class="across note" ng-if="editor.visuals.selected.custom.is_custom">
+            <br />
+            <img
+                src="/img/delete.png"
+                style="cursor:pointer"
+                ng-click="editor.visuals.removeVisual(editor.visuals.selected)"
+                title="Remove Component"
+                />
+            Removes the custom component.
+        </span>
+        <br />
+
+        <!-- LAYOUT -->
+        <span class="across">
+            <h4>Layout</h4>
+        </span>
+        <span class="across note">
+            All dimensions are in feet. Coordinates are measured from the top left corner of the barn.
+        </span>
+        <br />
+        <span class="across note">
+            Location (X, Y)
+        </span>
+        <span class="across">
+            <input type="number" step="any" ng-model="editor.selected_options.x"
+                   ng-value="editor.selected_options.x" class="sec" />
+            <input type="number" step="any" ng-model="editor.selected_options.y"
+                   ng-value="editor.selected_options.y" class="sec" />
+        </span>
+        <br /><br />
+        <span class="across note">
+            Size (Width, Height)
+        </span>
+        <span class="across">
+            <input type="number" step="any" ng-model="editor.selected_options.w"
+                   ng-value="editor.selected_options.w" class="sec" />
+            <input type="number" step="any" ng-model="editor.selected_options.h"
+                   ng-value="editor.selected_options.h" class="sec" />
+        </span>
+        <br /><br />
+        <span class="across note">
+            Rotation ({{editor.selected_options.rotation * 90}}°)
+        </span>
+        <span class="across" style="margin-bottom:.3em">
+            <input type="range" min="0" max="3" ng-value="editor.selected_options.rotation" ng-model="editor.selected_options.rotation" />
+        </span>
+        <span class="across note">
+            <input type="checkbox" ng-value="editor.selected_options.flipped" ng-model="editor.selected_options.flipped" />
+            Horizontally Flipped
+        </span>
+
+
+        <!-- CUSTOM -->
+        <span ng-if="editor.visuals.selected.custom.is_custom">
+            <br />
+            <span class="across">
+                <h4>Custom Options</h4>
+            </span>
+            <br />
+            <span class="across note">
+                <input type="checkbox" ng-model="editor.visuals.selected.custom.has_text" ng-value="editor.visuals.selected.custom.has_text"/>
+                {{editor.visuals.selected.custom.has_text ? "Custom Component Text" : "Include Text"}}
+            </span>
+            <input
+                type="text"
+                ng-model="editor.visuals.selected.custom.text"
+                ng-value="editor.visuals.selected.custom.text"
+                ng-if="editor.visuals.selected.custom.has_text"
+                class="across"
+                />
+            <br />
+            <span class="across note">
+                <input type="checkbox" ng-model="editor.visuals.selected.custom.filled" ng-value="editor.visuals.selected.custom.filled"/>
+                Solid Background
+            </span>
+            <br />
+            <span class="across note">
+                <input type="checkbox" ng-model="editor.visuals.selected.custom.border" ng-value="editor.visuals.selected.custom.border"/>
+                Has Border
+            </span>
+
+        </span>
+    </div>
+
+</div>
+
+
+<div id="blueprint" blueprint class="module">
+    <div id="barn-outline" ng-style="editor.barn.getOutlineStyle()">
+        <div id="dimensions" ng-if="!editor.barn.image_url">
+            {{form.options.style == 'Studio' ? editor.barn.dimensions.height - 2 : editor.barn.dimensions.height}}x{{editor.barn.dimensions.width}}
+        </div>
+    </div>
+    <div id="studio-outline" ng-style="editor.barn.getStudioOutlineStyle()" ng-if="!editor.barn.image_url && form.options.style == 'Studio'"></div>
+    <canvas id="underlay"></canvas>
+    <div id="overlay" ng-click="editor.overlayClicked($event)" tabindex="0">
+        <div
+            ng-repeat="visual in editor.visuals.visuals"
+            ng-style="visual.getStyle()"
+            id="{{visual.id}}"
+            ng-mousedown="editor.selectVisual(visual)"
+            ng-class="{'selected' : editor.visuals.isSelected(visual)}"
+            vis="visual"
+            blueprint-draggable
+            >
+            <span ng-if="visual.overlapping.length" class="overlaps">{{visual.overlapping.length}}</span>
+            <img
+                ng-src="{{visual.getDisplayUrl()}}"
+                class="rotate{{(visual.flipped ? '_flip' : '') + visual.getRotation()}} on-blueprint"
+                ng-style="visual.getImageStyle()"
+                title="{{form.getComponentById(visual.component_id).name}}"
+                ng-if="!visual.custom.is_custom"
+                ng-mousedown="editor.selectVisual(visual)"
+                />
+            <span ng-if="visual.custom.is_custom"
+                  class="rotate{{(visual.flipped ? '_flip' : '') + visual.getRotation()}} on-blueprint"
+                  ng-style="visual.getSpanStyle()"
+                  ng-mousedown="editor.visuals.selectVisual(visual)"
+                >{{visual.custom.has_text ? visual.custom.text : ""}}</span>
+            <div class="control-box"
+                 ng-show="editor.visuals.isSelected(visual)"
+                >
+                <img src="/img/rotate.png" ng-click="visual.rotate()" title="Rotate"
+                     style="float: left"/>
+                <img src="/img/resize-horizontal.svg" ng-click="visual.flip()" title="Flip"
+                     style="float: left"/>
+                <img src="/img/return.png" ng-click="editor.visuals.unplaceVisual(visual)" title="Remove (Return to Queued)"
+                     style="float: right" ng-if="!visual.custom.is_custom"  />
+                <img src="/img/delete.png" ng-click="editor.visuals.removeVisual(visual)" title="Delete (Remove from Form)"
+                     style="float: right" ng-if="!visual.custom.is_custom" />
+                <img src="/img/delete.png" ng-click="editor.visuals.unplaceVisual(visual)" title="Remove Custom Component"
+                     style="float: right" ng-if="visual.custom.is_custom"  />
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+/* line 4, /home/anthony/rails-dev-box/weaver-crm/app/assets/stylesheets/expand.css.scss */
+css
+body.form-expanded #main {
+  margin-top: 200px;
+}
+/* line 7, /home/anthony/rails-dev-box/weaver-crm/app/assets/stylesheets/expand.css.scss */
+css
+body.form-expanded header {
+  position: fixed;
+  left: 0;
+  right: 315px;
+  z-index: 999999;
+}
+
+/* line 16, /home/anthony/rails-dev-box/weaver-crm/app/assets/stylesheets/expand.css.scss */
+table .glyphicon span {
+  display: none;
+}
+
+/* line 20, /home/anthony/rails-dev-box/weaver-crm/app/assets/stylesheets/expand.css.scss */
+.pagination > li > a, .pagination > li > span {
+  color: inherit;
+}
+
+/* line 24, /home/anthony/rails-dev-box/weaver-crm/app/assets/stylesheets/expand.css.scss */
+.pagination > .active > a, .pagination > .active > a:hover, .pagination > .active > a:focus, .pagination > .active > span, .pagination > .active > span:hover, .pagination > .active > span:focus {
+  background-color: #42826C;
+  border-color: #42826C;
+}
+
+/* line 29, /home/anthony/rails-dev-box/weaver-crm/app/assets/stylesheets/expand.css.scss */
+.pagination > li > a:hover, .pagination > li > a:focus, .pagination > li > span:hover, .pagination > li > span:focus {
+  color: #42826C;
+}
+
+/* line 33, /home/anthony/rails-dev-box/weaver-crm/app/assets/stylesheets/expand.css.scss */
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+  height: inherit;
+  margin-bottom: inherit;
+}

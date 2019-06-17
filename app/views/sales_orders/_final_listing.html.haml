@@ -1,0 +1,60 @@
+%table.table.table-striped.table-bordered.table-radmin
+  %thead
+    %tr
+      %th
+        =smart_listing.sortable 'Order #', :id
+      %th
+        =smart_listing.sortable 'Status', :status            
+      %th
+        =smart_listing.sortable 'Customer Information', 'customers.name'      
+      %th
+        =smart_listing.sortable 'Sales Team', 'sales_teams.name'
+      %th
+        =smart_listing.sortable 'Salesperson', 'salespeople.name'    
+      %th
+        =smart_listing.sortable 'Order Date', :date            
+      %th Details
+      %th Warnings
+      %th Total
+      %th Approval Form
+  %tbody
+    - smart_listing.collection.each do |order|
+      - json = JSON.load(order.json_info)
+      %tr        
+        %td 
+          =order.id
+        %td
+          =order.real_status.gsub('_', ' ')
+        %td
+          -if(order.customer)
+            =link_to(order.customer.andand.name, customer_path(order.customer))
+            %br
+            =json['data']['customer']['shipping']['address']
+            %br
+            #{json['data']['customer']['shipping']['city']}, #{json['data']['customer']['shipping']['state']} #{json['data']['customer']['shipping']['zip']}
+        %td
+          =order.salesperson.sales_team.name
+        %td
+          =order.salesperson.name
+        %td
+          =order.date.strftime("%m/%d/%Y")      
+        %td
+          - if(json['data']['options']['size'] == 'Custom')
+            - width   = json['data']['custom']['size']['width']
+            - length  = json['data']['custom']['size']['len']
+          - else
+            - width = json['data']['options']['size']['width']
+            - length = json['data']['options']['size']['len']
+          #{json['data']['options']['style']} #{width} x #{length} - #{json['data']['options']['feature']}
+        %td
+          - if(!json['data']['warnings'].andand.values)
+            Clear
+          - else
+            - json['data']['warnings'].andand.values.andand.flatten.andand.each do |error|
+              = error
+              %br
+        %td
+          =JSON.load(order.prices).andand['total']
+        %td
+          %a.btn.btn-info{href: "/sales_orders/#{order.id}/final_approval"} Approval Form
+= smart_listing.paginate

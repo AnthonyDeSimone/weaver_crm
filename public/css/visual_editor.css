@@ -1,0 +1,520 @@
+.rotate0, .rotate1, .rotate2, .rotate3, .rotate_flip0, .rotate_flip1, .rotate_flip2, .rotate_flip3 {
+    -webkit-transform-origin: left top;
+    -ms-transform-origin: left top;
+    -moz-transform-origin: left top;
+    -o-transform-origin: left top;
+    transform-origin: left top;
+}
+
+.rotate0 {
+    -webkit-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+}
+
+.rotate1 {
+    -webkit-transform: rotate(90deg) translate(0, -100%);
+    -ms-transform: rotate(90deg) translate(0, -100%);
+    -moz-transform: rotate(90deg) translate(0, -100%);
+    -o-transform: rotate(90deg) translate(0, -100%);
+    transform: rotate(90deg) translate(0, -100%);
+}
+
+.rotate2 {
+    -webkit-transform: rotate(180deg) translate(-100%, -100%);
+    -ms-transform: rotate(180deg) translate(-100%, -100%);
+    -moz-transform: rotate(180deg) translate(-100%, -100%);
+    -o-transform: rotate(180deg) translate(-100%, -100%);
+    transform: rotate(180deg) translate(-100%, -100%);
+}
+
+.rotate3 {
+    -webkit-transform: rotate(270deg) translate(-100%, 0%);
+    -ms-transform: rotate(270deg) translate(-100%, 0%);
+    -moz-transform: rotate(270deg) translate(-100%, 0%);
+    -o-transform: rotate(270deg) translate(-100%, 0%);
+    transform: rotate(270deg) translate(-100%, 0%);
+}
+
+.rotate_flip0 {
+    -webkit-transform: rotate(0deg) translate(100%, 0) scaleX(-1);
+    -ms-transform: rotate(0deg) translate(100%, 0) scaleX(-1);
+    -moz-transform: rotate(0deg) translate(100%, 0) scaleX(-1);
+    -o-transform: rotate(0deg) translate(100%, 0) scaleX(-1);
+    transform: rotate(0deg) translate(100%, 0) scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+}
+
+.rotate_flip1 {
+    -webkit-transform: rotate(90deg) translate(100%, -100%) scaleX(-1);
+    -ms-transform: rotate(90deg) translate(100%, -100%) scaleX(-1);
+    -moz-transform: rotate(90deg) translate(100%, -100%) scaleX(-1);
+    -o-transform: rotate(90deg) translate(100%, -100%) scaleX(-1);
+    transform: rotate(90deg) translate(100%, -100%) scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+}
+
+.rotate_flip2 {
+    -webkit-transform: rotate(180deg) translate(0, -100%) scaleX(-1);
+    -ms-transform: rotate(180deg) translate(0, -100%) scaleX(-1);
+    -moz-transform: rotate(180deg) translate(0, -100%) scaleX(-1);
+    -o-transform: rotate(180deg) translate(0, -100%) scaleX(-1);
+    transform: rotate(180deg) translate(0, -100%) scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+}
+
+.rotate_flip3 {
+    -webkit-transform: rotate(270deg) translate(0, 0%) scaleX(-1);
+    -ms-transform: rotate(270deg) translate(0, 0%) scaleX(-1);
+    -moz-transform: rotate(270deg) translate(0, 0%) scaleX(-1);
+    -o-transform: rotate(270deg) translate(0, 0%) scaleX(-1);
+    transform: rotate(270deg) translate(0, 0%) scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+}
+
+#visual-editor {
+    z-index: 9999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #fff8e4;
+    box-shadow: 0 15px 80px rgba(0, 0, 0, 0.5);
+}
+
+#visual-editor img.on-editor-icon {
+    display: inline-block;
+    border: 1px solid #888888;
+    max-width: 25px !important;
+    min-width: 5px !important;
+    height: 25px;
+    margin: 2px;
+    cursor: pointer;
+}
+
+#visual-editor img.on-editor-icon:hover {
+    border: 1px solid gold;
+}
+
+#visual-editor img.on-editor-icon.selected {
+    border: 2px solid #60d0ff;
+    height: 28px;
+    max-width: 30px !important;
+}
+
+#visual-editor #visual-editor-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5em;
+    border-bottom: 1px solid #84705c;
+}
+
+#visual-editor #sandbox, #visual-editor #edit-selected {
+    position: fixed;
+    top: 0;
+    width: 0;
+    height: 0;
+    background-color: white;
+    vertical-align: middle;
+}
+
+#visual-editor #sandbox img.waiting, #visual-editor #edit-selected img.waiting {
+    display: block;
+    max-width: 150px !important;
+    max-height: 150px !important;
+    margin: auto;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: 1px solid black;
+    cursor: grab;
+}
+
+#visual-editor #sandbox img.waiting:hover, #visual-editor #edit-selected img.waiting:hover {
+    border: 1px solid #000030;
+}
+
+#visual-editor #sandbox img.z-img, #visual-editor #edit-selected img.z-img {
+    width: 25px !important;
+    height: 25px !important;
+    cursor: pointer;
+}
+
+#visual-editor #sandbox img.z-img:hover, #visual-editor #edit-selected img.z-img:hover {
+    background-color: #E0F0FF;
+}
+
+#visual-editor #blueprint {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    top: calc(5em + 10px);
+    width: calc(100% - 280px);
+    height: calc(100% - 20px - 5em);
+    display: block;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border: 1px solid #84705c;
+    background-color: white;
+}
+
+#visual-editor #blueprint #overlay, #visual-editor #blueprint #underlay {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+#visual-editor #blueprint #overlay {
+    z-index: 100;
+}
+
+#visual-editor #blueprint #underlay {
+    z-index: 5;
+}
+
+#visual-editor #blueprint #barn-outline {
+    width: 100%;
+    height: 100%;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 100%;
+    box-sizing: border-box;
+}
+
+#visual-editor #blueprint #barn-outline #dimensions {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    font-family: 'Coming Soon', sans-serif;
+    color: #374b5f;
+}
+
+#visual-editor #blueprint #barn-floorplan {
+    width: 100%;
+    height: 100%;
+}
+
+#visual-editor #visual-editor-tabs {
+    position: fixed;
+    top: calc(5em + 10px);
+    right: 10px;
+    width: 245px;
+    height: 26px;
+    box-sizing: border-box;
+    z-index: 2;
+}
+
+#visual-editor #visual-editor-tabs a {
+    text-decoration: none;
+    display: block;
+    float: left;
+    height: 26px;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #fff8e4;
+    box-sizing: border-box;
+    margin-right: 3px;
+    line-height: 26px;
+    font-size: 13px;
+    padding: 0 3px;
+    z-index: 10;
+    border: 1px solid #84705c;
+}
+
+#visual-editor #visual-editor-tabs a:active, #visual-editor #visual-editor-tabs a:visited, #visual-editor #visual-editor-tabs a {
+    outline: none;
+}
+
+#visual-editor #visual-editor-tabs a.t_selected {
+    border-bottom: 1px solid #f5f5f5;
+    background-color: #f5f5f5;
+    color: rgba(0, 0, 0, 0.4);
+    height: 27px;
+    padding-bottom: 1px;
+}
+
+#visual-editor #tab-container {
+    position: fixed;
+    top: calc(5em + 10px + 25px);
+    right: 10px;
+    bottom: 10px;
+    width: 250px;
+    box-sizing: border-box;
+    background-color: #f5f5f5;
+    z-index: 1;
+    border: 1px solid #84705c;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 10px;
+}
+
+#visual-editor #tab-container div {
+    display: block;
+    box-sizing: border-box;
+    width: calc(100% - 30px);
+    min-width: calc(100% - 30px);
+    max-width: calc(100% - 30px);
+    position: relative;
+    top: 5px;
+    left: 1px;
+}
+
+#visual-editor #tab-container h5 {
+    margin-bottom: 2px;
+    padding: 2px;
+    text-align: center;
+    margin-top: 8px;
+}
+
+#visual-editor #tab-container h5 img {
+    margin: auto;
+}
+
+#visual-editor #visual-editor-buttons {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+#visual-editor #visual-editor-buttons a {
+    color: #feb;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 0.5em 1em;
+    font-size: 1em;
+    font-weight: 300;
+    box-sizing: border-box;
+    display: inline-block;
+    transition: background-color 0.25s;
+    text-decoration: none;
+}
+
+#visual-editor #visual-editor-buttons a:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.control-box {
+    z-index: 1000;
+    position: absolute;
+    top: -18px;
+    left: -1px;
+    background-color: white;
+    border: 1px dotted gray;
+    box-sizing: border-box;
+    display: block;
+    width: calc(100% + 2px);
+    height: 18px !important;
+    min-width: 80px !important;
+    cursor: grab;
+}
+
+.control-box img {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.control-box img:hover {
+    background-color: #f0f0f0;
+}
+
+.selected {
+    border: 1px dotted gray;
+    box-sizing: border-box;
+}
+
+#visual-editor .incrementor img {
+    width: 18px;
+    height: 18px;
+}
+
+.visual-section {
+    display: block;
+    width: 300px;
+}
+
+.visual-section img {
+    max-width: 300px;
+}
+
+.ve_image_wrap {
+    display: block;
+    width: 300px;
+}
+
+.ve_image_wrap img {
+    display: block;
+    margin: 0px;
+    max-width: 100%;
+}
+
+.on-blueprint {
+    cursor: grab;
+}
+
+.waiting, .new-draggable {
+    z-index: 99999;
+}
+
+.new-draggable {
+    vertical-align: middle;
+    cursor: grab;
+    display: block;
+    min-width: 10px !important;
+    min-height: 10px !important;
+    max-width: 50px !important;
+    max-height: 50px !important;
+}
+
+.new-draggable:active {
+    cursor: grabbing;
+}
+
+.visual_box {
+    background-color: #fffffa;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: 1px solid #fcfcec;
+}
+
+.visual_box:hover {
+    background-color: #fcfcff;
+    border: 1px solid #f5f5fa;
+}
+
+span.center {
+    display: block;
+    margin: 0px;
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+    left: 0;
+    width: 100%;
+}
+
+#custom_options, #visual_options, #sandbox, #edit-selected, #ve_extra, #ve_options {
+    display: block;
+    width: 225px;
+    margin: 0;
+    padding: 0;
+}
+
+#custom_options *, #visual_options *, #sandbox *, #edit-selected *, #ve_extra *, #ve_options * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+#custom_options .across, #visual_options .across, #sandbox .across, #edit-selected .across, #ve_extra .across, #ve_options .across {
+    box-sizing: border-box;
+    display: block;
+    width: 225px;
+    clear: both;
+}
+
+#custom_options .across .sec, #visual_options .across .sec, #sandbox .across .sec, #edit-selected .across .sec, #ve_extra .across .sec, #ve_options .across .sec {
+    box-sizing: border-box;
+    margin-top: 5px;
+    display: inline-block;
+    width: 100px;
+    float: left;
+    height: 30px;
+    text-align: right;
+    padding-right: 5px;
+}
+
+#custom_options .across .sec input[type=text], #custom_options .across .sec input[type=number], #visual_options .across .sec input[type=text], #visual_options .across .sec input[type=number], #sandbox .across .sec input[type=text], #sandbox .across .sec input[type=number], #edit-selected .across .sec input[type=text], #edit-selected .across .sec input[type=number], #ve_extra .across .sec input[type=text], #ve_extra .across .sec input[type=number], #ve_options .across .sec input[type=text], #ve_options .across .sec input[type=number] {
+    width: 115px;
+}
+
+#custom_options h4, #visual_options h4, #sandbox h4, #edit-selected h4, #ve_extra h4, #ve_options h4 {
+    box-sizing: border-box;
+    background-color: #eaeaea;
+    width: 224px;
+    padding: 3px;
+    text-align: center;
+}
+
+#components>div {
+    width: 220px;
+}
+
+#components select {
+    width: 220px;
+}
+
+.note {
+    font-style: italic;
+    font-size: .8em;
+    color: #666666;
+}
+
+#overlay .overlaps {
+    border: 10px solid red;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+/*# sourceMappingURL=visual_editor.css.map */
+
+
+h2.weaver-accordion-handle {
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+
+h2.weaver-accordion-handle.weaver-selected {
+  margin-bottom: -20px;
+}
+
+
+.weaver-accordion-handle:before {
+  content: '+';
+  display: inline-block;
+  margin-right: 5px;
+  width: 30px;
+  text-align: center;
+}
+.weaver-accordion-handle.weaver-selected:before {
+  content: '-';
+  display: inline-block;
+  margin-right: 5px;
+  width: 30px;
+  text-align: center;
+}
+h3.weaver-accordion-handle {
+  width: 100%;
+  border-bottom: 1px dashed #ccc;
+  border-top: 1px dashed #ccc;
+  padding: 3px;
+}
+h2.weaver-selected {
+  border-color: #bdc;
+}
+h3.weaver-selected {
+  background-color: #e0efe0;
+}

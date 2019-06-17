@@ -1,0 +1,163 @@
+<h2>{{section.name}}</h2>
+
+<div ng-show="form.overhead_steel_warning && section.name == 'Structural'" style="color:tomato">
+    Please remember to increase the sidewall height to accommodate the overhead/steel door.
+</div>
+
+
+<div class="form-element" ng-repeat="subsection in section.subsections" ng-if="subsection.show">
+    <h3>{{subsection.name}}</h3>
+
+    <div ng-repeat="component in subsection.components" ng-if="component.show">
+
+        <!-- checkbox -->
+        <div class="checkbox-option"
+             ng-if="component.show &&
+                    (component.form_type === 'checkbox' ||
+                    component.form_type === 'check_price' ||
+                    component.form_type === 'check_length')">
+            <input id="{{component.name}}" name="{{subsection.name}}" ng-value="component.name" ng-model="component.value"
+                   ng-change="form.checkboxChanged(component)"
+                   type="checkbox"/>
+            <label for="{{component.name}}">
+                {{component.name}}
+                <span class="unit">{{form.displayPrice(component)}}</span>
+            </label>
+            <label ng-if="component.form_type === 'check_price'" for="{{component.name}}-price" class="price">
+                Price: $
+            </label>
+            <input ng-if="component.form_type === 'check_price'" ng-model="component.user_price" id="{{component.name}}-price" type="number" step="any"/>
+            <input ng-if="component.form_type === 'check_length'" ng-model="component.len" id="{{component.name}}-length" type="number" step="any"/>
+            <label ng-if="component.form_type === 'check_length'" for="{{component.name}}-length" class="quantity">
+                ft.
+            </label>
+        </div>
+
+        <!-- radio button -->
+        <div class="radio-options"
+             ng-if="component.show  &&
+                    component.form_type === 'radio'">
+            <h4 ng-if="component.name !== subsection.name">{{component.name}}</h4>
+            <div class="radio-option" ng-repeat="option in component.options" ng-if="option.show">
+                <input id="{{component.name + option.name}}"
+                       name="{{component.name}}"
+                       ng-value="option.id"
+                       ng-model="component.value"
+                       type="radio"
+                       ng-change="form.radioChange(component)"
+                />
+                <label for="{{component.name + option.name}}">
+                    {{option.name}}
+                    <span class="unit">{{form.displayPrice(component, $index)}}</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- number range -->
+        <div class="number-option"
+             ng-if="component.show &&
+                    component.form_type === 'numeric'">
+            <div class="incrementor">
+                <img ng-click="form.numericDown(component, subsection)" src="/img/icon-subtract.svg"/>
+                <span class="value">{{component.value ? component.value : (component.min ? component.min : 0)}}</span>
+                <img ng-click="form.numericUp(component, subsection)" src="/img/icon-add.svg"/>
+            </div>
+            <label for="{{component.name}}">
+                {{component.name}}
+                <span class="unit">{{form.displayPrice(component)}}</span>
+            </label>
+            <div class="radio-option" ng-if="option.show" ng-repeat="option in component.options" ng-model="component.selected">
+                <input id="{{component.name + option.name}}"
+                       name="{{component.name}}"
+                       type="radio"
+                       ng-change="form.radioChange(component)"
+                />
+                <label for="{{component.name + option.name}}">
+                    {{option.name}}
+                    <span class="unit">{{form.displayPrice(component, $index)}}</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- half number range -->
+        <div class="number-option"
+             ng-if="component.show &&
+                    component.form_type === 'half_numeric'">
+            <div class="incrementor">
+                <img ng-click="form.halfNumericDown(component, subsection)" src="/img/icon-subtract.svg"/>
+                <span class="value">{{component.value ? component.value : (component.min ? component.min : 0)}}</span>
+                <img ng-click="form.halfNumericUp(component, subsection)" src="/img/icon-add.svg"/>
+            </div>
+            <label for="{{component.name}}">
+                {{component.name}}
+                <span class="unit">{{form.displayPrice(component)}}</span>
+            </label>
+            <div class="radio-option" ng-if="option.show" ng-repeat="option in component.options" ng-model="component.selected">
+                <input id="{{component.name + option.name}}"
+                       name="{{component.name}}"
+                       type="radio"
+                       ng-change="form.radioChange(component)"
+                />
+                <label for="{{component.name + option.name}}">
+                    {{option.name}}
+                    <span class="unit">{{form.displayPrice(component, $index)}}</span>
+                </label>
+            </div>
+        </div>        
+
+        <!-- dropdown -->
+        <div class="select-option"
+             ng-if="component.show &&
+                    component.form_type.startsWith('select')">
+            <h4 ng-if="component.name !== subsection.name">{{component.name}}</h4>
+            <select name="{{component.name}}"
+                    ng-options="option.id as option.name + ' ' + form.displayPrice(component, index) for (index, option) in component.options"
+                    ng-model="component.value"
+                    ng-change="form.selectChange(component)"
+            ><!-- http://stackoverflow.com/a/22080183 -->
+                <option value="">-- none --</option>
+            </select>
+            <label ng-if="component.form_type === 'select_price'" for="{{component.name}}-price" class="price">
+                Price: $
+            </label>
+            <input ng-if="component.form_type === 'select_price'" ng-model="component.user_price" id="{{component.name}}-price" type="number" step="any" />
+            <div class="incrementor" ng-if="component.requires_quantity && component.value">
+                Quantity:
+                <img ng-click="form.decrementRange(component, 'quantity')" src="/img/icon-subtract.svg"/>
+                <span class="value">{{component.quantity || 0}}</span>
+                <img ng-click="form.incrementRange(component, 'quantity')" src="/img/icon-add.svg"/>
+            </div>
+        </div>
+
+        <!-- Text -->
+        <div class="text-option" ng-if="component.show && component.form_type === 'text'">
+            <h4>{{component.name}}</h4>
+            <input id="{{component.name + component.id}}"
+                   name="{{component.name}}"
+                   ng-model="component.value"
+                   type="text"
+                   placeholder="Description"
+                   ng-keydown="component.quantity = (!component.quantity || component.quantity < 1) ? 1 : component.quantity"
+            />
+            <label for="{{component.name + component.id}}-price" class="price">
+                Price: $
+            </label>
+            <input id="{{component.name + component.id}}-price" type="number" class="custom-price" ng-model="component.price" step="any" />
+            <div class="incrementor" ng-if="component.requires_quantity">
+                Quantity:
+                <img ng-click="form.decrementRange(component, 'quantity')" src="/img/icon-subtract.svg"/>
+                <span class="value">{{component.quantity || 0}}</span>
+                <img ng-click="form.incrementRange(component, 'quantity')" src="/img/icon-add.svg"/>
+            </div>
+            <img ng-if="form.getCustomCount(subsection.components, component) > 1 && component.name.substring(0,12) == 'Custom Field'"
+                 ng-click="form.removeCustom(subsection.components, component)" src="/img/icon-delete.svg" class="button delete"/>
+            <img ng-if="$index == form.getLastCustomIndex(subsection.components, form.getCustomBaseName(component))  && component.name.substring(0,12) == 'Custom Field'"
+                 ng-click="form.addCustom(subsection.components, component)" src="/img/icon-add.svg" class="button add"/>
+        </div>
+
+    </div><!-- end subsection.components ng-repeat -->
+
+</div><!-- end subsection in subsection.subsections ng-repeat -->
+
+
+<button ng-click="form.nextSection()" class="next">Next Section</button>

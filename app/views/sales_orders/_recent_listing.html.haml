@@ -1,0 +1,140 @@
+- unless smart_listing.empty?
+  %table.table.table-striped.table-bordered.table-radmin
+    %thead
+      %tr
+        %th 
+          =smart_listing.sortable "Order #", :id
+        %th
+          =smart_listing.sortable 'Status', :fake_status            
+        %th
+          =smart_listing.sortable 'Customer Information', 'customers.name'          
+        %th
+          =smart_listing.sortable 'Order Date', :date            
+        %th Details
+        %th Warnings
+        %th Edit
+        %th JR Approved
+        %th Dustin Approved
+        %th Total
+    %tbody
+      - smart_listing.collection.each do |thing|
+        - if(thing.approved_1 && thing.approved_2)
+          - event = thing.change_orders.order(:created_at).where.not(approved_1: true, approved_2: true).last
+          - next if event.nil?
+        - else
+          - event = thing 
+
+        - if(event.is_a? ChangeOrder)
+          - order = event.sales_order
+        - else
+          - order = event
+        - json = JSON.load(order.json_info)
+        %tr        
+          %td 
+            =order.id
+          %td
+            - if(event.is_a? ChangeOrder)
+              - event_type = 'ChangeOrder'
+            - else
+              - event_type = 'SalesOrder'
+            = SalesOrder.statuses.key(order.fake_status)
+          %td
+            -if(order.customer)
+              =link_to(order.customer.andand.name, customer_path(order.customer))
+              %br
+              =json['data']['customer']['shipping']['address']
+              %br
+              #{json['data']['customer']['shipping']['city']}, #{json['data']['customer']['shipping']['state']} #{json['data']['customer']['shipping']['zip']}
+          %td
+            =order.date.andand.strftime("%m/%d/%Y")      
+          %td
+            - if(json['data']['options']['size'] == 'Custom')
+              - width   = json['data']['custom']['size']['width']
+              - length  = json['data']['custom']['size']['len']
+            - else
+              - width = json['data']['options']['size']['width']
+              - length = json['data']['options']['size']['len']
+            #{json['data']['options']['style']} #{width} x #{length} - #{json['data']['options']['feature']}
+            - if(event.is_a? ChangeOrder)
+              %table
+                - JSON.load(event.revisions).andand.each do |item|   
+                  %tr
+                    %td=item['quantity']
+                    %td=item['name']
+                    %td=item['price']
+          %td
+            - special_order_warnings = order.special_order_warnings
+            - if(!json['data']['warnings'].andand.values && special_order_warnings.empty?)
+              Clear
+            - else
+              - json['data']['warnings'].andand.values.andand.flatten.andand.each do |error|
+                = error
+                %br
+              - special_order_warnings.andand.each do |warning|
+                = warning
+                %br
+          %td
+            %a.btn.btn-info.btn-large{:href => "/sales_orders/#{order.id}/edit"}
+              %i.radmin-pencil
+              Edit   
+          %td
+            - hash = {type: 'checkbox', event_type: event_type, event_id: event.id, approver: 'approved_1', checked: event.approved_1}
+            - hash[:disabled] = 'disabled' unless current_salesperson.email == 'delivery@weaverbarns.com'
+            %input.approved-check.approved-1{hash}
+          %td
+            - hash = {type: 'checkbox', event_type: event_type, event_id: event.id, approver: 'approved_2', checked: event.approved_2}   
+            - hash[:disabled] = 'disabled' unless current_salesperson.email == 'dustin@weaverbarns.com'            
+            %input.approved-check.approved-2{hash}        
+          %td
+            =JSON.load(event.prices).andand['total']
+  = smart_listing.paginate
+- else
+  %p.warning No records!
+:javascript
+  $(document).ready(function(){
+    $(".approved-check").click(function(){
+      if($(this).prop('checked'))
+        confirmed = confirm("Are you sure you want to approve this?");
+      else
+        confirmed = confirm("Are you sure you want to unapprove this?");
+              
+      if(!confirmed)
+        return false;
+      
+      $.ajax({url: '/sales_orders/double_approval', 
+              type: 'POST',
+              data: {id: $(this).attr('event_id'), type: $(this).attr('event_type'), approved: $(this).prop("checked"), approver: $(this).attr('approver')}
+              })
+      if($(this).closest('tr').find(".approved-1").prop('checked') && $(this).closest('tr').find(".approved-2").prop('checked'))
+        $(this).closest('tr').remove();
+    });
+    
+
+    $('a.sales_order_finalize').click(function() {        
+      if($(this).text().indexOf('Lock Order') >= 0){
+        $.ajax({url: this.href + '/finalize', type: 'POST'})
+        $(this).html("<i class='radmin-checkbox-unchecked'></i>Unlock Order")
+      }
+      else{
+        $.ajax({url: this.href + '/unfinalize', type: 'POST'})
+        $(this).html("<i class='radmin-checkbox'></i>Lock Order")     
+      }
+            
+      return false
+    })   
+    
+    $('a.sales_order_delete').click(function() {  
+      confirmation = confirm("Are you sure you want to delete this order?")
+      
+      if(confirmation)
+      {
+        $(this).closest('tr').remove()
+        $.ajax({url: this.href, type: 'DELETE'})
+      }
+      return false
+    })   
+        
+    $('#sales_order_search').change(function() { 
+      window.location.replace("/sales_orders/" + $(sales_order_search).val())
+    });        
+  })

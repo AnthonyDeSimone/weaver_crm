@@ -1,0 +1,59 @@
+-content_for(:page_title) do
+  New Service Ticket
+
+-content_for(:meta_info) do
+  = javascript_include_tag 'jquery.select2.js'  
+  = javascript_include_tag 'moment.min.js'   
+  = javascript_include_tag 'pikaday.js'  
+  = stylesheet_link_tag    'select2.min.css'
+  = stylesheet_link_tag    'pikaday.css'
+  :css
+    .input-group-addon{display: none !important;}    
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 New Service Ticket
+      %br/
+      %p.hidden-phone
+
+.row-fluid
+  .span12
+    = breadcrumbs(['Reports'])
+  .span4
+    - user = current_salesperson
+    = simple_form_for @service_ticket do |f|
+      = f.input :sales_order_id, label: 'Order by ID or Customer Name', collection: [], class: 'select2'
+      = f.input :details  
+      = f.input :date, as: :string, class: 'pikaday'
+      - if(user.account_type == 'Delivery')
+        = f.input :confirmed, inline_label: 'Confirmed', label: false
+      = f.submit
+      
+:javascript
+  $(document).ready(function(){
+    var picker = new Pikaday({ field: $('#service_ticket_date')[0], format: 'MM/DD/YYYY', firstDay: 0})
+    
+    $("#service_ticket_sales_order_id").select2({
+      ajax: {
+        url: "/sales_orders/search",
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+          return {
+            q: params.term, // search term
+            page: params.page
+          };
+        },
+        processResults: function (data, page) {
+          // parse the results into the format expected by Select2.
+          // since we are using custom formatting functions we do not need to
+          // alter the remote JSON data
+          return {
+            results: data.items
+          };
+        },
+        cache: true
+      },
+      minimumInputLength: 1,
+    });    
+  })

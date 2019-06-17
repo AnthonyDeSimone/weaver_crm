@@ -1,0 +1,141 @@
+<div class="extra">
+	<h2>Additional Info</h2>
+
+    <h3>Pricing</h3>
+    <label for="salesTax" class="setWidth">
+        Sales Tax (%):
+    </label>
+    <input ng-model="form.fees.sales_tax" id="salesTax" name="salesTax" type="number" min="0" max="100" step="any" />
+    <br />
+    <label for="deliveryFees" class="setWidth">
+        Delivery Fees ($):
+    </label>
+    <input ng-model="form.fees.delivery" id="deliveryFees" name="deliveryFees" type="number" min="0" step="any" />
+    <br />
+    <label for="deposit" class="setWidth">
+        Deposit ($):
+    </label>
+    <input ng-model="form.fees.deposit" id="deposit" name="deposit" type="number" min="0" step="any" />
+    <br />
+    <label for="deposit_type" class="setWidth">
+        Deposit Type:
+    </label>
+    <select ng-model="form.fees.deposit_type" id="deposit_type" name="deposit_type">
+        <option value=""></option>
+        <option value="credit_card">Credit Card</option>
+        <option value="cash">Cash</option>
+        <option value="check">Check</option>
+        <option value="financing">Financing</option>
+    </select>
+    <br />
+    <label for="reference" class="setWidth">
+        Reference:
+    </label>
+    <input ng-model="form.extra.reference" id="reference" name="reference" type="text" />
+
+
+
+    <h3>Advanced Calculations</h3>
+    <label for="advancedCalculationsDollars" class="setWidth">
+        Dollar Amount ($):
+    </label>
+    <input ng-model="form.fees.advanced.price" id="advancedCalculationsDollars" name="advancedCalculationsDollars" type="number" min="0" step="any" />
+    <br />
+    <label for="advancedCalculationsPercent" class="setWidth">
+        Percentage (%):
+    </label>
+    <input ng-model="form.fees.advanced.percent" id="advancedCalculationsPercent" name="advancedCalculationsPercent" type="number" min="0" max="100" step="any" />
+    <br />
+    <label for="advancedSpecial" class="setWidth">
+        Special:
+    </label>
+    <input ng-model="form.fees.advanced.special" id="advancedSpecial" name="advancedSpecial" type="text" />
+
+
+    <h3>Dates</h3>
+    <label for="siteReadyDate" class="setWidth">
+        Site Ready Date:
+    </label>
+    <input id="siteReadyDate" name="siteReadyDate" ng-value="form.extra.site_ready_date" ng-model="form.extra.site_ready_date" type="text" placeholder="Site Ready Date" date-picker />
+    <br />
+    <label for="deliveryDate" class="setWidth">
+        Delivery Date:
+    </label>
+    <input id="deliveryDate" name="deliveryDate" ng-model="form.extra.delivery_date" type="text" placeholder="Delivery Date" date-picker />
+    <br />
+    <label for="quoteDate" class="setWidth">
+        Quote Date (Optional):
+    </label>
+    <input id="quoteDate" name="quoteDate" ng-model="form.extra.quote_date" type="text" placeholder="Quote Date" date-picker />
+    <br />
+    <label for="purchaseDate" class="setWidth">
+        Order Date (Optional):
+    </label>
+    <input id="purchaseDate" name="purhcaseDate" ng-model="form.extra.purchase_date" type="text" placeholder="Order Date" date-picker />
+    <br />
+    <label for="estimatedTime" class="setWidth">
+        Estimated Time:
+    </label>
+    <input id="estimatedTime" name="estimatedTime" ng-model="form.extra.estimated_time" type="text" placeholder="Estimated Time" />
+    <br />
+
+
+    <h3>Crew</h3>
+    <label for="crew" class="setWidth">
+        Crew:
+    </label>
+    <input type="text" name="crew" id="crew" ng-model="form.extra.crew" type="text" />
+    <br />
+
+    <h3>Miscellaneous</h3>
+    <label for="unitSerial" class="setWidth">
+        Unit Serial #:
+    </label>
+    <input type="text" name="unitSerial" id="unitSerial" placeholder="Unit Serial #" ng-model="form.extra.serial_number" placeholder="Unit Serial #"/>
+    <div class="checkbox-option">
+		<span class="setWidth" style="position:relative; top:0px">
+			Site Ready:
+		</span>
+        <input id="siteReady" name="siteReady" ng-value="form.extra.site_ready" ng-model="form.extra.site_ready" type="checkbox" ng-change="form.siteReadyClicked()" />
+        <label for="siteReady" > </label>
+    </div>
+    <div class="checkbox-option">
+		<span class="setWidth" style="position:relative; top:0px">
+			Weaver's Site:
+		</span>
+        <input id="workingOnSite" name="workingOnSite" ng-value="form.extra.working_on_site" ng-model="form.extra.working_on_site" type="checkbox"/>
+        <label for="workingOnSite" > </label>
+    </div>
+    <div class="checkbox-option">
+		<span class="setWidth" style="position:relative; top:0px">
+			Scheduled:
+		</span>
+        <input id="scheduled" name="scheduled" ng-value="form.extra.scheduled" ng-model="form.extra.scheduled" type="checkbox" ng-disabled="!form.is_shipping_user" />
+        <label for="scheduled" > </label>
+    </div>
+    <div class="checkbox-option">
+		<span class="setWidth" style="position:relative; top:0px">
+			Load Complete:
+		</span>
+        <input id="loadComplete" name="loadComplete" ng-value="form.extra.load_complete" ng-model="form.extra.load_complete" type="checkbox" ng-disabled="!form.is_shipping_user" />
+        <label for="loadComplete" > </label>
+    </div>
+    <div class="checkbox-option">
+		<span class="setWidth" style="position:relative; top:0px">
+			Order Finalized:
+		</span>
+        <input id="orderFinalized" name="orderFinalized" ng-value="form.extra.order_finalized" ng-model="form.extra.order_finalized" type="checkbox" ng-disabled="(form.extra.order_finalized && !form.is_admin_user) || !form.extra.confirmed" />
+        <label for="orderFinalized" > </label>
+    </div>
+
+    <h3>Notes/Special Instructions</h3>
+    <textarea ng-value="form.extra.notes" ng-model="form.extra.notes"></textarea>
+    <br />
+
+    <h3>Additional Notes/Special Instructions</h3>
+    <textarea ng-value="form.extra.additional_notes" ng-model="form.extra.additional_notes"></textarea>
+    <br />
+    <br />
+</div>
+
+<button ng-click="form.selectSection(-1)" class="next">Next Section</button>

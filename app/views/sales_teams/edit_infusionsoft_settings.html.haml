@@ -1,0 +1,27 @@
+-content_for(:page_title) do
+  Sales Team Infusionsoft Settings
+  
+.row-fluid
+  .span12 
+    .hero-unit.non-index
+      %h2 Sales Team Infusionsoft Settings
+.row-fluid
+  .span12
+    = breadcrumbs(['Sales Teams'])
+.row-fluid.hidden-tablet.hidden-phone
+  .span12
+    %h2.title Sales Teams for Infusionsoft
+    .squiggly-border
+    = form_tag('/infusionsoft_settings') do 
+      - @sales_teams.each do |team|
+        %h3
+          =team.name
+        = check_box_tag "sales_team_ids[]", team.id, team.track_in_infusionsoft
+        = label_tag "sales_team_#{team.id}", "Entire Team"  
+        %br
+        - team.salespeople.active.order(:name).each do |salesperson|
+          %br        
+          = check_box_tag "salespeople_ids[]", salesperson.id, salesperson.track_in_infusionsoft, id: "salespeople_#{salesperson.id}", 'data-sales-team-id' => team.id
+          = label_tag "salespeople_#{salesperson.id}", salesperson.name        
+        %hr 
+      =submit_tag('Update ')

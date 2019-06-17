@@ -1,0 +1,75 @@
+-content_for(:page_title) do
+  Customers
+  
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Customers
+      %br/
+      %p.hidden-phone
+        %a.btn.btn-info.btn-large.pull-right{:href => '/customers/new'} Add new customer &raquo; 
+.row-fluid
+  .span12
+    %ul.breadcrumb
+      = breadcrumbs(['Customers', 'Leads'])
+
+.row-fluid.hidden-tablet.hidden-phone
+  .span12
+    %h4.title Customers
+    .squiggly-border    
+    - if @show_search
+      = form_tag '/customers/search', method: 'get' do
+        .input-group{style: 'width: 15%;'}
+          %input.form-control{:name => 'name', :placeholder => "Search Customers", :type => "text", style: 'height: 34px;'}
+            %span.input-group-btn
+              %button.btn.btn-info{:type => "submit"}
+                %i.icon-search.icon-white
+    %table.table.table-striped.table-bordered.table-radmin
+      %thead
+        %tr
+          %th Status
+          %th 
+            %a{href: "/customers/?order_by=id&direction=#{@new_direction}"} Customer ID
+          %th 
+            %a{href: "/customers/?order_by=name&direction=#{@new_direction}"} Name
+          %th 
+            %a{href: "/customers/?order_by=callback_date&direction=#{@new_direction}"} Callback Date
+          %th Sales Team
+          %th Quoted
+          %th Edit
+          %th Notes
+      %tbody
+        - @customers.each do |customer|
+          %tr
+            %td 
+              - if customer.lead_status
+                %img{src: "/#{customer.lead_status}_status.png"} 
+            %td #{customer.id}
+            %td #{customer.name} 
+            %td
+              #{customer.callback_date.andand.strftime("%m/%d/%Y")}
+            %td
+              =customer.sales_team.andand.name             
+            %td
+              =check_box_tag nil, nil, customer.has_quote?, disabled: true            
+            %td
+              %a.btn.btn-info.btn-small{:href => "/customers/#{customer.id}/edit"}
+                %i.radmin-pencil
+                Edit
+            %td
+              %a.btn.btn-info.btn-small{:href => "/customers/#{customer.id}"}
+                %i.radmin-comments
+                Notes
+        
+    .pagination.pagination-right
+      = will_paginate @customers, renderer: RadminRenderer
+
+:javascript
+  $(document).ready(function() {  
+    //bootbox.alert('Hey there')
+    $('a.sales_ticket-mark_complete').click(function() {    
+      $(this).closest('tr').remove()
+      $.ajax({url: this.href, type: 'POST'})
+      return false      
+    })      
+  })

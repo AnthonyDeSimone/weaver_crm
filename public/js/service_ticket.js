@@ -1,0 +1,444 @@
+/**
+ * Created by Steven Jeffries on 9/15/15.
+ */
+
+
+
+
+var Address = function(data) {
+    data = data || {};
+
+    var me = this;
+
+    this.address = data.address || '';
+    this.city = data.city || '';
+    this.state = data.state || '';
+    this.zip = data.zip || '';
+    this.county = data.county || '';
+
+    this.toJSON = function() {
+        return {
+            address: me.address,
+            city: me.city,
+            state: me.state,
+            zip: me.zip,
+            county: me.county
+        }
+    }
+};
+
+var Customer = function(data) {
+    data = data || {};
+
+    var me = this;
+
+    this.id = data.id || null;
+
+    this.name = data.name || '';
+    this.last_name = data.last_name || '';
+    this.primary_email = data.email || '';
+    this.secondary_email = data.secondary_email || '';
+
+    this.primary_phone = data.primary_phone || '';
+    this.secondary_phone = data.secondary_phone || '';
+
+    this.billing  = new Address(data);
+
+    if (typeof data.shipping_same !== 'undefined' && data.shipping_same === false) {
+        this.shipping = new Address(data.shipping);
+    } else {
+        this.shipping = this.billing;
+    }
+
+    var shipping_billing_same =  this.billing === this.shipping;
+    var different_shipping = new Address(data.shipping);
+
+
+    Object.defineProperty(this, 'shipping_same', {
+        get: function() {
+            return shipping_billing_same;
+        },
+        set: function(newVal) {
+            if (typeof newVal !== 'boolean') {
+                if (newVal == "true") {
+                    newVal = true;
+                } else if (newVal == "false") {
+                    newVal = false;
+                } else {
+                    newVal = !!newVal;
+                }
+            }
+            if (newVal) {
+                me.shipping = me.billing;
+            } else {
+                me.shipping = different_shipping;
+            }
+            shipping_billing_same = newVal;
+        }
+    });
+
+
+    this.toJSON = function() {
+        return {
+            id: me.id,
+            name: me.name,
+            last_name: me.last_name,
+            email: me.primary_email,
+            secondary_email: me.secondary_email,
+            primary_phone: me.primary_phone,
+            secondary_phone: me.secondary_phone,
+            address: me.billing.address,
+            county: me.billing.county,
+            state: me.billing.state,
+            zip: me.billing.zip,
+            shipping_same: me.billing === me.shipping,
+            shipping: me.shipping.toJSON(),
+            city: me.billing.city
+        }
+    }
+
+
+};
+
+var ServiceItem = function(data) {
+    data = data || {};
+    this.description = data.description || '';
+    this.cost = data.cost || 0;
+};
+
+var ServiceMaterial = function(data) {
+    data = data || {};
+    this.description = data.description || '';
+    this.requires_ordering = data.requires_ordering || false;
+    this.ordered = data.ordered || false;
+};
+
+var TimeFrame = {
+    FULL_DAY: "Full Day",
+    HALF_DAY: "Half Day",
+    LT_2_HOUR: "2 Hours or Less"
+};
+
+/**
+ *
+ * @param data
+ * @constructor
+ */
+var ServiceTicket = function(data) {
+    data = data || {};
+
+    var me = this;
+
+    //region Var Setup
+    this.id = data.id || null;
+
+    this.customer = new Customer(data.customer);
+    this.date = data.date || '';
+
+    if (this.date == '') {
+        var d = new Date();
+        this.date = d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear();
+    }
+
+    this.notes = data.notes || '';
+    this.customer_present_required = data.customer_present_required || '';
+
+    this.service_description = [];
+
+    if (data.service_description === null) {
+        data.service_description = [];
+    }
+
+
+    if (typeof data.service_description !== 'undefined' && typeof data.service_description.length !== 'undefined') {
+        for (var i = 0; i < data.service_description.length; i++) {
+            this.service_description.push(new ServiceItem(data.service_description[i]));
+        }
+    }
+    
+    this.service_material = [];
+
+    if (data.service_material === null) {
+        data.service_material = [];
+    }
+
+    if (typeof data.service_material !== 'undefined' && typeof data.service_material.length !== 'undefined') {
+        for (var i = 0; i < data.service_material.length; i++) {
+            this.service_material.push(new ServiceMaterial(data.service_material[i]));
+        }
+    }
+
+    this.time_frame = data.time_frame || null;
+    this.site_visit = data.site_visit || '';
+
+    this.subtotal_1 = data.subtotal_1 || 0;
+    this.delivery = data.delivery || 20;
+    this.subtotal_2 = data.subtotal_2 || 20;
+    this.tax = data.tax || 7.0;
+    this.total = data.total || this.subtotal_2 * (1 + this.tax / 100);
+
+    //endregion
+
+    //region Descriptions
+
+    this.addDescription = function() {
+        me.service_description.push(new ServiceItem());
+        console.log("adding");
+    };
+
+    this.removeDescription = function(desc) {
+        var io = me.service_description.indexOf(desc);
+        if (io != -1) {
+            me.service_description.splice(io, 1);
+        }
+    };
+
+    this.addMaterial = function() {
+        me.service_material.push(new ServiceMaterial());
+    };
+
+    this.removeMaterial = function(mat) {
+        var io = me.service_material.indexOf(mat);
+        if (io != -1) {
+            me.service_material.splice(io, 1);
+        }
+    };
+
+    //endregion
+
+    //region Totals
+
+    this.getSubtotal1 = function() {
+        var sub = 0;
+        for (var i = 0; i < me.service_description.length; i++) {
+            if (isNaN(me.service_description[i].cost)) {
+                me.service_description[i].cost = 0;
+            }
+            sub += +(me.service_description[i].cost);
+        }
+        me.subtotal_1 = sub;
+        return sub;
+    };
+
+    this.getDelivery = function() {
+        return me.delivery;
+    };
+
+    this.getSubtotal2 = function() {
+        return me.subtotal_2 = me.getSubtotal1() + me.delivery;
+    };
+
+    this.getTax = function() {
+        return me.tax;
+    };
+
+    this.getTotal = function() {
+        return me.total = this.getSubtotal2() * (1 + this.getTax() / 100);
+    };
+
+
+    //endregion
+
+    this.toJSON = function() {
+        return {
+            id: me.id,
+            customer: me.customer.toJSON(),
+            date: me.date,
+            notes: me.notes,
+            customer_present_required: me.customer_present_required,
+            service_description: me.service_description,
+            service_material: me.service_material,
+            time_frame: me.time_frame,
+            site_visit: me.site_visit,
+            subtotal_1: me.getSubtotal1(),
+            delivery: me.getDelivery(),
+            subtotal_2: me.getSubtotal2(),
+            tax: me.getTax(),
+            tax_amount: me.getTax() / 100 * me.getSubtotal2(),
+            total: me.getTotal()
+        }
+    }
+
+};
+var service = angular.module('service', []);
+
+
+var ticket_controller = null;
+var ticket = null;
+var st_id_to_load = null;
+
+service.controller("serviceTicketController", function($timeout, $http)  {
+    //noinspection BadExpressionStatementJS
+    "$timeout:nomunge,$http:nomunge";
+
+    this.BASE_URL = "/";
+    //this.BASE_URL = "http://76.115.226.174/";
+
+    var api = new ApiCalls(this.BASE_URL, $http);
+    api.addCall("save", "post", "service_tickets/save/", 50, true);
+    api.addCall("load", "jsonp", "service_tickets/{0}/load/?callback=JSON_CALLBACK", 10, false);
+
+    var me = this;
+    ticket_controller = this;
+
+    this.is_new_ticket = true;
+
+    this.is_saving = false;
+
+    /**
+     *
+     * @type {ServiceTicket}
+     */
+    this.ticket = new ServiceTicket();
+    /**
+     *
+     * @type {ServiceTicket}
+     */
+    ticket = this.ticket;
+
+    //region dev code
+
+    this.loadTest = function() {
+        $timeout(function() {
+            me.ticket = ticket = new ServiceTicket({
+                id: null,
+                customer: {
+                    name: "Steve",
+                    last_name: "J",
+                    billing: {
+                        address: "1234 foo bar",
+                        city: "Foo",
+                        state: "FooBarius",
+                        zip: "120FooBar",
+                        county: "yup"
+                    },
+                    shipping: {
+                        address: "1234 bar bar",
+                        city: "Foo",
+                        state: "BarFooius",
+                        zip: "123BarMe",
+                        county: "meh"
+                    },
+                    primary_email: "test@test.com",
+                    primary_phone: "(123) 456-7890",
+                    shipping_same: false
+                },
+                notes: "test notes",
+                service_description: [
+                    {
+                        description: "Some Item",
+                        cost: 3.14
+                    },
+                    {
+                        description: "Two pies",
+                        cost: 6.28
+                    }
+                ],
+                service_material: [
+                    {
+                        requires_ordering: true,
+                        ordered: false,
+                        description: "Some Material"
+                    },
+                    {
+                        requires_ordering: true,
+                        ordered: false,
+                        description: "Some Other Material"
+                    }
+
+                ]
+            })
+        }, 0);
+        me.is_new_ticket = true;
+    };
+
+
+    //endregion
+
+
+    //region JSON/Saving/Loading
+
+    this.loadJSON = function(data) {
+        $timeout(function() {
+            me.is_new_ticket = false;
+            console.log("loading with data", data);
+            me.ticket = new ServiceTicket(data.ticket);
+            $("#select2-st_billing_state-container").text(getStateById(me.ticket.customer.billing.state));
+            $("#select2-customerSelect-container").text(me.ticket.customer.name);
+            $("#select2-st_shipping_state-container").text(getStateById(me.ticket.customer.shipping.state));
+        }, 0);
+    };
+
+    this.loadId = function(id) {
+        // TODO load the json from server, call loadJSON with it.
+        api.makeCall("load", null, [id])
+            .success(function(data) {
+                me.loadJSON(data);
+            })
+            .error(function(data) {
+                console.log("Failed to load",data);
+            })
+    };
+
+    // Check if there is an order waiting to be loaded.
+    if (st_id_to_load !== null) {
+        me.loadId(st_id_to_load);
+    }
+
+    this.toJSON = function() {
+        return {
+            ticket: me.ticket.toJSON()
+        }
+    };
+
+    this.printJSON = function() {
+        console.log("Save Object: ", me.toJSON());
+        console.log("As String: ", JSON.stringify(me.toJSON()));
+    };
+
+    this.save = function() {
+        me.is_saving = true;
+        api.makeCall("save", me.toJSON())
+            .success(function(data) {
+                $timeout(function() {
+                    me.is_saving = false;
+                    me.ticket.id = data.ticket.id;
+                    me.is_new_ticket = false;
+                    me.ticket.customer.id = data.customer.id;
+                    $("#select2-customerSelect-container").text(me.ticket.customer.name + " " + me.ticket.customer.last_name);
+                }, 0);
+            })
+            .error(function(data) {
+                console.log("Error saving.");
+            });
+    };
+
+    //endregion
+
+}).directive("datePicker", ["$timeout", function ($timeout) {
+    return {
+        link: function (scope, elem, attrs) {
+            $timeout(function () {
+                var picker = new Pikaday({
+                    field: document.getElementById(attrs.id),
+                    firstDay: 0,
+                    minDate: new Date("2000-01-01"),
+                    maxDate: new Date("2050-12-31"),
+                    yearRange: [2000, 2020],
+                    format: 'MM/DD/YYYY'
+                });
+            }, 0);
+        }
+    }
+}]);
+
+
+function loadServiceTicket(id) {
+    if (ticket_controller != null) {
+        // The angular stuff has already loaded. We can directly load the id.
+        ticket_controller.loadId(id);
+    } else {
+        // The angular stuff has not yet loaded. Store the id, angular app will check upon config.
+        st_id_to_load = id;
+    }
+}

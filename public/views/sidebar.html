@@ -1,0 +1,84 @@
+<div class="top" ng-show="!form.isLoading && form.next_section_available && !form.calculating_price" >
+    <h1>Price Calculator</h1>
+    <h2 class="barn-type">{{form.getSizeString()}} ({{form.options.build_type}}) {{form.getStyleString()}} {{form.getFeatureString()}}</h2>
+    <h3 ng-show="form.totals.prices.base" class="base-price">Base Price: {{form.totals.prices.base}}</h3>
+    <h3 ng-show="form.sales_data.salesperson.name" class="base-price">Salesperson: {{form.sales_data.salesperson.name}}</h3>
+</div>
+
+<!-- Display each option category and, if available, any options selected within that category. -->
+<div ng-show="!form.isLoading && form.next_section_available && !form.calculating_price" class="middle">
+    <h4 ng-show="form.totals.sidebar_items">Options</h4>
+    <div ng-repeat="section in form.totals.sidebar_items">
+        <h5>{{section.category}}</h5>
+        <div ng-repeat="component in section.components">
+            <div class="option">
+                <span class="quantity" ng-if="component.quantity > 0">{{component.quantity}}</span>
+                <span style="width:35px" ng-if="component.quantity == 0"></span>
+                <span class="name">{{component.name}}</span>
+                <span class="price" ng-show="component.price != '$0.00'">{{component.price}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div ng-show="!form.isLoading && form.next_section_available && !form.calculating_price" class="bottom">
+    <h2>Totals</h2>
+    <span>
+        Subtotal <span class="price">{{form.totals.prices.subtotal_1}}</span>
+    </span>
+    <span>
+        Options Subtotal <span class="price">{{form.totals.prices.options_subtotal}}</span>
+    </span>
+    <span>
+        Subtotal <span class="price">{{form.totals.prices.subtotal_2}}</span>
+    </span>
+    <span class="adv" ng-if="form.totals.prices.discount_total != '$0.00'">
+        Discount <span class="price" style="color: green">(-{{form.totals.prices.discount_total}})</span>
+    </span>
+    <span ng-if="form.totals.prices.discount_total != '$0.00'">
+        *Subtotal <span class="price">{{form.totals.prices.subtotal_3}}</span>
+    </span>
+    <span class="delivery">
+        Delivery <span class="price">{{form.totals.prices.delivery}}</span>
+    </span>
+    <span>
+        Subtotal <span class="price">{{form.totals.prices.subtotal_4}}</span>
+    </span>
+    <span class="tax">
+        Tax ({{form.fees.sales_tax}}%) <span class="price">{{form.totals.prices.tax}}</span>
+    </span>
+    <span class="total">
+        <strong>Total</strong> <span class="price">{{form.totals.prices.total}}</span>
+    </span>
+    <span>
+        Deposit <span class="price">{{form.totals.prices.deposit}}</span>
+    </span>
+    <span>
+        Balance Due <span class="price">{{form.totals.prices.balance_due}}</span>
+    </span>
+</div>
+
+<!-- If there are no valid base options, then show a message to the user telling them to select some. -->
+<div class="top" ng-show="!form.isLoading && !form.calculating_price && !form.validBaseOptions()">
+    <h1>Select Options</h1>
+    <br /><br />
+    <i>Please select some valid options to continue.</i>
+</div>
+
+
+<!-- When the price is recalculating. -->
+<div class="top" ng-show="!form.isLoading && form.next_section_available && form.calculating_price">
+    <h1>Price Calculator</h1>
+    <br /><br />
+    <img src="/img/spinner.gif" />  <i>Calculating...</i>
+</div>
+
+<!-- When the form is loading. -->
+<div class="top" ng-show="form.isLoading">
+    <h1>Form Loading</h1>
+    <br /><br />
+    <img src="/img/spinner.gif" /> <i>Form is loading...</i>
+</div>
+
+<div class="middle" ng-show="!(!form.isLoading && form.next_section_available && !form.calculating_price)"></div>
+<div class="bottom" ng-show="!(!form.isLoading && form.next_section_available && !form.calculating_price)"></div>

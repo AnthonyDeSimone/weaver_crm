@@ -1,0 +1,88 @@
+$GOLDEN_RATIO: 1.618;
+
+
+.draggable {
+    cursor: move;
+}
+
+.component {
+    position: relative;
+    float: left;
+
+    & > img {
+        display: block;
+    }
+
+    .controls {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 10;
+        background-color: rgba(255,255,255,0.6);
+
+        & > img {
+            float: right;
+            width: 20px; height: 20px;
+            cursor: pointer;
+        }
+    }
+}
+
+#visual-editor {
+    $width: 1024px;
+    $module-margin: 5px;
+    position: absolute;
+    top: 20px;
+    right: 50%;
+    margin-right: (-$width/2);
+    width: $width;
+    padding: 10px;
+    background-color: $FORM_ACCENT + #444;
+    box-shadow: 0 15px 80px rgba(0,0,0, 0.5);
+
+    .module {
+        background-color: white;
+        margin: $module-margin;
+        box-sizing: border-box;
+        border: 1px solid $FORM_ACCENT - #444;
+        box-shadow: 0 1px 6px rgba(0,0,0, 0.25) inset;
+        padding: 20px;
+    }
+
+    #sandbox {
+        overflow-x: auto;
+    }
+
+    #blueprint {
+        float: left;
+        position: relative;
+        width: ($width/$GOLDEN_RATIO) - ($module-margin*2);
+        font-family: 'Coming Soon', sans-serif;
+        color: $DARK_ACCENT;
+
+        #barn-outline {
+            position: relative;
+            border: 2px solid $DARK_ACCENT;
+            height: 361px; // TODO: magic number. replace w/ calculation in js
+
+            .dimensions {
+                $dimensions-width: 100px;
+                $dimensions-height: 20px;
+                position: absolute;
+                width: $dimensions-width;
+                height: $dimensions-height;
+                left: 50%;
+                top: 50%;
+                margin-left: -$dimensions-width/2;
+                margin-top: -$dimensions-height/2;
+                text-align: center;
+            }
+        }
+    }
+
+    #components {
+        float: left;
+        width: ($width - ($width/$GOLDEN_RATIO)) - ($module-margin*2);
+        overflow-y: auto;
+    }
+}

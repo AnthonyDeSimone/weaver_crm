@@ -1,0 +1,84 @@
+=javascript_include_tag "http://malsup.github.com/jquery.form.js"
+- content_for(:page_title) do
+  Components
+:css
+  .input-group-addon{display: none !important;}
+
+  .custom-file-input::-webkit-file-upload-button {
+    visibility: hidden;
+  }
+  .custom-file-input::before {
+    content: 'Select file';
+    display: inline-block;
+    background: -webkit-linear-gradient(top, #f9f9f9, #e3e3e3);
+    border: 1px solid #999;
+    border-radius: 3px;
+    padding: 5px 8px;
+    outline: none;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    cursor: pointer;
+    text-shadow: 1px 1px #fff;
+    font-weight: 700;
+    font-size: 10pt;
+  }
+  .custom-file-input:hover::before {
+    border-color: black;
+  }
+  .custom-file-input:active::before {
+    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+  }  
+  
+:javascript
+  $(document).ready(function() {
+    $('.uploadForm input').change(function(){
+      image = $(this).siblings('img').eq(0)
+      image.attr('src', "/img/spinner.gif");
+      
+     $(this).parent().ajaxSubmit({
+      beforeSubmit: function(a,f,o) {
+       o.dataType = 'json';
+      },
+      complete: function(XMLHttpRequest, textStatus) {
+        image.attr('src', XMLHttpRequest.responseText);
+       // XMLHttpRequest.responseText will contain the URL of the uploaded image.
+       // Put it in an image element you create, or do with it what you will.
+       // For example, if you have an image elemtn with id "my_image", then
+       //  $('#my_image').attr('src', XMLHttpRequest.responseText);
+       // Will set that image tag to display the uploaded image.
+      },
+     });
+    });
+  });
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Components
+      %br/
+      %p.hidden-phone
+
+.row-fluid
+  .span12
+    %ul.breadcrumb
+      = breadcrumbs(['Form Components'])
+.row-fluid
+  .span12
+    %h4.title Settings
+    .squiggly-border
+    = form_tag(nil) do
+      - @categories.each do |category|
+        %h5=category.name
+        - category.component_subcategories.each do |subcategory|
+          %h6=subcategory.name
+          - subcategory.components.each do |component|
+            %p
+              =component.name
+              - if(component.image_url =~ /dropbox/)
+                (Dropbox)
+            = form_for(:image_form, :url => { :controller => "application", :action => :edit_image }, :html => { :method => :post, :class => 'uploadForm', :multipart => true }) do |f|
+              %img{src: component.image_url}
+              = hidden_field_tag('component_id', component.id)
+              = f.file_field :uploaded_data, class: 'custom-file-input'          
+            - component.component_options.each do |option|
+              %p{style:'margin-left: 20px;'} #{option.name}: #{option.small_price}, #{option.large_price}
+      = submit_tag 

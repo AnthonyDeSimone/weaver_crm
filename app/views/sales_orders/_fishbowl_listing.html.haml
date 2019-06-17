@@ -1,0 +1,75 @@
+%table.table.table-striped.table-bordered.table-radmin
+  %thead
+    %tr
+      %th
+        =smart_listing.sortable 'Order #', :id
+      %th 
+        =smart_listing.sortable 'Status', :status    
+      %th 
+        =smart_listing.sortable "Approved", :final_approval
+      %th
+        =smart_listing.sortable 'Customer Information', 'customers.name'          
+      %th
+        =smart_listing.sortable 'Order Date', :date            
+      %th 
+        =smart_listing.sortable 'Added to Fishbowl', :in_fishbowl
+      %th Finalized in Fishbowl
+      %th 
+      %th 
+  %tbody
+    - smart_listing.collection.each do |order|
+      - json = JSON.load(order.json_info)
+      %tr        
+        %td 
+          =order.id
+        %td
+          =order.real_status.andand.gsub('_', ' ')
+        %td 
+          = order.final_approval ? 'Approved' : 'Not Approved'          
+        %td
+          -if(order.customer)
+            =link_to(order.customer.andand.name, customer_path(order.customer))
+            %br
+            =json['data']['customer']['shipping']['address']
+            %br
+            #{json['data']['customer']['shipping']['city']}, #{json['data']['customer']['shipping']['state']} #{json['data']['customer']['shipping']['zip']}
+        %td
+          =order.date.andand.strftime("%m/%d/%Y")      
+        %td
+          =check_box_tag(nil, nil, order.in_fishbowl, {disabled: true})
+        %td
+          =check_box_tag(nil, nil, false, {class: 'sales_order_finalize', sales_order_id: order.id, disabled: !order.in_fishbowl,})
+        %td
+          = link_to sales_order_path(order.id, format: 'pdf', t: Time.now.to_f.to_i.to_s), target: '_blank', class: 'btn btn-info' do
+            %i.radmin-printer
+            Download PDF  
+        %td
+          - if(!order.in_fishbowl)
+            =link_to("Push to Fishbowl", "/sales_orders/#{order.id}/push_to_fishbowl", class: 'btn btn-info add-fishbowl')
+= smart_listing.paginate
+:javascript
+  $('.add-fishbowl').click(function() {        
+    confirmation = confirm("Are you sure you want to add this order to Fishbowl?")  
+  
+    if(confirmation)
+    {
+      $.ajax({url: this.href, type: 'POST'});
+        
+      alert('Order was queued for adding to Fishbowl.');
+    }
+      
+      return false;
+  })  
+  $('.sales_order_finalize').click(function() {        
+    confirmation = confirm("Are you sure you want to finalize this order?")
+    
+    if(confirmation)
+    {
+      $(this).closest('tr').remove()
+      $.ajax({url: '/sales_orders/'+ $(this).attr("sales_order_id") +'/fishbowl_finalize', type: 'POST'})
+    }
+    else{
+      return false;
+    }
+
+  })    

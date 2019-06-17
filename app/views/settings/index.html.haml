@@ -1,0 +1,28 @@
+- content_for(:page_title) do
+  Fishbowl Settings
+:css
+  .input-group-addon{display: none !important;}
+
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Fishbowl Settings
+      %br/
+      %p.hidden-phone
+        These settings should match those of the Fishbowl server and will allow sales data to be passed from here to Fishbowl.
+.row-fluid
+  .span12
+    %ul.breadcrumb
+      = breadcrumbs(['Fishbowl Settings'])
+.row-fluid
+  .span12
+    %h4.title Settings
+    .squiggly-border
+    = simple_form_for @settings do |f|
+      = f.input :fishbowl_ip, label: 'Fishbowl IP'
+      = f.input :fishbowl_port      
+      = f.input :fishbowl_username, input_html: {autocomplete: 'off'}
+      = f.input :fishbowl_password, as: :string, input_html: {autocomplete: 'off'}
+      %br/
+      = f.submit 'Update Settings', class: 'btn btn-info'
+      

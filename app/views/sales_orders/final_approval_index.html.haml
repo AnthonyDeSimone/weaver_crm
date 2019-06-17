@@ -1,0 +1,90 @@
+-content_for(:page_title) do
+  Recent Orders
+
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Orders Requiring Approval
+      %br/
+      %p.hidden-phone
+
+.row-fluid
+  .span12
+    = breadcrumbs(['Sales Orders'])
+.row-fluid.hidden-tablet.hidden-phone
+  .span12
+    %h4.title 
+      =@title
+    .squiggly-border
+    = smart_listing_render(:sales_orders)
+          
+:javascript
+  $(document).ready(function() {  
+     $('.confirm').change(function(){
+      $(this).closest('form').submit()
+    })     
+  })
+
+:javascript
+  $(document).ready(function(){
+    
+    $("#sales_order_search").select2({
+      ajax: {
+        url: "/sales_orders/search",
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+          return {
+            q: params.term, // search term
+            page: params.page
+          };
+        },
+        processResults: function (data, page) {
+          // parse the results into the format expected by Select2.
+          // since we are using custom formatting functions we do not need to
+          // alter the remote JSON data
+          return {
+            results: data.items
+          };
+        },
+        cache: true
+      },
+      minimumInputLength: 1,
+    });
+
+    $('a.sales_order_close').click(function() {  
+      
+      $(this).closest('tr').remove()
+      $.ajax({url: this.href, type: 'POST'})
+      
+      return false
+    })   
+
+    $('a.sales_order_finalize').click(function() {        
+      if($(this).text().indexOf('Lock Order') >= 0){
+        $.ajax({url: this.href + '/finalize', type: 'POST'})
+        $(this).html("<i class='radmin-checkbox-unchecked'></i>Unlock Order")
+      }
+      else{
+        $.ajax({url: this.href + '/unfinalize', type: 'POST'})
+        $(this).html("<i class='radmin-checkbox'></i>Lock Order")     
+      }
+            
+      return false
+    })   
+    
+    $('a.sales_order_delete').click(function() {  
+      confirmation = confirm("Are you sure you want to delete this order?")
+      
+      if(confirmation)
+      {
+        $(this).closest('tr').remove()
+        $.ajax({url: this.href, type: 'DELETE'})
+      }
+      return false
+    })   
+        
+    $('#sales_order_search').change(function() { 
+      window.location.replace("/sales_orders/" + $(sales_order_search).val())
+    });        
+  })

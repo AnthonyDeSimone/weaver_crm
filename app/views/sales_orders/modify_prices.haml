@@ -1,0 +1,37 @@
+-content_for(:page_title) do
+  Modify Order Prices
+  
+-content_for(:meta_info) do
+  = javascript_include_tag 'jquery.select2.js'  
+  = stylesheet_link_tag    'select2.min.css'  
+
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Modify Order Prices
+      %br/
+      %p.hidden-phone
+ 
+.row-fluid
+  .span12
+    = breadcrumbs(['Sales Orders'])
+.row-fluid.hidden-tablet.hidden-phone
+  .span12
+    %h4 Order #{@order.id}
+    = form_tag "/sales_orders/#{@order.id}/update_prices" do
+      %p
+        %label
+          Base Price
+      =text_field_tag "base_price", @base_price   
+      - @line_items.each do |category|
+        - (category[:components]).each_with_index do |item, i|
+          - next if item[:form_type] == 'text'
+          - if(i == 0)
+            %h5= category[:category]
+          %p
+            %label
+              #{item[:name]} (#{item[:quantity]})
+          =text_field_tag "items[#{item[:id]}]", item[:unit_price].gsub(/[$,]/, '')
+      %br
+      %br
+      = submit_tag "Update Pricing", class: 'btn btn-info'

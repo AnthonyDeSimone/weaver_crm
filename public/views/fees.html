@@ -1,0 +1,28 @@
+<h2>Pricing</h2>
+
+<section class="center-floated-children">
+    <div class="col wide">
+        <h3>Sales Tax</h3>
+        <input ng-model="form.fees.sales_tax" id="sales-tax" type="number" min="0" max="100" step=".01" />
+        <label for="sales-tax" class="price">%</label>
+    </div>
+
+    <div class="col wide">
+        <h3>Delivery Fees</h3>
+        <label for="delivery-fees" class="price">$</label>
+        <input ng-model="form.fees.delivery" id="delivery-fees" type="number" min="0" />
+    </div>
+
+    <div class="col wide">
+        <h3>Advanced Calculations</h3>
+        <input ng-model="form.fees.advanced.percent" id="discount-percent" type="number" min="0" max="100" />
+        <label for="discount-percent" class="price">%</label>
+
+        <label for="discount-number" class="price">$</label>
+        <input ng-model="form.fees.advanced.price" id="discount-number" type="number" min="0" />
+        <label for="special" class="price">Special:</label>
+        <input ng-model="form.fees.advanced.special" id="special" type="text" />
+    </div>
+
+    <button ng-click="form.submit()" class="next">Submit Order</button>
+</section>

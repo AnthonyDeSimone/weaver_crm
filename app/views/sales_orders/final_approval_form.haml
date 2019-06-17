@@ -1,0 +1,53 @@
+-content_for(:page_title) do
+  Final Order Approval
+  
+-content_for(:meta_info) do
+  = javascript_include_tag 'jquery.select2.js'  
+  = stylesheet_link_tag    'select2.min.css'  
+
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Final Order Approval
+      %br/
+      %p.hidden-phone
+ 
+.row-fluid
+  .span12
+    = breadcrumbs(['Sales Orders'])
+.row-fluid.hidden-tablet.hidden-phone
+  .span12
+    %h4
+      %b Order #{@order.id}, #{@style} #{@width} x #{@length} - #{@feature}
+      %a{href: "/sales_orders/#{@order.id}/edit"} View Order
+    -if(@order.customer)
+      =link_to(@order.customer.andand.name, customer_path(@order.customer))
+      %br
+      =@json['data']['customer']['shipping']['address']
+      %br
+      #{@json['data']['customer']['shipping']['city']}, #{@json['data']['customer']['shipping']['state']} #{@json['data']['customer']['shipping']['zip']}    
+    %h4 
+      %b Warnings
+    %p
+      - if(!@json['data']['warnings'].andand.values)
+        Clear
+      - else
+        - @json['data']['warnings'].andand.values.andand.flatten.andand.each do |error|
+          = error
+          %br
+    %h4
+      %b Custom Options
+    - @line_items.each do |category|
+      - (category[:components]).each_with_index do |item, i|
+        - next unless(item[:form_type] == 'text')
+        - if(i == 0)
+          %h5= category[:category]
+        %p
+          #{item[:name]} (#{item[:quantity]}): #{item[:unit_price]}
+    %h4
+      %b 
+        Total:
+      =@prices['total']
+      
+    = form_tag "/sales_orders/#{@order.id}/final_approval", method: 'POST' do      
+      = submit_tag "Approve Order", class: 'btn btn-info'

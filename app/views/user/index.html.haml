@@ -1,0 +1,27 @@
+-content_for(:page_title) do
+  Sales Teams
+  
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2 Sales Teams
+      %br/
+      %p.hidden-phone
+        %a.btn.btn-info.btn-large.pull-right{:href => '/sales_teams/new'} Add new team &raquo; 
+        - puts new_user_registration_path
+.row-fluid
+  .span12
+    = breadcrumbs(['Sales Orders'])
+.row-fluid.hidden-tablet.hidden-phone
+  .span12
+    %h4.title Sales Teams
+    .squiggly-border
+    %table.table.table-striped.table-bordered.table-radmin
+      %thead
+        %tr
+          %th Sales Team
+          %th Number of Sales Reps
+          %th{:style => "text-align:center; width: 60px"} Edit
+      %tbody
+    .pagination.pagination-right
+      -# = will_paginate @sales_teams, renderer: RadminRenderer

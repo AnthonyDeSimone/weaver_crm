@@ -1,0 +1,60 @@
+-content_for(:page_title) do
+  Inactive Users
+  
+.row-fluid
+  .span12
+    .hero-unit.non-index
+      %h2
+        Inactive Users
+      %br/
+      %p.hidden-phone
+        %a.btn.btn-info.btn-large.pull-right{:href => '/salespeople/invitation/new'} Add new user &raquo; 
+
+.row-fluid
+  .span12
+    = breadcrumbs(['Users'])
+.row-fluid.hidden-tablet.hidden-phone
+  .span12
+    %h4.title{style: 'display: inline-block;'} Users
+    .dropdown
+      %button#dropdownMenu1.btn.btn-info.dropdown-toggle{"aria-expanded" => "true", "data-toggle" => "dropdown", :type => "button"}
+        Show
+        %span.caret
+      %ul.dropdown-menu{"aria-labelledby" => "dropdownMenu1", :role => "menu"}
+        %li{:role => "presentation"}
+          %a{:href => "/salespeople", :role => "menuitem", :tabindex => "-1"} All     
+        - @sales_teams.each do |team|
+          %li{:role => "presentation"}
+            %a{:href => "/salespeople/team?team_id=#{team.id}", :role => "menuitem", :tabindex => "-1"} #{team.name}
+    .squiggly-border
+    %table.table.table-striped.table-bordered.table-radmin
+      %thead
+        %tr
+          %th Name
+          %th Email
+          %th Account Type
+          %th Sales Team
+          %th{:style => "text-align:center; width: 10%"} Reactivate
+      %tbody
+        - @users.each do |user|
+          %tr
+            %td
+              =user.name
+            %td
+              =user.email
+            %td=user.account_type
+            %td=user.sales_team.name if user.sales_team
+            %td
+              %a.btn.btn-small.btn-danger.user-reactivate{:href => "/salespeople/#{user.id}/reactivate"}
+                %i.radmin-checkmark
+                Reactivate
+    .pagination.pagination-right
+      = will_paginate @users, renderer: RadminRenderer
+:javascript
+  $(document).ready(function() {  
+    $('a.user-reactivate').click(function() {    
+      $(this).closest('tr').remove()
+      $.ajax({url: this.href, type: 'POST'})
+      return false      
+    })      
+  })
